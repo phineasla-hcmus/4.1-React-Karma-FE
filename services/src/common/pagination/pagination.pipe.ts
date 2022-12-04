@@ -31,14 +31,14 @@ export class PaginationPipe
       'page',
       value.page,
       PAGINATION_MIN_PAGE,
-      DEFAULT_PAGINATION_PAGE
+      DEFAULT_PAGINATION_PAGE,
     );
     const size = this.sanitize(
       metadata.type,
       'size',
       value.size,
       PAGINATION_MIN_SIZE,
-      DEFAULT_PAGINATION_SIZE
+      DEFAULT_PAGINATION_SIZE,
     );
     const errors = [page, size].filter((query) => query.error);
     if (errors.length !== 0) {
@@ -56,7 +56,7 @@ export class PaginationPipe
     field: string,
     value: string | string[] | number,
     min: number,
-    defaultValue: number
+    defaultValue: number,
   ) {
     if (value == null) {
       return { value: defaultValue };
