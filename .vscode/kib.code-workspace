@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "4.1-React-Karma",
+			"path": ".."
+		},
+		{
+			"name": "client",
+			"path": "../client"
+		},
+		{
+			"name": "services",
+			"path": "../services"
+		}
+	],
+	"settings": {}
+}
