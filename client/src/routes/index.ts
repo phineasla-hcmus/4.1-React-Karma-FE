@@ -1,4 +1,4 @@
-import Home from '../containers/UserTemplate/Home';
+import Home from '../pages/Home';
 
 const routesUser = [
   {

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { GET_ITEMS } from '../../api/endpoints';
+import { Item } from '../../types';
 import { apiSlice } from './apiSlice';
 
 const initialState = {
@@ -19,7 +20,7 @@ export const homeApi = apiSlice.injectEndpoints({
         url: `${GET_ITEMS}/${id}`,
         method: 'GET',
       }),
-      transformResponse: (response, meta: any, arg: any) => {
+      transformResponse: (response: Item[], meta: any, arg: any) => {
         return response;
       },
     }),
