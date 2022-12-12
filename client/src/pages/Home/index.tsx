@@ -1,6 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Box, IconButton, Tab, Tabs, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { SyntheticEvent, useCallback, useState } from 'react';
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
 import TabPanel from '../../components/TabPanel';
@@ -19,7 +19,7 @@ function Home() {
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleChangeTab = useCallback(
-    (event: React.SyntheticEvent, newValue: number) => {
+    (event: SyntheticEvent, newValue: number) => {
       setSelectedTab(newValue);
     },
     []

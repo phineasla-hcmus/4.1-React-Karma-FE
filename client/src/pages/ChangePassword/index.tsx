@@ -9,7 +9,7 @@ import {
   Link,
   TextField,
 } from '@mui/material';
-import React from 'react';
+import React, { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 
 interface State {
   currentPassword: string;
@@ -21,7 +21,7 @@ interface State {
 }
 
 function ChangePassword() {
-  const [values, setValues] = React.useState<State>({
+  const [values, setValues] = useState<State>({
     currentPassword: '',
     password: '',
     confirmPassword: '',
@@ -30,35 +30,35 @@ function ChangePassword() {
     showConfirmPassword: false,
   });
 
-  const handleChange = React.useCallback(
-    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback(
+    (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
       setValues((v) => ({ ...v, [prop]: event.target.value }));
     },
     []
   );
 
-  const handleClickShowCurrentPassword = React.useCallback(() => {
+  const handleClickShowCurrentPassword = useCallback(() => {
     setValues((v) => ({
       ...v,
       showCurrentPassword: !v.showCurrentPassword,
     }));
   }, []);
 
-  const handleClickShowPassword = React.useCallback(() => {
+  const handleClickShowPassword = useCallback(() => {
     setValues((v) => ({
       ...v,
       showPassword: !v.showPassword,
     }));
   }, []);
 
-  const handleClickShowConfirmPassword = React.useCallback(() => {
+  const handleClickShowConfirmPassword = useCallback(() => {
     setValues((v) => ({
       ...v,
       showConfirmPassword: !v.showConfirmPassword,
     }));
   }, []);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -83,12 +83,7 @@ function ChangePassword() {
               src='/img/logo_1.png'
             />
           </Link>
-          <Box
-            component='form'
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component='form' onSubmit={handleSubmit} noValidate mt={1}>
             <TextField
               type={values.showCurrentPassword ? 'text' : 'password'}
               margin='normal'

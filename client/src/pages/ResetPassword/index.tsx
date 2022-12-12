@@ -9,7 +9,7 @@ import {
   Link,
   TextField,
 } from '@mui/material';
-import React from 'react';
+import React, { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 
 interface State {
   password: string;
@@ -19,35 +19,35 @@ interface State {
 }
 
 function ResetPassword() {
-  const [values, setValues] = React.useState<State>({
+  const [values, setValues] = useState<State>({
     password: '',
     confirmPassword: '',
     showPassword: false,
     showConfirmPassword: false,
   });
 
-  const handleChange = React.useCallback(
-    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback(
+    (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
       setValues((v) => ({ ...v, [prop]: event.target.value }));
     },
     []
   );
 
-  const handleClickShowPassword = React.useCallback(() => {
+  const handleClickShowPassword = useCallback(() => {
     setValues((v) => ({
       ...v,
       showPassword: !v.showPassword,
     }));
   }, []);
 
-  const handleClickShowConfirmPassword = React.useCallback(() => {
+  const handleClickShowConfirmPassword = useCallback(() => {
     setValues((v) => ({
       ...v,
       showConfirmPassword: !v.showConfirmPassword,
     }));
   }, []);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -72,12 +72,7 @@ function ResetPassword() {
               src='/img/logo_1.png'
             />
           </Link>
-          <Box
-            component='form'
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component='form' onSubmit={handleSubmit} noValidate mt={1}>
             <TextField
               type={values.showPassword ? 'text' : 'password'}
               margin='normal'

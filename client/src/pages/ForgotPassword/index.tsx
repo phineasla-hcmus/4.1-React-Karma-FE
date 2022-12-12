@@ -1,8 +1,8 @@
 import { Avatar, Box, Button, Container, Link, TextField } from '@mui/material';
-import React from 'react';
+import React, { FormEvent } from 'react';
 
 function ForgotPassword() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -27,12 +27,7 @@ function ForgotPassword() {
               src='/img/logo_1.png'
             />
           </Link>
-          <Box
-            component='form'
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component='form' onSubmit={handleSubmit} noValidate mt={1}>
             <TextField
               margin='normal'
               fullWidth

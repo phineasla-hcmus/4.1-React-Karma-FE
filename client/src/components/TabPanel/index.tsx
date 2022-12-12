@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 interface TabPanelProps {
-  children: React.ReactNode;
+  children: ReactNode;
   index: number;
   value: number;
 }
@@ -11,7 +11,7 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index } = props;
 
   return (
-    <Box role="tabpanel" hidden={value !== index}>
+    <Box role='tabpanel' hidden={value !== index}>
       {value === index && <Box>{children}</Box>}
     </Box>
   );

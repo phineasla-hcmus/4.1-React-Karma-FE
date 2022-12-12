@@ -1,4 +1,10 @@
-import * as React from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -17,27 +23,27 @@ interface State {
 }
 
 function Login() {
-  const [values, setValues] = React.useState<State>({
+  const [values, setValues] = useState<State>({
     username: '',
     password: '',
     showPassword: false,
   });
 
-  const handleChange = React.useCallback(
-    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback(
+    (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
       setValues((v) => ({ ...v, [prop]: event.target.value }));
     },
     []
   );
 
-  const handleClickShowPassword = React.useCallback(() => {
+  const handleClickShowPassword = useCallback(() => {
     setValues((v) => ({
       ...v,
       showPassword: !v.showPassword,
     }));
   }, []);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -46,7 +52,7 @@ function Login() {
     });
   };
 
-  const captchaRef = React.useRef(null);
+  const captchaRef = useRef(null);
 
   return (
     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
@@ -65,12 +71,7 @@ function Login() {
               src='/img/logo_1.png'
             />
           </Link>
-          <Box
-            component='form'
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component='form' onSubmit={handleSubmit} noValidate mt={1}>
             <TextField
               margin='normal'
               fullWidth
