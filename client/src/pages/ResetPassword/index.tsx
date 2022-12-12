@@ -1,26 +1,29 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import { Avatar, IconButton, InputAdornment } from '@mui/material';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { StyledCaptchaWrapper } from './styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  InputAdornment,
+  Link,
+  TextField,
+} from '@mui/material';
+import React from 'react';
 
 interface State {
-  username: string;
   password: string;
+  confirmPassword: string;
   showPassword: boolean;
+  showConfirmPassword: boolean;
 }
 
-function Login() {
+function ResetPassword() {
   const [values, setValues] = React.useState<State>({
-    username: '',
     password: '',
+    confirmPassword: '',
     showPassword: false,
+    showConfirmPassword: false,
   });
 
   const handleChange = React.useCallback(
@@ -37,16 +40,20 @@ function Login() {
     }));
   }, []);
 
+  const handleClickShowConfirmPassword = React.useCallback(() => {
+    setValues((v) => ({
+      ...v,
+      showConfirmPassword: !v.showConfirmPassword,
+    }));
+  }, []);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       username: data.get('username'),
-      password: data.get('password'),
     });
   };
-
-  const captchaRef = React.useRef(null);
 
   return (
     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
@@ -72,17 +79,11 @@ function Login() {
             sx={{ mt: 1 }}
           >
             <TextField
+              type={values.showPassword ? 'text' : 'password'}
               margin='normal'
               fullWidth
-              label='Tên đăng nhập'
-              name='username'
-            />
-            <TextField
-              label='Mật khẩu'
+              label='Mật khẩu mới'
               name='password'
-              sx={{ margin: '0.5rem 0', width: '100%' }}
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
               onChange={handleChange('password')}
               InputProps={{
                 endAdornment: (
@@ -102,31 +103,39 @@ function Login() {
                 ),
               }}
             />
+            <TextField
+              type={values.showConfirmPassword ? 'text' : 'password'}
+              margin='normal'
+              fullWidth
+              label='Nhập lại mật khẩu mới'
+              name='confirmPassword'
+              onChange={handleChange('confirmPassword')}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label='toggle confirm password visibility'
+                      onClick={handleClickShowConfirmPassword}
+                      edge='end'
+                    >
+                      {values.showConfirmPassword ? (
+                        <VisibilityOff sx={{ fontSize: '1.25rem' }} />
+                      ) : (
+                        <Visibility sx={{ fontSize: '1.25rem' }} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
             <Button
               type='submit'
               fullWidth
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
             >
-              Đăng nhập
+              Lưu thay đổi
             </Button>
-            <Grid
-              sx={{ marginBottom: '1.25rem' }}
-              container
-              justifyContent='flex-end'
-            >
-              <Grid item>
-                <Link href='/forgot-password' variant='body2'>
-                  Quên mật khẩu
-                </Link>
-              </Grid>
-            </Grid>
-            <StyledCaptchaWrapper>
-              <ReCAPTCHA
-                sitekey={process.env.REACT_APP_SITE_KEY || ''}
-                ref={captchaRef}
-              />
-            </StyledCaptchaWrapper>
           </Box>
         </Box>
       </Container>
@@ -134,4 +143,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ResetPassword;
