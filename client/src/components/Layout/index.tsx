@@ -9,7 +9,7 @@ interface LayoutProps {
 function Layout({ children }: LayoutProps) {
   return (
     <Box>
-      <Header />
+      <Header isAuthenticated />
       {children}
     </Box>
   );

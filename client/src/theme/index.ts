@@ -25,6 +25,18 @@ const themeOptions: ThemeOptionsOld = {
       contrastText: themeColors.color.grey,
     },
   },
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          backgroundColor: themeColors.color.white,
+          padding: '4rem',
+          borderRadius: '0.5rem',
+          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;',
+        },
+      },
+    },
+  },
 };
 
 // Update for Typescript
