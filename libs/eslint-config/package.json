@@ -2,7 +2,7 @@
   "name": "eslint-config",
   "description": "Common ESLint configuration",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "GPL-2.0",
   "main": "src/index.js",
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.40.1",
@@ -11,6 +11,7 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.1",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^27.1.6",
