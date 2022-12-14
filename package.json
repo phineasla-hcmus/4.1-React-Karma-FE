@@ -4,9 +4,7 @@
   "version": "0.5.0",
   "private": true,
   "scripts": {
-    "watch": "concurrently -n client,services \"pnpm watch-client\" \"pnpm watch-services\"",
-    "watch-client": "cd client && pnpm watch",
-    "watch-services": "cd services && pnpm watch"
+    
   },
   "devDependencies": {
     "@hm/spm": "github:Ducky-Momo-HCMUS/spm",
