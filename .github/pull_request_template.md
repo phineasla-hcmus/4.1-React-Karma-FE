@@ -2,12 +2,11 @@
 <!-- Feel free to remove sections that you don't need -->
 
 <!-- Pull request title must include ticket key and capitalize first letter -->
-<!-- [HM-???] Your pull request title -->
 
 ## :sparkles: Summary
 
-<!-- Copy the link of the ticket from Jira website -->
-- Ticket: [HM-???](paste-the-link-here)
+<!-- Copy the link of the ticket from Jira/Trello website -->
+- Ticket: paste-the-link-here
 
 <!-- Long description of PR -->
 <!-- Why are we doing this? -->
