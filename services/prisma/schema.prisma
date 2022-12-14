@@ -85,12 +85,12 @@ model TAIKHOAN {
 }
 
 model TAIKHOANTHANHTOAN {
-  soTK                                                   String        @id @map("SOTK") @db.VarChar(12)
-  soDu                                                   Int           @map("SODU")
-  maTK                                                   Int?          @unique @map("MATK")
-  CHUYENKHOAN_CHUYENKHOAN_NGUOICHUYENToTAIKHOANTHANHTOAN CHUYENKHOAN[] @relation("CHUYENKHOAN_NGUOICHUYENToTAIKHOANTHANHTOAN")
-  CHUYENKHOAN_CHUYENKHOAN_NGUOINHANToTAIKHOANTHANHTOAN   CHUYENKHOAN[] @relation("CHUYENKHOAN_NGUOINHANToTAIKHOANTHANHTOAN")
-  taiKhoan                                               TAIKHOAN?     @relation(fields: [maTK], references: [maTK], onDelete: NoAction, onUpdate: NoAction, map: "FK_TAIKHOANTHANHTOAN_TAIKHOAN")
+  soTK            String        @id @map("SOTK") @db.VarChar(12)
+  soDu            Int           @map("SODU")
+  maTK            Int?          @unique @map("MATK")
+  chuyenKhoan     CHUYENKHOAN[] @relation("CHUYENKHOAN_NGUOICHUYENToTAIKHOANTHANHTOAN")
+  duocChuyenKhoan CHUYENKHOAN[] @relation("CHUYENKHOAN_NGUOINHANToTAIKHOANTHANHTOAN")
+  taiKhoan        TAIKHOAN?     @relation(fields: [maTK], references: [maTK], onDelete: NoAction, onUpdate: NoAction, map: "FK_TAIKHOANTHANHTOAN_TAIKHOAN")
 }
 
 enum vaitro {
