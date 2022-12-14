@@ -68,7 +68,7 @@ function ChangePassword() {
 
   return (
     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-      <Container component='main' maxWidth='xs'>
+      <Container component="main" maxWidth="xs">
         <Box
           sx={{
             display: 'flex',
@@ -76,28 +76,28 @@ function ChangePassword() {
             alignItems: 'center',
           }}
         >
-          <Link href='/'>
+          <Link href="/">
             <Avatar
               sx={{ width: '8rem', height: '8rem' }}
-              alt='Karma logo'
-              src='/img/logo_1.png'
+              alt="Karma logo"
+              src="/img/logo_1.png"
             />
           </Link>
-          <Box component='form' onSubmit={handleSubmit} noValidate mt={1}>
+          <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
             <TextField
               type={values.showCurrentPassword ? 'text' : 'password'}
-              margin='normal'
+              margin="normal"
               fullWidth
-              label='Mật khẩu hiện tại'
-              name='password'
+              label="Mật khẩu hiện tại"
+              name="password"
               onChange={handleChange('currentPassword')}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position='end'>
+                  <InputAdornment position="end">
                     <IconButton
-                      aria-label='toggle current password visibility'
+                      aria-label="toggle current password visibility"
                       onClick={handleClickShowCurrentPassword}
-                      edge='end'
+                      edge="end"
                     >
                       {values.showCurrentPassword ? (
                         <VisibilityOff sx={{ fontSize: '1.25rem' }} />
@@ -111,18 +111,18 @@ function ChangePassword() {
             />
             <TextField
               type={values.showPassword ? 'text' : 'password'}
-              margin='normal'
+              margin="normal"
               fullWidth
-              label='Mật khẩu mới'
-              name='password'
+              label="Mật khẩu mới"
+              name="password"
               onChange={handleChange('password')}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position='end'>
+                  <InputAdornment position="end">
                     <IconButton
-                      aria-label='toggle password visibility'
+                      aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
-                      edge='end'
+                      edge="end"
                     >
                       {values.showPassword ? (
                         <VisibilityOff sx={{ fontSize: '1.25rem' }} />
@@ -136,18 +136,18 @@ function ChangePassword() {
             />
             <TextField
               type={values.showConfirmPassword ? 'text' : 'password'}
-              margin='normal'
+              margin="normal"
               fullWidth
-              label='Nhập lại mật khẩu mới'
-              name='confirmPassword'
+              label="Nhập lại mật khẩu mới"
+              name="confirmPassword"
               onChange={handleChange('confirmPassword')}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position='end'>
+                  <InputAdornment position="end">
                     <IconButton
-                      aria-label='toggle confirm password visibility'
+                      aria-label="toggle confirm password visibility"
                       onClick={handleClickShowConfirmPassword}
-                      edge='end'
+                      edge="end"
                     >
                       {values.showConfirmPassword ? (
                         <VisibilityOff sx={{ fontSize: '1.25rem' }} />
@@ -160,9 +160,9 @@ function ChangePassword() {
               }}
             />
             <Button
-              type='submit'
+              type="submit"
               fullWidth
-              variant='contained'
+              variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Lưu thay đổi
