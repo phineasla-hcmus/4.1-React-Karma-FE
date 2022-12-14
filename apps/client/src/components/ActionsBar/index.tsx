@@ -28,27 +28,27 @@ function ActionsBar() {
     <>
       <Box>
         <IconButton
-          size='large'
-          color='inherit'
-          aria-label='notification'
-          component='label'
+          size="large"
+          color="inherit"
+          aria-label="notification"
+          component="label"
         >
-          <NotificationsIcon fontSize='inherit' />
+          <NotificationsIcon fontSize="inherit" />
         </IconButton>
         <IconButton
           sx={{ paddingRight: 0 }}
-          size='large'
-          color='inherit'
-          aria-label='personal'
-          component='label'
+          size="large"
+          color="inherit"
+          aria-label="personal"
+          component="label"
           onClick={handleClick}
         >
-          <AccountCircleIcon fontSize='inherit' />
+          <AccountCircleIcon fontSize="inherit" />
         </IconButton>
       </Box>
       <Menu
         anchorEl={anchorEl}
-        id='account-menu'
+        id="account-menu"
         open={open}
         onClose={handleClose}
         onClick={handleClose}
@@ -84,11 +84,11 @@ function ActionsBar() {
         <MenuItem>
           <ListItemButton
             sx={{ padding: 0 }}
-            href='/change-password'
+            href="/change-password"
             LinkComponent={Link}
           >
             <ListItemIcon>
-              <SettingsIcon fontSize='small' />
+              <SettingsIcon fontSize="small" />
             </ListItemIcon>
             Thay đổi mật khẩu
           </ListItemButton>
@@ -96,11 +96,11 @@ function ActionsBar() {
         <MenuItem>
           <ListItemButton
             sx={{ padding: 0 }}
-            href='/logout'
+            href="/logout"
             LinkComponent={Link}
           >
             <ListItemIcon>
-              <Logout fontSize='small' />
+              <Logout fontSize="small" />
             </ListItemIcon>
             Đăng xuất
           </ListItemButton>

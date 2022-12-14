@@ -13,8 +13,9 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { Avatar, IconButton, InputAdornment } from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { StyledCaptchaWrapper } from './styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+
+import { StyledCaptchaWrapper } from './styles';
 
 interface State {
   username: string;
@@ -56,7 +57,7 @@ function Login() {
 
   return (
     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-      <Container component='main' maxWidth='xs'>
+      <Container component="main" maxWidth="xs">
         <Box
           sx={{
             display: 'flex',
@@ -64,34 +65,34 @@ function Login() {
             alignItems: 'center',
           }}
         >
-          <Link href='/'>
+          <Link href="/">
             <Avatar
               sx={{ width: '8rem', height: '8rem' }}
-              alt='Karma logo'
-              src='/img/logo_1.png'
+              alt="Karma logo"
+              src="/img/logo_1.png"
             />
           </Link>
-          <Box component='form' onSubmit={handleSubmit} noValidate mt={1}>
+          <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
             <TextField
-              margin='normal'
+              margin="normal"
               fullWidth
-              label='Tên đăng nhập'
-              name='username'
+              label="Tên đăng nhập"
+              name="username"
             />
             <TextField
-              label='Mật khẩu'
-              name='password'
+              label="Mật khẩu"
+              name="password"
               sx={{ margin: '0.5rem 0', width: '100%' }}
               type={values.showPassword ? 'text' : 'password'}
               value={values.password}
               onChange={handleChange('password')}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position='end'>
+                  <InputAdornment position="end">
                     <IconButton
-                      aria-label='toggle password visibility'
+                      aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
-                      edge='end'
+                      edge="end"
                     >
                       {values.showPassword ? (
                         <VisibilityOff sx={{ fontSize: '1.25rem' }} />
@@ -104,9 +105,9 @@ function Login() {
               }}
             />
             <Button
-              type='submit'
+              type="submit"
               fullWidth
-              variant='contained'
+              variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Đăng nhập
@@ -114,10 +115,10 @@ function Login() {
             <Grid
               sx={{ marginBottom: '1.25rem' }}
               container
-              justifyContent='flex-end'
+              justifyContent="flex-end"
             >
               <Grid item>
-                <Link href='/forgot-password' variant='body2'>
+                <Link href="/forgot-password" variant="body2">
                   Quên mật khẩu
                 </Link>
               </Grid>

@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+
 import homeReducer from './slices/homeSlice';
 import { apiSlice } from './slices/apiSlice';
 

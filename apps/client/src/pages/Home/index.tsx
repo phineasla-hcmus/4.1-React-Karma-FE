@@ -1,6 +1,7 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Box, IconButton, Tab, Tabs, Typography } from '@mui/material';
 import { SyntheticEvent, useCallback, useState } from 'react';
+
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
 import TabPanel from '../../components/TabPanel';
@@ -42,16 +43,16 @@ function Home() {
             justifyContent: 'space-between',
           }}
         >
-          <Typography variant='h6'>
+          <Typography variant="h6">
             Số dư khả dụng:{' '}
-            <Typography sx={{ marginLeft: '0.2rem' }} component='span'>
+            <Typography sx={{ marginLeft: '0.2rem' }} component="span">
               {values.showBalance ? values.balance : '*********'} VND
             </Typography>
           </Typography>
           <IconButton
-            aria-label='toggle balance visibility'
+            aria-label="toggle balance visibility"
             onClick={handleClickShowBalance}
-            edge='end'
+            edge="end"
           >
             {values.showBalance ? (
               <VisibilityOff sx={{ fontSize: '1.25rem' }} />
@@ -65,12 +66,12 @@ function Home() {
           sx={{ marginTop: '1rem' }}
           value={selectedTab}
           onChange={handleChangeTab}
-          indicatorColor='secondary'
-          textColor='inherit'
+          indicatorColor="secondary"
+          textColor="inherit"
         >
-          <Tab label='Lịch sử giao dịch' />
-          <Tab label='Chuyển tiền' />
-          <Tab label='Nhắc nợ' />
+          <Tab label="Lịch sử giao dịch" />
+          <Tab label="Chuyển tiền" />
+          <Tab label="Nhắc nợ" />
         </Tabs>
         <TabPanel index={0} value={selectedTab}>
           Lịch sử giao dịch
