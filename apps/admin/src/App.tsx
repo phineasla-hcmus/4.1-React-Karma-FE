@@ -8,6 +8,8 @@ import { BankerEdit } from "./components/banker/BankerEdit";
 import { BankerCreate } from "./components/banker/BankerCreate";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { authProvider } from "./auth/authProvider";
+import Login from "./pages/Login";
+
 const dataProvider = jsonServerProvider("https://jsonplaceholder.typicode.com");
 
 const history = createBrowserHistory();
@@ -17,6 +19,7 @@ const App = () => (
     history={history}
     dataProvider={dataProvider}
     authProvider={authProvider}
+    loginPage={Login}
   >
     <Resource
       name="users"
