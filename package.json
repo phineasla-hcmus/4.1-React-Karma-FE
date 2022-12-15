@@ -7,8 +7,6 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
     "@reduxjs/toolkit": "^1.9.1",
     "@testing-library/dom": "^8.19.0",
     "@testing-library/jest-dom": "^5.16.5",
