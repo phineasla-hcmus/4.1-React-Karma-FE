@@ -10,6 +10,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { authProvider } from "./auth/authProvider";
 import Login from "./pages/Login";
 
+import { TransactionList } from "./components/transaction/TransactionList";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+
 const dataProvider = jsonServerProvider("https://jsonplaceholder.typicode.com");
 
 const history = createBrowserHistory();
@@ -28,6 +31,7 @@ const App = () => (
       create={BankerCreate}
       icon={AccountCircleIcon}
     />
+    <Resource name="posts" list={TransactionList} icon={CurrencyExchangeIcon} />
   </Admin>
 );
 

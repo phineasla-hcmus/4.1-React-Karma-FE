@@ -72,7 +72,7 @@ function Login() {
               variant="h5"
               sx={{ fontWeight: 600, textAlign: "center" }}
             >
-              Login as a Admin User
+              Login as a Banker
             </Typography>
             <TextField
               margin="normal"

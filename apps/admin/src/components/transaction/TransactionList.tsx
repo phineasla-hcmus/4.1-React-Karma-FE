@@ -1,22 +1,20 @@
 // in src/users.tsx
-import { useMediaQuery } from "@mui/material";
+import { Button, useMediaQuery } from "@mui/material";
 import {
   List,
   SimpleList,
   Datagrid,
   TextField,
   EmailField,
-  EditButton,
   TextInput,
-  ReferenceInput,
 } from "react-admin";
 
 const bankerFilters = [
-  <TextInput source="q" label="Tìm kiếm" alwaysOn />,
+  <TextInput source="q" label="Search" alwaysOn />,
   // <ReferenceInput source="userId" label="User" reference="users" />,
 ];
 
-export const BankerList = () => {
+export const TransactionList = () => {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
   return (
     <List filters={bankerFilters}>
@@ -28,10 +26,12 @@ export const BankerList = () => {
         />
       ) : (
         <Datagrid>
-          <TextField source="id" label="Id" />
-          <TextField source="name" label="Fullname" />
-          <TextField source="phone" label="Phone" />
-          <EditButton />
+          <TextField source="id" label="Transaction id" />
+          <TextField source="name" label="Sent account" />
+          <TextField source="username" label="Received account" />
+          <TextField source="email" label="Bank" />
+          <TextField source="phone" label="Money" />
+          <TextField source="phone" label="Transaction time" />
         </Datagrid>
       )}
     </List>
