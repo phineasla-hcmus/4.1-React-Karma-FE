@@ -1,58 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+// in src/App.tsx
+import React from "react";
+import { Admin, Resource } from "react-admin";
+import jsonServerProvider from "ra-data-json-server";
+import { BankerList } from "./components/banker/BankerList";
+import { BankerEdit } from "./components/banker/BankerEdit";
+import { BankerCreate } from "./components/banker/BankerCreate";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { authProvider } from "./auth/authProvider";
+const dataProvider = jsonServerProvider("https://jsonplaceholder.typicode.com");
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
-}
+const App = () => (
+  <Admin dataProvider={dataProvider} authProvider={authProvider}>
+    <Resource
+      name="users"
+      list={BankerList}
+      edit={BankerEdit}
+      create={BankerCreate}
+      icon={AccountCircleIcon}
+    />
+  </Admin>
+);
 
 export default App;
