@@ -1,6 +1,6 @@
+import React, { SyntheticEvent, useCallback, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Box, IconButton, Tab, Tabs, Typography } from '@mui/material';
-import { SyntheticEvent, useCallback, useState } from 'react';
 
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
