@@ -12,7 +12,7 @@
     "plugin:import/typescript",
     "plugin:prettier/recommended"
   ],
-  "ignorePatterns": ["**/build/*", "**/.eslintrc.js"],
+  "ignorePatterns": ["**/build/*", "**/.eslintrc.js", "**/craco.config.js"],
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest",
