@@ -1,58 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+// in src/App.tsx
+import React from "react";
+import { createBrowserHistory } from "history";
+import { Admin, Resource } from "react-admin";
+import jsonServerProvider from "ra-data-json-server";
+import { UserList } from "./components/user/UserList";
+import { UserEdit } from "./components/user/UserEdit";
+import { UserCreate } from "./components/user/UserCreate";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { authProvider } from "./auth/authProvider";
+import Login from "./pages/Login";
+import { TransactionList } from "./components/transaction/TransactionList";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
-}
+const dataProvider = jsonServerProvider("https://jsonplaceholder.typicode.com");
+
+const history = createBrowserHistory();
+
+const App = () => (
+  <Admin
+    history={history}
+    dataProvider={dataProvider}
+    authProvider={authProvider}
+    loginPage={Login}
+  >
+    <Resource
+      name="users"
+      list={UserList}
+      edit={UserEdit}
+      create={UserCreate}
+      icon={AccountCircleIcon}
+    />
+    <Resource name="posts" list={TransactionList} icon={CurrencyExchangeIcon} />
+  </Admin>
+);
 
 export default App;

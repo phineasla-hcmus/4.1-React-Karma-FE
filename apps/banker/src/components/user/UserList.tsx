@@ -8,18 +8,17 @@ import {
   EmailField,
   EditButton,
   TextInput,
-  ReferenceInput,
 } from "react-admin";
 
-const bankerFilters = [
-  <TextInput source="q" label="Tìm kiếm" alwaysOn />,
+const userFilters = [
+  <TextInput source="q" label="Search" alwaysOn />,
   // <ReferenceInput source="userId" label="User" reference="users" />,
 ];
 
-export const BankerList = () => {
+export const UserList = () => {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
   return (
-    <List filters={bankerFilters}>
+    <List filters={userFilters}>
       {isSmall ? (
         <SimpleList
           primaryText={(record) => record.name}
@@ -28,10 +27,10 @@ export const BankerList = () => {
         />
       ) : (
         <Datagrid>
-          <TextField source="id" label="Id" />
-          <TextField source="name" label="Fullname" />
-          <TextField source="phone" label="Phone" />
-          <EditButton />
+          <TextField source="id" label="Account number" />
+          <TextField source="name" label="User" />
+
+          <EditButton label="Add money" />
         </Datagrid>
       )}
     </List>
