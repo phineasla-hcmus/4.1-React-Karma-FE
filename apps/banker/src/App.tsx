@@ -11,6 +11,7 @@ import { authProvider } from "./auth/authProvider";
 import Login from "./pages/Login";
 import { TransactionList } from "./components/transaction/TransactionList";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+
 const dataProvider = jsonServerProvider("https://jsonplaceholder.typicode.com");
 
 const history = createBrowserHistory();

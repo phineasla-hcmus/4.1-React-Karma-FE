@@ -29,9 +29,9 @@ export const TransactionList = () => {
           <TextField source="id" label="Transaction id" />
           <TextField source="name" label="Sent account" />
           <TextField source="username" label="Received account" />
+          <TextField source="email" label="Bank" />
+          <TextField source="phone" label="Money" />
           <TextField source="phone" label="Transaction time" />
-          <TextField source="phone" label="Transaction type" />
-          <Button>Details</Button>
         </Datagrid>
       )}
     </List>

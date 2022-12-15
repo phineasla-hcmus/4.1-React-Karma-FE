@@ -12,7 +12,7 @@ import {
 } from "react-admin";
 
 const bankerFilters = [
-  <TextInput source="q" label="Search" alwaysOn />,
+  <TextInput source="q" label="Tìm kiếm" alwaysOn />,
   // <ReferenceInput source="userId" label="User" reference="users" />,
 ];
 
@@ -28,11 +28,9 @@ export const BankerList = () => {
         />
       ) : (
         <Datagrid>
-          <TextField source="id" />
-          <TextField source="name" />
-          <TextField source="username" />
-          <EmailField source="email" />
-          <TextField source="phone" />
+          <TextField source="id" label="Id" />
+          <TextField source="name" label="Fullname" />
+          <TextField source="phone" label="Phone" />
           <EditButton />
         </Datagrid>
       )}

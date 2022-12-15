@@ -77,11 +77,11 @@ function Login() {
             <TextField
               margin="normal"
               fullWidth
-              label="ユーザー名"
+              label="Username"
               name="username"
             />
             <TextField
-              label="パスワード"
+              label="Password"
               name="password"
               sx={{ margin: "0.5rem 0", width: "100%" }}
               type={values.showPassword ? "text" : "password"}
@@ -111,7 +111,7 @@ function Login() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Đăng nhập
+              Login
             </Button>
             <Grid
               sx={{ marginBottom: "1.25rem" }}
@@ -120,7 +120,7 @@ function Login() {
             >
               <Grid item>
                 <Link href="/forgot-password" variant="body2">
-                  Quên mật khẩu
+                  Forgot password
                 </Link>
               </Grid>
             </Grid>

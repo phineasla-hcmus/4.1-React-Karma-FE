@@ -27,12 +27,10 @@ export const UserList = () => {
         />
       ) : (
         <Datagrid>
-          <TextField source="id" />
-          <TextField source="name" />
-          <TextField source="username" />
-          <EmailField source="email" />
-          <TextField source="phone" />
-          <EditButton />
+          <TextField source="id" label="Account number" />
+          <TextField source="name" label="User" />
+
+          <EditButton label="Add money" />
         </Datagrid>
       )}
     </List>
