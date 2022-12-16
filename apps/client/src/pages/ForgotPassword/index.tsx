@@ -12,7 +12,7 @@ function ForgotPassword() {
 
   return (
     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-      <Container component='main' maxWidth='xs'>
+      <Container component="main" maxWidth="xs">
         <Box
           sx={{
             display: 'flex',
@@ -20,24 +20,24 @@ function ForgotPassword() {
             alignItems: 'center',
           }}
         >
-          <Link href='/'>
+          <Link href="/">
             <Avatar
               sx={{ width: '8rem', height: '8rem' }}
-              alt='Karma logo'
-              src='/img/logo_1.png'
+              alt="Karma logo"
+              src="/img/logo_1.png"
             />
           </Link>
-          <Box component='form' onSubmit={handleSubmit} noValidate mt={1}>
+          <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
             <TextField
-              margin='normal'
+              margin="normal"
               fullWidth
-              label='Tên đăng nhập'
-              name='username'
+              label="Tên đăng nhập"
+              name="username"
             />
             <Button
-              type='submit'
+              type="submit"
               fullWidth
-              variant='contained'
+              variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Gửi yêu cầu

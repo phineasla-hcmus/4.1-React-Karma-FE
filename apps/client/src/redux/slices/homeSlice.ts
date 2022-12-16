@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { GET_ITEMS } from '../../api/endpoints';
 import { Item } from '../../types';
+
 import { apiSlice } from './apiSlice';
 
 const initialState = {

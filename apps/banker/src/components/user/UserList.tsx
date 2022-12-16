@@ -1,5 +1,5 @@
-// in src/users.tsx
-import { useMediaQuery } from "@mui/material";
+import React from 'react';
+import { useMediaQuery } from '@mui/material';
 import {
   List,
   SimpleList,
@@ -8,15 +8,15 @@ import {
   EmailField,
   EditButton,
   TextInput,
-} from "react-admin";
+} from 'react-admin';
 
 const userFilters = [
   <TextInput source="q" label="Search" alwaysOn />,
   // <ReferenceInput source="userId" label="User" reference="users" />,
 ];
 
-export const UserList = () => {
-  const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
+export function UserList() {
+  const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
     <List filters={userFilters}>
       {isSmall ? (
@@ -35,4 +35,4 @@ export const UserList = () => {
       )}
     </List>
   );
-};
+}

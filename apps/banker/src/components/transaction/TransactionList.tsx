@@ -1,21 +1,14 @@
-// in src/users.tsx
-import { Button, useMediaQuery } from "@mui/material";
-import {
-  List,
-  SimpleList,
-  Datagrid,
-  TextField,
-  EmailField,
-  TextInput,
-} from "react-admin";
+import React from 'react';
+import { Button, useMediaQuery } from '@mui/material';
+import { List, SimpleList, Datagrid, TextField, TextInput } from 'react-admin';
 
 const bankerFilters = [
   <TextInput source="q" label="Search" alwaysOn />,
   // <ReferenceInput source="userId" label="User" reference="users" />,
 ];
 
-export const TransactionList = () => {
-  const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
+export function TransactionList() {
+  const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
     <List filters={bankerFilters}>
       {isSmall ? (
@@ -36,4 +29,4 @@ export const TransactionList = () => {
       )}
     </List>
   );
-};
+}

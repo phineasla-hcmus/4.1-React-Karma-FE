@@ -12,18 +12,14 @@ function Header({ isAuthenticated }: HeaderProps) {
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 9999, width: '100%' }}>
       <StyledBox>
-        <Link href='/'>
+        <Link href="/">
           <Avatar
             sx={{ width: '4rem', height: '4rem' }}
-            alt='Karma logo'
-            src='/img/logo_2.png'
+            alt="Karma logo"
+            src="/img/logo_2.png"
           />
         </Link>
-        {isAuthenticated && (
-          <>
-            <ActionsBar />
-          </>
-        )}
+        {isAuthenticated && <ActionsBar />}
       </StyledBox>
     </Box>
   );
