@@ -1,12 +1,12 @@
-import React, { SyntheticEvent, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Box, IconButton, Tab, Tabs, Typography } from '@mui/material';
+import { Avatar, Box, Grid, IconButton, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
-import TabPanel from '../../components/TabPanel';
 
-import TransferHistory from './TransferHistory';
+import { StyledClickableCard } from './styles';
 
 interface State {
   balance: number;
@@ -14,19 +14,12 @@ interface State {
 }
 
 function Home() {
+  const navigate = useNavigate();
+
   const [values, setValues] = useState<State>({
     balance: 100000,
     showBalance: false,
   });
-
-  const [selectedTab, setSelectedTab] = useState(0);
-
-  const handleChangeTab = useCallback(
-    (event: SyntheticEvent, newValue: number) => {
-      setSelectedTab(newValue);
-    },
-    []
-  );
 
   const handleClickShowBalance = useCallback(() => {
     setValues((v) => ({
@@ -63,27 +56,46 @@ function Home() {
             )}
           </IconButton>
         </Box>
-
-        <Tabs
-          sx={{ marginTop: '1rem' }}
-          value={selectedTab}
-          onChange={handleChangeTab}
-          indicatorColor="secondary"
-          textColor="inherit"
-        >
-          <Tab label="Lịch sử giao dịch" />
-          <Tab label="Chuyển tiền" />
-          <Tab label="Nhắc nợ" />
-        </Tabs>
-        <TabPanel index={0} value={selectedTab}>
-          <TransferHistory />
-        </TabPanel>
-        <TabPanel index={1} value={selectedTab}>
-          Chuyển tiền
-        </TabPanel>
-        <TabPanel index={2} value={selectedTab}>
-          Nhắc nợ
-        </TabPanel>
+        <Grid container>
+          <Grid item xs={9} sx={{ display: 'flex' }}>
+            <StyledClickableCard
+              onClick={() => {
+                navigate('/transaction-history');
+              }}
+            >
+              <Avatar
+                variant="square"
+                sx={{ marginRight: '1rem' }}
+                src="/img/transaction_history.png"
+              />
+              Lịch sử giao dịch
+            </StyledClickableCard>
+            <StyledClickableCard
+              onClick={() => {
+                navigate('/transfer');
+              }}
+            >
+              <Avatar
+                variant="square"
+                sx={{ marginRight: '1rem' }}
+                src="/img/transfer_money.png"
+              />
+              Chuyển tiền
+            </StyledClickableCard>
+            <StyledClickableCard
+              onClick={() => {
+                navigate('/debt-management');
+              }}
+            >
+              <Avatar
+                variant="square"
+                sx={{ marginRight: '1rem' }}
+                src="/img/debt.png"
+              />
+              Nhắc nợ
+            </StyledClickableCard>
+          </Grid>
+        </Grid>
       </StyledContentWrapper>
     </Layout>
   );
