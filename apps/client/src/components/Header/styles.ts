@@ -9,4 +9,5 @@ export const StyledBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  overflow: 'hidden',
 }));

@@ -6,6 +6,8 @@ import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
 import TabPanel from '../../components/TabPanel';
 
+import TransferHistory from './TransferHistory';
+
 interface State {
   balance: number;
   showBalance: boolean;
@@ -74,7 +76,7 @@ function Home() {
           <Tab label="Nhắc nợ" />
         </Tabs>
         <TabPanel index={0} value={selectedTab}>
-          Lịch sử giao dịch
+          <TransferHistory />
         </TabPanel>
         <TabPanel index={1} value={selectedTab}>
           Chuyển tiền

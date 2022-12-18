@@ -22,7 +22,7 @@ export const homeApi = apiSlice.injectEndpoints({
         url: `${GET_ITEMS}/${id}`,
         method: 'GET',
       }),
-      transformResponse: (response: Item[], meta: any, arg: any) => {
+      transformResponse: (response: Item[]) => {
         return response;
       },
     }),
