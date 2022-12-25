@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Button } from '@mui/material';
 import {
   List,
   SimpleList,
@@ -7,10 +7,12 @@ import {
   TextField,
   EditButton,
   TextInput,
+  FunctionField,
 } from 'react-admin';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const bankerFilters = [
-  <TextInput source="q" label="Tìm kiếm" alwaysOn />,
+  <TextInput source="q" label="Search" alwaysOn />,
   // <ReferenceInput source="userId" label="User" reference="users" />,
 ];
 
@@ -26,10 +28,14 @@ export function BankerList() {
         />
       ) : (
         <Datagrid>
-          <TextField source="id" label="Id" />
+          <TextField source="id" label="ID" />
           <TextField source="nhanVien.hoTen" label="Fullname" />
           <TextField source="nhanVien.sdt" label="Phone" />
           <EditButton />
+          <Button color="error">
+            <DeleteIcon />
+            Delete
+          </Button>
         </Datagrid>
       )}
     </List>

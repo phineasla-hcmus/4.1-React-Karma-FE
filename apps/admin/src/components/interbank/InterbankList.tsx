@@ -35,11 +35,11 @@ export function InterbankList() {
           <TextField source="nganHangLK.tenNH" label="Affiliated bank" />
           <FunctionField
             source="soTien"
-            label="Money"
+            label="Amount"
             render={(record: any) =>
               record.soTien > 0
-                ? `+${formatNumber(record.soTien)}`
-                : `${formatNumber(record.soTien)}`
+                ? `+${formatNumber(record.soTien)} VND`
+                : `${formatNumber(record.soTien)} VND`
             }
           />
           <FunctionField
