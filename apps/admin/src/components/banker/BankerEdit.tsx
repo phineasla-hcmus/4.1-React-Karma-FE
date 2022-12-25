@@ -5,10 +5,10 @@ export function BankerEdit() {
   return (
     <Edit>
       <SimpleForm>
-        <ReferenceInput source="userId" reference="users" />
+        <ReferenceInput source="id" reference="bankers" />
         <TextInput source="id" />
-        <TextInput source="title" />
-        <TextInput source="body" />
+        <TextInput source="nhanVien.hoTen" label="Fullname" />
+        <TextInput source="nhanVien.sdt" label="Phone" />
       </SimpleForm>
     </Edit>
   );

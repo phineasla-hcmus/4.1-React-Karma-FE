@@ -27,8 +27,8 @@ export function BankerList() {
       ) : (
         <Datagrid>
           <TextField source="id" label="Id" />
-          <TextField source="name" label="Fullname" />
-          <TextField source="phone" label="Phone" />
+          <TextField source="nhanVien.hoTen" label="Fullname" />
+          <TextField source="nhanVien.sdt" label="Phone" />
           <EditButton />
         </Datagrid>
       )}

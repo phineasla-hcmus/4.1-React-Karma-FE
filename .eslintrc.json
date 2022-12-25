@@ -10,7 +10,10 @@
     "airbnb-typescript",
     "plugin:import/recommended",
     "plugin:import/typescript",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "ignorePatterns": ["**/build/*", "**/.eslintrc.js", "**/craco.config.js"],
   "overrides": [],
