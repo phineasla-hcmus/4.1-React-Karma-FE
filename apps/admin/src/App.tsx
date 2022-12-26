@@ -2,7 +2,6 @@
 import React from 'react';
 import { createBrowserHistory } from 'history';
 import { Admin, Resource } from 'react-admin';
-import jsonServerProvider from 'ra-data-json-server';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 
@@ -11,9 +10,8 @@ import { BankerEdit } from './components/banker/BankerEdit';
 import { BankerCreate } from './components/banker/BankerCreate';
 import { authProvider } from './auth/authProvider';
 import Login from './pages/Login';
-import { TransactionList } from './components/transaction/TransactionList';
-
-const dataProvider = jsonServerProvider('https://jsonplaceholder.typicode.com');
+import { InterbankList } from './components/interbank/InterbankList';
+import dataProvider from './providers/data';
 
 const history = createBrowserHistory();
 
@@ -26,15 +24,15 @@ function App() {
       loginPage={Login}
     >
       <Resource
-        name="users"
+        name="bankers"
         list={BankerList}
         edit={BankerEdit}
         create={BankerCreate}
         icon={AccountCircleIcon}
       />
       <Resource
-        name="posts"
-        list={TransactionList}
+        name="interbank"
+        list={InterbankList}
         icon={CurrencyExchangeIcon}
       />
     </Admin>
