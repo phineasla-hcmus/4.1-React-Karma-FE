@@ -1,8 +1,11 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ChangeEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
   Container,
+  Link,
   Step,
   StepLabel,
   Stepper,
@@ -10,7 +13,10 @@ import {
 } from '@mui/material';
 
 import Layout from '../../../components/Layout';
-import { StyledContentWrapper } from '../../../components/styles';
+import {
+  StyledBreadCrumbs,
+  StyledContentWrapper,
+} from '../../../components/styles';
 import OTPModal from '../../../components/OTPModal';
 
 import TransferInfo from './TransferInfo';
@@ -24,6 +30,7 @@ const steps = [
 ];
 
 function TransferMoney() {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [open, setOpen] = useState(false);
   const [otp, setOTP] = useState('');
@@ -51,9 +58,19 @@ function TransferMoney() {
   return (
     <Layout>
       <StyledContentWrapper>
-        <Typography mb={2} variant="h5">
-          Chuyển tiền
-        </Typography>
+        <StyledBreadCrumbs aria-label="breadcrumb">
+          <Link
+            component="button"
+            underline="hover"
+            color="inherit"
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            Trang chủ
+          </Link>
+          <Typography color="text.primary">Chuyển tiền</Typography>
+        </StyledBreadCrumbs>
         <Container>
           <Stepper activeStep={activeStep}>
             {steps.map((label) => {

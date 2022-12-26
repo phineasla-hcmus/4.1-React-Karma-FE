@@ -7,6 +7,8 @@ import {
 } from '@mui/material';
 import React, { ChangeEvent, useState } from 'react';
 
+import { formatMoney } from '../../../../utils';
+
 import { StyledRow, StyledTitle } from './styles';
 
 function TransferConfirmation() {
@@ -31,7 +33,7 @@ function TransferConfirmation() {
         </StyledRow>
         <StyledRow>
           <StyledTitle>Số tiền</StyledTitle>
-          <Typography sx={{ width: '100%' }}>100.000</Typography>
+          <Typography sx={{ width: '100%' }}>{formatMoney(100000)}</Typography>
         </StyledRow>
         <StyledRow>
           <StyledTitle>Mô tả</StyledTitle>

@@ -1,6 +1,8 @@
 import { Avatar, Box, Card, Typography } from '@mui/material';
 import React, { useCallback } from 'react';
 
+import { formatMoney } from '../../../../utils';
+
 interface TransferCardProps {
   type: 'transfer' | 'receive' | 'debt';
   description: string;
@@ -45,7 +47,7 @@ function TransferCard({
         </Typography>
         <Typography>
           {type === 'debt' ? '-' : '+'}
-          {amount} VND
+          {formatMoney(amount)}
         </Typography>
       </Box>
     </Card>

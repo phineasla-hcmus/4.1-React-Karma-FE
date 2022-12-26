@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
+import { formatMoney } from '../../utils';
 
 import { StyledClickableCard } from './styles';
 
@@ -33,7 +34,7 @@ function Home() {
       <StyledContentWrapper>
         <Box
           sx={{
-            maxWidth: '18rem',
+            width: 'fit-content',
             display: 'flex',
             justifyContent: 'space-between',
           }}
@@ -41,7 +42,7 @@ function Home() {
           <Typography variant="h6">
             Số dư khả dụng:{' '}
             <Typography sx={{ marginLeft: '0.2rem' }} component="span">
-              {values.showBalance ? values.balance : '*********'} VND
+              {values.showBalance ? formatMoney(values.balance) : '*********'}
             </Typography>
           </Typography>
           <IconButton
