@@ -14,7 +14,7 @@ function Header({ isAuthenticated }: HeaderProps) {
       <StyledBox>
         <Link href="/">
           <Avatar
-            sx={{ width: '4rem', height: '4rem' }}
+            sx={{ width: '5rem', height: '5rem' }}
             alt="Karma logo"
             src="/img/logo_2.png"
           />
