@@ -28,9 +28,13 @@ export function BankerList() {
         />
       ) : (
         <Datagrid>
-          <TextField source="id" label="ID" />
-          <TextField source="nhanVien.hoTen" label="Fullname" />
-          <TextField source="nhanVien.sdt" label="Phone" />
+          <TextField source="id" label="ID" sortable={false} />
+          <TextField
+            source="nhanVien.hoTen"
+            label="Fullname"
+            sortable={false}
+          />
+          <TextField source="nhanVien.sdt" label="Phone" sortable={false} />
           <EditButton />
           <Button color="error">
             <DeleteIcon />

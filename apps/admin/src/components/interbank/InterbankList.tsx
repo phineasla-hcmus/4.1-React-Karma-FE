@@ -29,11 +29,20 @@ export function InterbankList() {
         />
       ) : (
         <Datagrid>
-          <TextField source="id" label="ID" />
-          <TextField source="tkTrong" label="Account" />
-          <TextField source="tkNgoai" label="Affiliated Account" />
-          <TextField source="nganHangLK.tenNH" label="Affiliated bank" />
+          <TextField source="id" label="ID" sortable={false} />
+          <TextField source="tkTrong" label="Account" sortable={false} />
+          <TextField
+            source="tkNgoai"
+            label="External Account"
+            sortable={false}
+          />
+          <TextField
+            source="nganHangLK.tenNH"
+            label="External Bank"
+            sortable={false}
+          />
           <FunctionField
+            sortable={false}
             source="soTien"
             label="Amount"
             render={(record: any) =>
@@ -43,6 +52,7 @@ export function InterbankList() {
             }
           />
           <FunctionField
+            sortable={false}
             source="thoiGian"
             label="Transaction time"
             render={(record: any) => `${formatDateTime(record.thoiGian)}`}
