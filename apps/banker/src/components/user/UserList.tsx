@@ -21,16 +21,18 @@ export function UserList() {
     <List filters={userFilters}>
       {isSmall ? (
         <SimpleList
-          primaryText={(record) => record.name}
-          secondaryText={(record) => record.username}
-          tertiaryText={(record) => record.email}
+          primaryText={(record) => record.khachHang.hoTen}
+          secondaryText={(record) => record.khachHang.email}
+          tertiaryText={(record) => record.khachHang.sdt}
         />
       ) : (
         <Datagrid>
-          <TextField source="id" label="Account number" />
-          <TextField source="name" label="User" />
-
-          <EditButton label="Add money" />
+          <TextField source="id" label="ID" />
+          <TextField source="tenDangNhap" label="Username" />
+          <TextField source="khachHang.hoTen" label="Fullname" />
+          <EmailField source="khachHang.email" label="Email" />
+          <TextField source="khachHang.sdt" label="Phone" />
+          <EditButton label="Recharge" />
         </Datagrid>
       )}
     </List>
