@@ -23,9 +23,18 @@ export type GetQueryParams = {
 
 export default {
   getList: async (resource: string, params: GetListParams) => {
-    return httpClient(`${apiUrl}/${resource}/all`, {
-      method: 'GET',
-    }).then(({ json }: { json: Paginated<unknown> }) => ({
+    const { page, perPage } = params.pagination;
+    const defaultQueryParams = {
+      page: `${page}`,
+      size: perPage.toString(),
+    };
+    const query: GetQueryParams = defaultQueryParams;
+    return httpClient(
+      `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
+      {
+        method: 'GET',
+      }
+    ).then(({ json }: { json: Paginated<unknown> }) => ({
       data: json.data,
       total: json.total,
     }));
