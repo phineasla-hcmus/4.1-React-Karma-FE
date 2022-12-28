@@ -1,11 +1,9 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ChangeEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Box,
   Button,
   Container,
-  Link,
   Step,
   StepLabel,
   Stepper,
@@ -30,7 +28,6 @@ const steps = [
 ];
 
 function TransferMoney() {
-  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [open, setOpen] = useState(false);
   const [otp, setOTP] = useState('');
@@ -59,16 +56,7 @@ function TransferMoney() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link
-            component="button"
-            underline="hover"
-            color="inherit"
-            onClick={() => {
-              navigate('/');
-            }}
-          >
-            Trang chủ
-          </Link>
+          <Link to="/">Trang chủ</Link>
           <Typography color="text.primary">Chuyển tiền</Typography>
         </StyledBreadCrumbs>
         <Container>

@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import {
   Box,
   Button,
@@ -7,12 +6,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Link,
   TextField,
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Layout from '../../../components/Layout';
 import {
@@ -24,7 +22,6 @@ import { RECEIVER_LIST } from '../../../mocks';
 import ReceiverInfoCard from './ReceiverInfoCard';
 
 export default function ReceiverManagement() {
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     accountNumber: '',
     name: '',
@@ -69,16 +66,7 @@ export default function ReceiverManagement() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link
-            component="button"
-            underline="hover"
-            color="inherit"
-            onClick={() => {
-              navigate('/');
-            }}
-          >
-            Trang chủ
-          </Link>
+          <Link to="/">Trang chủ</Link>
           <Typography color="text.primary">Quản lý người nhận</Typography>
         </StyledBreadCrumbs>
         <Box mt={2}>
@@ -127,9 +115,13 @@ export default function ReceiverManagement() {
             fullWidth
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAddReceiverDialog}>Hủy</Button>
-          <Button onClick={handleCloseAddReceiverDialog}>Lưu</Button>
+        <DialogActions sx={{ marginRight: '1rem' }}>
+          <Button variant="outlined" onClick={handleCloseAddReceiverDialog}>
+            Hủy
+          </Button>
+          <Button variant="contained" onClick={handleCloseAddReceiverDialog}>
+            Lưu
+          </Button>
         </DialogActions>
       </Dialog>
       <Dialog open={openEditReceiver} onClose={handleCloseEditReceiverDialog}>
@@ -152,9 +144,13 @@ export default function ReceiverManagement() {
             fullWidth
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseEditReceiverDialog}>Hủy</Button>
-          <Button onClick={handleCloseEditReceiverDialog}>Lưu</Button>
+        <DialogActions sx={{ marginRight: '1rem' }}>
+          <Button variant="outlined" onClick={handleCloseEditReceiverDialog}>
+            Hủy
+          </Button>
+          <Button variant="contained" onClick={handleCloseEditReceiverDialog}>
+            Lưu
+          </Button>
         </DialogActions>
       </Dialog>
       <Dialog
@@ -167,9 +163,13 @@ export default function ReceiverManagement() {
             Bạn có chắc muốn xoá người nhận này?
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteReceiverDialog}>Hủy</Button>
-          <Button onClick={handleCloseDeleteReceiverDialog}>Xoá</Button>
+        <DialogActions sx={{ marginRight: '1rem' }}>
+          <Button variant="outlined" onClick={handleCloseDeleteReceiverDialog}>
+            Hủy
+          </Button>
+          <Button variant="contained" onClick={handleCloseDeleteReceiverDialog}>
+            Xoá
+          </Button>
         </DialogActions>
       </Dialog>
     </Layout>
