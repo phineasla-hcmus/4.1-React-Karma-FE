@@ -58,7 +58,7 @@ function Home() {
           </IconButton>
         </Box>
         <Grid container>
-          <Grid item xs={9} sx={{ display: 'flex' }}>
+          <Grid item xs={12} sx={{ display: 'flex' }}>
             <StyledClickableCard
               onClick={() => {
                 navigate('/transaction-history');
@@ -70,6 +70,18 @@ function Home() {
                 src="/img/transaction_history.png"
               />
               Lịch sử giao dịch
+            </StyledClickableCard>
+            <StyledClickableCard
+              onClick={() => {
+                navigate('/receiver-management');
+              }}
+            >
+              <Avatar
+                variant="square"
+                sx={{ marginRight: '1rem' }}
+                src="/img/receiver_list.png"
+              />
+              Quản lý người nhận
             </StyledClickableCard>
             <StyledClickableCard
               onClick={() => {
