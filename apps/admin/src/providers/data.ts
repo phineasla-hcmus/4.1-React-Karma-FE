@@ -29,6 +29,14 @@ export default {
       size: perPage.toString(),
     };
     const query: GetQueryParams = defaultQueryParams;
+    if (resource === 'statistic') {
+      return httpClient(`${apiUrl}/interbank/${resource}`, {
+        method: 'GET',
+      }).then(({ json }: { json: Paginated<unknown> }) => ({
+        data: json.data,
+        total: json.total,
+      }));
+    }
     return httpClient(
       `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
       {
