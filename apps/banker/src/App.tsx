@@ -12,12 +12,14 @@ import { authProvider } from './auth/authProvider';
 import Login from './pages/Login';
 import { TransactionList } from './components/transaction/TransactionList';
 import dataProvider from './providers/data';
+import { theme } from './theme';
 
 const history = createBrowserHistory();
 
 function App() {
   return (
     <Admin
+      theme={theme}
       history={history}
       dataProvider={dataProvider}
       authProvider={authProvider}

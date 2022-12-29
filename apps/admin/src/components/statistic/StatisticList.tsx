@@ -18,29 +18,21 @@ const bankerFilters = [
   // <ReferenceInput source="userId" label="User" reference="users" />,
 ];
 
-export function BankerList() {
+export function StatisticList() {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
     <List filters={bankerFilters}>
       {isSmall ? (
         <SimpleList
-          primaryText={(record) => record.nhanVien.hoTen}
-          secondaryText={(record) => record.nhanVien.sdt}
+          primaryText={(record) => record.soTienGui}
+          secondaryText={(record) => record.soTienNhan}
         />
       ) : (
         <Datagrid>
           <TextField source="id" label="ID" sortable={false} />
-          <TextField
-            source="nhanVien.hoTen"
-            label="Fullname"
-            sortable={false}
-          />
-          <FunctionField
-            source="nhanVien.sdt"
-            label="Phone"
-            sortable={false}
-            render={(record: any) => formatPhoneNumber(record.nhanVien.sdt)}
-          />
+          <TextField source="soTienGui" label="Sent" sortable={false} />
+          <TextField source="soTienNhan" label="Received" sortable={false} />
+
           <EditButton />
           <DeleteWithConfirmButton />
         </Datagrid>

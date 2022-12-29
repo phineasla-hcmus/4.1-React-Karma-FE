@@ -1,8 +1,58 @@
-import React from 'react';
-import { Button, useMediaQuery } from '@mui/material';
-import { List, SimpleList, Datagrid, TextField, TextInput } from 'react-admin';
+import React, { ReactNode } from 'react';
+import {
+  Button,
+  useMediaQuery,
+  Tabs,
+  Tab,
+  Typography,
+  Box,
+} from '@mui/material';
+import {
+  List,
+  SimpleList,
+  Datagrid,
+  TextField,
+  TextInput,
+  FunctionField,
+} from 'react-admin';
 
-import { formatNumber } from '../../utils/helpers';
+import {
+  formatAccountNumber,
+  formatDateTime,
+  formatNumber,
+} from '../../utils/helpers';
+
+import { SentList } from './SentList';
+import { ReceivedList } from './ReceivedList';
+
+interface TabPanelProps {
+  children: ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box>{children}</Box>}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 const bankerFilters = [
   <TextInput source="q" label="Search" alwaysOn />,
@@ -11,24 +61,41 @@ const bankerFilters = [
 
 export function TransactionList() {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
   return (
     <List filters={bankerFilters}>
-      {isSmall ? (
-        <SimpleList
-          primaryText={(record) => `To: ${record.nguoiNhan}`}
-          secondaryText={(record) => `From: ${record.nguoiChuyen}`}
-          tertiaryText={(record) => `${formatNumber(record.soTien)} VND`}
-        />
-      ) : (
-        <Datagrid>
-          <TextField source="id" label="Transaction ID" />
-          <TextField source="nguoiChuyen" label="Sent Account" />
-          <TextField source="nguoiNhan" label="Received Account" />
-          <TextField source="soTien" label="Amount" />
-          <TextField source="ngayCK" label="Transaction Time" />
-          <Button>Details</Button>
-        </Datagrid>
-      )}
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="Sent" {...a11yProps(0)} />
+            <Tab label="Received" {...a11yProps(1)} />
+            <Tab label="Debt payment" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          <Box pt={3}>
+            <SentList />
+          </Box>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Box pt={3}>
+            <ReceivedList />
+          </Box>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          Item Three
+        </TabPanel>
+      </Box>
     </List>
   );
 }
