@@ -1,5 +1,5 @@
 import React from 'react';
-import { Create, SimpleForm, TextInput } from 'react-admin';
+import { Create, required, SimpleForm, TextInput } from 'react-admin';
 import { Typography } from '@mui/material';
 
 export function BankerCreate() {
@@ -9,8 +9,8 @@ export function BankerCreate() {
         <Typography variant="h5" mb={3}>
           Create a new banker
         </Typography>
-        <TextInput source="nhanVien.hoTen" label="Fullname" />
-        <TextInput source="nhanVien.sdt" label="Phone" />
+        <TextInput source="hoTen" validate={[required()]} label="Fullname" />
+        <TextInput source="sdt" validate={[required()]} label="Phone" />
       </SimpleForm>
     </Create>
   );
