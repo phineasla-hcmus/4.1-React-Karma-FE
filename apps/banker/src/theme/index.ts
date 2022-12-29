@@ -6,9 +6,7 @@ const themeColors = {
   color: {
     primary: '#563d82',
     white: '#fff',
-    green: '#6dd7ac',
     purple: '#7b568f',
-    grey: '#e6e7e7',
   },
 } as const;
 
@@ -18,25 +16,12 @@ const themeOptions: ThemeOptionsOld = {
   palette: {
     primary: {
       main: themeColors.color.primary,
-      contrastText: themeColors.color.grey,
     },
     secondary: {
-      main: themeColors.color.purple,
-      contrastText: themeColors.color.grey,
+      main: themeColors.color.primary,
     },
   },
-  components: {
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          backgroundColor: themeColors.color.white,
-          padding: '4rem',
-          borderRadius: '0.5rem',
-          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;',
-        },
-      },
-    },
-  },
+  components: {},
 };
 
 // Create theme
