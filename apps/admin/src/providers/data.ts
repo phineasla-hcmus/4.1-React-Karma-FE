@@ -75,14 +75,20 @@ export default {
   create: async (resource: string, params: CreateParams) => {
     return httpClient(`${apiUrl}/${resource}`, {
       method: 'POST',
-      body: JSON.stringify(params.data),
+      body: JSON.stringify({
+        hoTen: params.data.hoTen,
+        sdt: params.data.sdt,
+      }),
     }).then(({ json }) => ({ data: json, total: json.length }));
   },
 
   update: async (resource: string, params: UpdateParams) => {
     return httpClient(`${apiUrl}/${resource}/${params.id}`, {
       method: 'PATCH',
-      body: JSON.stringify(params.data),
+      body: JSON.stringify({
+        hoTen: params.data.nhanVien.hoTen,
+        sdt: params.data.nhanVien.sdt,
+      }),
     }).then(() => ({ data: { id: params.id, ...params.data } }));
   },
 
