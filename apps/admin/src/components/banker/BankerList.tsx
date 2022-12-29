@@ -8,7 +8,10 @@ import {
   EditButton,
   TextInput,
   DeleteWithConfirmButton,
+  FunctionField,
 } from 'react-admin';
+
+import { formatPhoneNumber } from '../../utils/helpers';
 
 const bankerFilters = [
   <TextInput source="q" label="Search" alwaysOn />,
@@ -32,7 +35,12 @@ export function BankerList() {
             label="Fullname"
             sortable={false}
           />
-          <TextField source="nhanVien.sdt" label="Phone" sortable={false} />
+          <FunctionField
+            source="nhanVien.sdt"
+            label="Phone"
+            sortable={false}
+            render={(record: any) => formatPhoneNumber(record.nhanVien.sdt)}
+          />
           <EditButton />
           <DeleteWithConfirmButton />
         </Datagrid>

@@ -8,7 +8,10 @@ import {
   EmailField,
   EditButton,
   TextInput,
+  FunctionField,
 } from 'react-admin';
+
+import { formatPhoneNumber } from '../../utils/helpers';
 
 const userFilters = [
   <TextInput source="q" label="Search" alwaysOn />,
@@ -31,7 +34,12 @@ export function UserList() {
           <TextField source="tenDangNhap" label="Username" />
           <TextField source="khachHang.hoTen" label="Fullname" />
           <EmailField source="khachHang.email" label="Email" />
-          <TextField source="khachHang.sdt" label="Phone" />
+          <FunctionField
+            source="nhanVien.sdt"
+            label="Phone"
+            sortable={false}
+            render={(record: any) => formatPhoneNumber(record.khachHang.sdt)}
+          />
           <EditButton label="Recharge" />
         </Datagrid>
       )}
