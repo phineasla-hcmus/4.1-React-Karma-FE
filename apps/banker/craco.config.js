@@ -3,6 +3,6 @@ module.exports = {
     port: 3001,
   },
   eslint: {
-    enable: true,
+    enable: false,
   },
 };

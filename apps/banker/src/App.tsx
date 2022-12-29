@@ -11,8 +11,7 @@ import { UserCreate } from './components/user/UserCreate';
 import { authProvider } from './auth/authProvider';
 import Login from './pages/Login';
 import { TransactionList } from './components/transaction/TransactionList';
-
-const dataProvider = jsonServerProvider('https://jsonplaceholder.typicode.com');
+import dataProvider from './providers/data';
 
 const history = createBrowserHistory();
 
@@ -32,7 +31,7 @@ function App() {
         icon={AccountCircleIcon}
       />
       <Resource
-        name="posts"
+        name="transactions"
         list={TransactionList}
         icon={CurrencyExchangeIcon}
       />

@@ -5,10 +5,11 @@ export function UserEdit() {
   return (
     <Edit>
       <SimpleForm>
-        <ReferenceInput source="userId" reference="users" />
-        <TextInput source="id" />
-        <TextInput source="title" />
-        <TextInput source="body" />
+        <TextInput source="id" disabled />
+        <TextInput source="khachHang.hoTen" label="Fullname" disabled />
+        <TextInput source="khachHang.email" label="Email" disabled />
+        <TextInput source="khachHang.sdt" label="Phone" disabled />
+        <TextInput source="Amount recharge" type="number" />
       </SimpleForm>
     </Edit>
   );
