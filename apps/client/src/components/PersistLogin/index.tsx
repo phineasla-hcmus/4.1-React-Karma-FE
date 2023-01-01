@@ -1,7 +1,3 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable react/jsx-no-useless-fragment */
-/* eslint-disable no-return-assign */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -26,7 +22,6 @@ function PersistLogin() {
       }
     };
 
-    // persist added here AFTER tutorial video
     // Avoids unwanted call to verifyRefreshToken
     !auth?.accessToken && persist ? verifyRefreshToken() : setIsLoading(false);
 

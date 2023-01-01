@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import { useContext, useDebugValue } from 'react';
 
 import AuthContext from '../context/AuthProvider';

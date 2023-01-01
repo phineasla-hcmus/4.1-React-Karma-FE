@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import PersistLogin from './components/PersistLogin';
-import SpecialLink from './components/SpecialLink';
 import { LocationContextProvider } from './context/LocationProvider';
 import ChangePassword from './pages/ChangePassword';
 import ForgotPassword from './pages/ForgotPassword';
@@ -35,6 +34,7 @@ function App() {
               path="/receiver-management"
               element={<ReceiverManagement />}
             />
+            <Route path="/debt-management" element={<DebtManagement />} />
             <Route path="/transfer" element={<TransferMoney />} />
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>
