@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
@@ -9,15 +9,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { theme } from './theme';
 import { store } from './redux/store';
+import { AuthProvider } from './context/AuthProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
   </Provider>

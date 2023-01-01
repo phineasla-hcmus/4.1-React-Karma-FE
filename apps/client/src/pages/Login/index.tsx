@@ -1,59 +1,77 @@
 import React, {
-  ChangeEvent,
   FormEvent,
   useCallback,
+  useContext,
   useRef,
   useState,
 } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import { Avatar, IconButton, InputAdornment } from '@mui/material';
+import { Link } from 'react-router-dom';
+import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
+import axios from '../../api/axios';
+import LocationContext from '../../context/LocationProvider';
+
 import { StyledCaptchaWrapper } from './styles';
 
-interface State {
-  username: string;
-  password: string;
-  showPassword: boolean;
-}
-
 function Login() {
-  const [values, setValues] = useState<State>({
-    username: '',
-    password: '',
-    showPassword: false,
-  });
-
-  const handleChange = useCallback(
-    (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-      setValues((v) => ({ ...v, [prop]: event.target.value }));
-    },
-    []
-  );
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const { registerLocation } = useContext(LocationContext);
 
   const handleClickShowPassword = useCallback(() => {
-    setValues((v) => ({
-      ...v,
-      showPassword: !v.showPassword,
-    }));
+    setShowPassword((v) => !v);
   }, []);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('username'),
-      password: data.get('password'),
-    });
-  };
+  /**
+   * https://blog.logrocket.com/implement-recaptcha-react-application/
+   */
 
-  const captchaRef = useRef(null);
+  const captchaRef = useRef<ReCAPTCHA>(null);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const token = captchaRef.current?.getValue();
+    captchaRef.current?.reset();
+
+    if (token?.length === 0) {
+      setError('Vui lòng nhấn vào ô Recaptcha');
+      return;
+    }
+
+    const data = new FormData(event.currentTarget);
+
+    try {
+      const response = await axios.post(
+        '/login',
+        JSON.stringify({
+          username: data.get('username'),
+          password: data.get('password'),
+        }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+      console.log('response', response);
+      const accessToken = response?.data?.accessToken;
+      setError('');
+    } catch (err) {
+      setError('Đăng nhập thất bại');
+    }
+  };
 
   return (
     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
@@ -65,7 +83,7 @@ function Login() {
             alignItems: 'center',
           }}
         >
-          <Link href="/">
+          <Link to="/">
             <Avatar
               sx={{ width: '8rem', height: '8rem' }}
               alt="Karma logo"
@@ -73,6 +91,7 @@ function Login() {
             />
           </Link>
           <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
+            {error.length > 0 && <Alert severity="error">{error}</Alert>}
             <TextField
               margin="normal"
               fullWidth
@@ -83,9 +102,7 @@ function Login() {
               label="Mật khẩu"
               name="password"
               sx={{ margin: '0.5rem 0', width: '100%' }}
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handleChange('password')}
+              type={showPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -94,7 +111,7 @@ function Login() {
                       onClick={handleClickShowPassword}
                       edge="end"
                     >
-                      {values.showPassword ? (
+                      {showPassword ? (
                         <VisibilityOff sx={{ fontSize: '1.25rem' }} />
                       ) : (
                         <Visibility sx={{ fontSize: '1.25rem' }} />
@@ -118,7 +135,12 @@ function Login() {
               justifyContent="flex-end"
             >
               <Grid item>
-                <Link href="/forgot-password" variant="body2">
+                <Link
+                  to="/forgot-password"
+                  onClick={() => {
+                    registerLocation('/forgot-password');
+                  }}
+                >
                   Quên mật khẩu
                 </Link>
               </Grid>
