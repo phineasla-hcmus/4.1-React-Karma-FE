@@ -1,5 +1,6 @@
 import React from 'react';
-import { Avatar, Box, Link } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Avatar, Box } from '@mui/material';
 
 import ActionsBar from '../ActionsBar';
 
@@ -12,7 +13,7 @@ function Header({ isAuthenticated }: HeaderProps) {
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 9999, width: '100%' }}>
       <StyledBox>
-        <Link href="/">
+        <Link to="/">
           <Avatar
             sx={{ width: '5rem', height: '5rem' }}
             alt="Karma logo"

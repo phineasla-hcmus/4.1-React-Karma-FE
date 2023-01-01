@@ -5,6 +5,7 @@ import ChangePassword from './pages/ChangePassword';
 import ForgotPassword from './pages/ForgotPassword';
 import Home from './pages/Home';
 import ReceiverManagement from './pages/Home/ReceiverManagement';
+import DebtManagement from './pages/Home/DebtManagement';
 import TransferHistory from './pages/Home/TransferHistory';
 import TransferMoney from './pages/Home/TransferMoney';
 import Login from './pages/Login';
@@ -23,6 +24,7 @@ function App() {
       <Route path="/transaction-history" element={<TransferHistory />} />
       <Route path="/receiver-management" element={<ReceiverManagement />} />
       <Route path="/transfer" element={<TransferMoney />} />
+      <Route path="/debt-management" element={<DebtManagement />} />
     </Routes>
   );
 }
