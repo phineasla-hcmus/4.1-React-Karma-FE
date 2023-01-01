@@ -92,12 +92,12 @@ function TransferInfo() {
         </FormControl>
         {chooseFromList ? (
           <FormControl sx={{ marginTop: '1rem', width: '100%' }}>
-            <InputLabel id="receiver-select-label">Người nhận</InputLabel>
+            <InputLabel id="receiver-select-label">Số tài khoản</InputLabel>
             <Select
               labelId="receiver-select-label"
               id="receiver-select"
               value={receiver}
-              label="Người nhận"
+              label="Số tài khoản"
               onChange={handleSelectReceiver}
             >
               <MenuItem value="123456789">123456789</MenuItem>
@@ -111,7 +111,7 @@ function TransferInfo() {
             sx={{ display: 'block' }}
             margin="normal"
             label="Số tài khoản"
-            name="accountId"
+            name="accountNumber"
           />
         )}
         <TextField
