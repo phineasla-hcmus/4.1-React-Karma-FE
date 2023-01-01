@@ -5,23 +5,30 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import { Alert, Avatar, IconButton, InputAdornment } from '@mui/material';
+import { Link } from 'react-router-dom';
+import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import axios from '../../api/axios';
+import LocationContext from '../../context/LocationProvider';
 
 import { StyledCaptchaWrapper } from './styles';
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const { registerLocation } = useContext(LocationContext);
 
   const handleClickShowPassword = useCallback(() => {
     setShowPassword((v) => !v);
@@ -76,7 +83,7 @@ function Login() {
             alignItems: 'center',
           }}
         >
-          <Link href="/">
+          <Link to="/">
             <Avatar
               sx={{ width: '8rem', height: '8rem' }}
               alt="Karma logo"
@@ -128,7 +135,12 @@ function Login() {
               justifyContent="flex-end"
             >
               <Grid item>
-                <Link href="/forgot-password" variant="body2">
+                <Link
+                  to="/forgot-password"
+                  onClick={() => {
+                    registerLocation('/forgot-password');
+                  }}
+                >
                   Quên mật khẩu
                 </Link>
               </Grid>

@@ -1,13 +1,19 @@
-import { Avatar, Box, Button, Container, Link, TextField } from '@mui/material';
+import { Avatar, Box, Button, Container, TextField } from '@mui/material';
 import React, { FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function ForgotPassword() {
+  const navigate = useNavigate();
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    // TODO: send OTP email
     console.log({
       username: data.get('username'),
     });
+
+    navigate('/verify-request?email=abc@gmail.com');
   };
 
   return (
@@ -20,7 +26,7 @@ function ForgotPassword() {
             alignItems: 'center',
           }}
         >
-          <Link href="/">
+          <Link to="/">
             <Avatar
               sx={{ width: '8rem', height: '8rem' }}
               alt="Karma logo"
