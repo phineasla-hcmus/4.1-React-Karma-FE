@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   Alert,
@@ -20,8 +21,9 @@ import {
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-import axios from '../../api/axios';
+// import axios from '../../api/axios';
 import LocationContext from '../../context/LocationProvider';
+import { setToken, useLoginMutation } from '../../redux/slices/authSlice';
 
 import { StyledCaptchaWrapper } from './styles';
 
@@ -40,6 +42,9 @@ function Login() {
 
   const captchaRef = useRef<ReCAPTCHA>(null);
 
+  const dispatch = useDispatch();
+  const [login] = useLoginMutation();
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -53,24 +58,33 @@ function Login() {
 
     const data = new FormData(event.currentTarget);
 
-    try {
-      const response = await axios.post(
-        '/login',
-        JSON.stringify({
-          username: data.get('username'),
-          password: data.get('password'),
-        }),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
-      );
-      console.log('response', response);
-      const accessToken = response?.data?.accessToken;
-      setError('');
-    } catch (err) {
-      setError('Đăng nhập thất bại');
-    }
+    await login(
+      JSON.stringify({
+        tenDangNhap: data.get('username'),
+        matKhau: data.get('password'),
+      })
+    );
+
+    dispatch(setToken('sfsdfsdfsdfsdfsdf'));
+
+    // try {
+    //   const response = await axios.post(
+    //     '/login',
+    //     JSON.stringify({
+    //       username: data.get('username'),
+    //       password: data.get('password'),
+    //     }),
+    //     {
+    //       headers: { 'Content-Type': 'application/json' },
+    //       withCredentials: true,
+    //     }
+    //   );
+    //   console.log('response', response);
+    //   const accessToken = response?.data?.accessToken;
+    //   setError('');
+    // } catch (err) {
+    //   setError('Đăng nhập thất bại');
+    // }
   };
 
   return (
