@@ -25,17 +25,14 @@ function App() {
         <Route path="/verify-request" element={<VerifyRequest />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/transaction-history" element={<TransferHistory />} />
+        <Route path="/receiver-management" element={<ReceiverManagement />} />
+        <Route path="/debt-management" element={<DebtManagement />} />
+        <Route path="/transfer" element={<TransferMoney />} />
 
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth allowedRoles={['Client']} />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/transaction-history" element={<TransferHistory />} />
-            <Route
-              path="/receiver-management"
-              element={<ReceiverManagement />}
-            />
-            <Route path="/debt-management" element={<DebtManagement />} />
-            <Route path="/transfer" element={<TransferMoney />} />
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>
         </Route>

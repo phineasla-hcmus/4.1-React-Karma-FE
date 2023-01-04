@@ -17,7 +17,7 @@ import {
   StyledBreadCrumbs,
   StyledContentWrapper,
 } from '../../../components/styles';
-import { RECEIVER_LIST } from '../../../mocks';
+import { RECEIVER_LIST } from '../../../mocks/transfer';
 
 import ReceiverInfoCard from './ReceiverInfoCard';
 
