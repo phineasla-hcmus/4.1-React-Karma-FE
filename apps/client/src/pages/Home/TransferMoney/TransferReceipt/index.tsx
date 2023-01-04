@@ -17,7 +17,7 @@ export default function TransferReceipt() {
       <Card sx={{ padding: '1rem', marginTop: '2rem', textAlign: 'center' }}>
         <Typography variant="h6">Chuyển Tiền</Typography>
         <Typography variant="caption">24/12/2022 17:56</Typography>
-        <Typography variant="h5">-{formatMoney(100000)}</Typography>
+        <Typography variant="h5">-{formatMoney(100000)} VND</Typography>
         <Box
           sx={{
             borderRadius: '0.5rem',

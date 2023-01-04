@@ -1,5 +1,6 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Button,
@@ -16,6 +17,9 @@ import {
   StyledContentWrapper,
 } from '../../../components/styles';
 import OTPModal from '../../../components/OTPModal';
+import { setTransferInfo } from '../../../redux/slices/transferSlice';
+import { useAddUserToSavedListMutation } from '../../../redux/slices/savedListSlice';
+import { RootState } from '../../../redux/store';
 
 import TransferInfo from './TransferInfo';
 import TransferConfirmation from './TransferConfirmation';
@@ -52,6 +56,46 @@ function TransferMoney() {
     setActiveStep(0);
   };
 
+  const dispatch = useDispatch();
+
+  const [addUserToSaveList, { error }] = useAddUserToSavedListMutation();
+
+  const { soTK } = useSelector(
+    (state: RootState) => state.transfer.transferInfo
+  );
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    if (activeStep === 0) {
+      const transferInfo = {
+        soTK: data.get('soTK'),
+        soTien: data.get('soTien'),
+        noiDungCK: data.get('noiDungCK'),
+        hinhThucThanhToan: data.get('hinhThucThanhToan'),
+      };
+
+      dispatch(setTransferInfo(transferInfo));
+    }
+
+    if (activeStep === 1) {
+      console.log('hello');
+      const receiverInfo = {
+        nguoiDung: soTK,
+        tenGoiNho: data.get('tenGoiNho'),
+      };
+      console.log('receiverInfo', receiverInfo);
+      await addUserToSaveList(receiverInfo);
+
+      if (error) {
+        console.log('error', error);
+      }
+    }
+
+    handleNext();
+  };
+
   return (
     <Layout>
       <StyledContentWrapper>
@@ -86,11 +130,21 @@ function TransferMoney() {
           ) : (
             <>
               <Box mt={2} mb={1}>
-                {activeStep === 0 && <TransferInfo />}
-                {activeStep === 1 && <TransferConfirmation />}
+                {activeStep === 0 && (
+                  <TransferInfo
+                    handleSubmit={handleSubmit}
+                    activeStep={activeStep}
+                  />
+                )}
+                {activeStep === 1 && (
+                  <TransferConfirmation
+                    handleSubmit={handleSubmit}
+                    activeStep={activeStep}
+                  />
+                )}
                 {activeStep === 2 && <TransferReceipt />}
               </Box>
-              {activeStep !== 2 && (
+              {/* {activeStep !== 2 && (
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                   <Button
                     color="inherit"
@@ -103,7 +157,7 @@ function TransferMoney() {
                   <Box sx={{ flex: '1 1 auto' }} />
                   <Button onClick={handleNext}>Next</Button>
                 </Box>
-              )}
+              )} */}
             </>
           )}
         </Container>

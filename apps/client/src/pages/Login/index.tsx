@@ -107,12 +107,14 @@ function Login() {
           <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
             {error.length > 0 && <Alert severity="error">{error}</Alert>}
             <TextField
+              required
               margin="normal"
               fullWidth
               label="Tên đăng nhập"
               name="username"
             />
             <TextField
+              required
               label="Mật khẩu"
               name="password"
               sx={{ margin: '0.5rem 0', width: '100%' }}

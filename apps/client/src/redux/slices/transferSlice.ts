@@ -4,13 +4,22 @@ import { createSlice } from '@reduxjs/toolkit';
 import { apiSlice } from './apiSlice';
 
 const initialState = {
-  transfer: [],
+  transferInfo: {
+    soTK: '',
+    soTien: 0,
+    noiDungCK: '',
+    hinhThucThanhToan: '',
+  },
 };
 
 export const transferSlice = createSlice({
   name: 'transfer',
   initialState,
-  reducers: {},
+  reducers: {
+    setTransferInfo: (state, { payload }) => {
+      state.transferInfo = payload;
+    },
+  },
 });
 
 export const transferApi = apiSlice.injectEndpoints({
@@ -43,6 +52,8 @@ export const transferApi = apiSlice.injectEndpoints({
     }),
   }),
 });
+
+export const { setTransferInfo } = transferSlice.actions;
 
 export default transferSlice.reducer;
 
