@@ -49,4 +49,5 @@ export default transferSlice.reducer;
 export const {
   useMakeInternalTransferMutation,
   useRequestOTPForTransferMutation,
+  useGetTransactionHistoryQuery,
 } = transferApi;

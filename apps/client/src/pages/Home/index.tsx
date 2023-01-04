@@ -1,12 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Avatar, Box, Grid, IconButton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
 import { formatMoney } from '../../utils';
-import { useUserInfoQuery } from '../../redux/slices/authSlice';
+import { setUserInfo, useUserInfoQuery } from '../../redux/slices/authSlice';
 import AsyncDataRenderer from '../../components/AsyncDataRenderer';
 import { USER_INFO } from '../../mocks/auth';
 
@@ -22,8 +23,13 @@ function Home() {
   }, []);
 
   const { isLoading, data } = useUserInfoQuery({});
+  const dispatch = useDispatch();
 
   const userInfo = useMemo(() => data || USER_INFO, [data]);
+
+  useEffect(() => {
+    dispatch(setUserInfo(userInfo));
+  }, [userInfo]);
 
   return (
     <Layout>
@@ -39,7 +45,9 @@ function Home() {
             <Typography variant="h6">
               Số dư khả dụng:{' '}
               <Typography sx={{ marginLeft: '0.2rem' }} component="span">
-                {showBalance ? formatMoney(userInfo.soDu) : '*********'}
+                {showBalance
+                  ? formatMoney(userInfo.soDu).concat(' VND')
+                  : '*********'}
               </Typography>
             </Typography>
             <IconButton

@@ -3,8 +3,9 @@ import React, { useCallback } from 'react';
 
 import { formatMoney } from '../../../../utils';
 
-interface TransferCardProps {
+export interface TransferCardProps {
   type: 'transfer' | 'receive' | 'debt';
+  title: string;
   description: string;
   dateTime: string;
   amount: number;
@@ -12,6 +13,7 @@ interface TransferCardProps {
 
 function TransferCard({
   type,
+  title,
   description,
   dateTime,
   amount,
@@ -37,17 +39,24 @@ function TransferCard({
         alignItems: 'center',
       }}
     >
-      <Avatar src={mapTransferTypeToIcon()} />
+      <Avatar variant="square" src={mapTransferTypeToIcon()} />
       <Box ml={3}>
         <Typography sx={{ fontSize: '0.8rem', color: '#9b9a9a' }}>
           {dateTime}
         </Typography>
         <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-          {description}
+          {title}
         </Typography>
-        <Typography>
-          {type === 'debt' ? '-' : '+'}
-          {formatMoney(amount)}
+        <Typography>{description}</Typography>
+        <Typography
+          sx={{
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            color: type === 'receive' ? '#FFD700' : 'red',
+          }}
+        >
+          {type === 'receive' ? '+' : '-'}
+          {formatMoney(amount)} VND
         </Typography>
       </Box>
     </Card>
