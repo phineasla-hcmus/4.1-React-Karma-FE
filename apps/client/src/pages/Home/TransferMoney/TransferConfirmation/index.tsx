@@ -1,14 +1,5 @@
-import {
-  Box,
-  Button,
-  Card,
-  FormControl,
-  FormControlLabel,
-  Switch,
-  TextField,
-  Typography,
-} from '@mui/material';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { Box, Button, Card, Typography } from '@mui/material';
+import React, { FormEvent } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../../redux/store';
@@ -25,14 +16,6 @@ function TransferConfirmation({
   activeStep,
   handleSubmit,
 }: TransferConfirmationProps) {
-  const [saveReceiverInfo, setSaveReceiverInfo] = useState(false);
-
-  const handleSelectSaveReceiverInfo = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    setSaveReceiverInfo(event.target.checked);
-  };
-
   const { soTK, soTien, noiDungCK, hinhThucThanhToan } = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
@@ -64,26 +47,6 @@ function TransferConfirmation({
             </Typography>
           </StyledRow>
         </Card>
-        <FormControl sx={{ display: 'block' }}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={saveReceiverInfo}
-                onChange={handleSelectSaveReceiverInfo}
-              />
-            }
-            label="Lưu lại thông tin người nhận"
-          />
-        </FormControl>
-        {saveReceiverInfo && (
-          <TextField
-            fullWidth
-            sx={{ display: 'block' }}
-            margin="normal"
-            label="Tên gợi nhớ"
-            name="tenGoiNho"
-          />
-        )}
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
           <Button
             color="inherit"

@@ -111,6 +111,7 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
           </FormControl>
         ) : (
           <TextField
+            type="number"
             required
             fullWidth
             sx={{ display: 'block' }}
@@ -142,7 +143,7 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
             Hình thức thanh toán
           </InputLabel>
           <Select
-            name="hinhThucThanhToan"
+            name="loaiCK"
             label="Hình thức thanh toán"
             labelId="payment-select-label"
             id="payment-select"
