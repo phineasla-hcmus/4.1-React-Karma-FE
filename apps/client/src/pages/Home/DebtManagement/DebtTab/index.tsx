@@ -8,20 +8,22 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 
 import TabPanel from '../../../../components/TabPanel';
+import { Reminder } from '../../../../types';
 import DebtTable from '../DebtTable';
 
 import { StyledCard } from './styles';
 
 interface DebtTabProps {
+  data: Reminder[];
   value: number;
   index: number;
   created: boolean;
 }
 
-export default function DebtTab({ value, index, created }: DebtTabProps) {
+export default function DebtTab({ data, value, index, created }: DebtTabProps) {
   const [openDeleteDebtDialog, setOpenDeleteDebtDialog] = useState(false);
   const [deleteContent, setDeleteContent] = useState('');
 
@@ -40,6 +42,13 @@ export default function DebtTab({ value, index, created }: DebtTabProps) {
     []
   );
 
+  const { pendingList, completedList } = useMemo(() => {
+    return {
+      pendingList: data.filter((item) => item.trangThai === 'pending'),
+      completedList: data.filter((item) => item.trangThai === 'completed'),
+    };
+  }, []);
+
   return (
     <>
       <TabPanel value={value} index={index}>
@@ -48,14 +57,16 @@ export default function DebtTab({ value, index, created }: DebtTabProps) {
           <DebtTable
             created={created}
             onClickDelete={handleOpenDeleteDebtDialog}
+            data={pendingList}
           />
         </StyledCard>
         <StyledCard>
           <Typography>Đã thanh toán</Typography>
           <DebtTable
             created={created}
-            paid
+            completed
             onClickDelete={handleOpenDeleteDebtDialog}
+            data={completedList}
           />
         </StyledCard>
       </TabPanel>

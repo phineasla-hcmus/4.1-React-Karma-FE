@@ -59,6 +59,7 @@ export default reminderSlice.reducer;
 
 export const {
   useGetReminderListQuery,
+  useGetMyReminderListQuery,
   useCreateReminderMutation,
   useDismissReminderByIdMutation,
   useCheckOutReminderMutation,

@@ -23,15 +23,21 @@ import React, {
   ChangeEvent,
   SyntheticEvent,
   useCallback,
+  useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { Link } from 'react-router-dom';
 
+import AsyncDataRenderer from '../../../components/AsyncDataRenderer';
 import Layout from '../../../components/Layout';
 import {
   StyledBreadCrumbs,
   StyledContentWrapper,
 } from '../../../components/styles';
+import { MY_REMINDER_LIST, REMINDER_LIST } from '../../../mocks/reminder';
+import { reminderApi } from '../../../redux/slices/reminderSlice';
+import { Reminder } from '../../../types';
 
 import DebtTab from './DebtTab';
 
@@ -49,8 +55,41 @@ export default function DebtManagement() {
     setOpenAddDebtDialog(false);
   }, []);
 
+  const [
+    getReminderList,
+    { isLoading: reminderListLoading, data: reminderListData },
+  ] = reminderApi.endpoints.getReminderList.useLazyQuery();
+
+  const reminderList = useMemo(
+    () => reminderListData || REMINDER_LIST,
+    [reminderListData]
+  ) as Reminder[];
+
+  const [
+    getMyReminderList,
+    { isLoading: myReminderListLoading, data: myReminderListData },
+  ] = reminderApi.endpoints.getMyReminderList.useLazyQuery();
+
+  const myReminderList = useMemo(
+    () => myReminderListData || MY_REMINDER_LIST,
+    [reminderListData]
+  ) as Reminder[];
+
   const handleChange = useCallback(
     (event: SyntheticEvent, newValue: number) => {
+      switch (newValue) {
+        case 0:
+          getReminderList({});
+          break;
+
+        case 1:
+          getMyReminderList({});
+          break;
+
+        default:
+          break;
+      }
+
       setValue(newValue);
     },
     []
@@ -63,6 +102,10 @@ export default function DebtManagement() {
   const handleSelectReceiver = (event: SelectChangeEvent) => {
     setReceiver(event.target.value as string);
   };
+
+  useEffect(() => {
+    getReminderList({});
+  }, []);
 
   return (
     <Layout>
@@ -99,8 +142,17 @@ export default function DebtManagement() {
             </Tabs>
           </AppBar>
           <Box>
-            <DebtTab value={value} index={0} created />
-            <DebtTab value={value} index={1} created={false} />
+            <AsyncDataRenderer loading={reminderListLoading}>
+              <DebtTab value={value} index={0} created data={reminderList} />
+            </AsyncDataRenderer>
+            <AsyncDataRenderer loading={myReminderListLoading}>
+              <DebtTab
+                value={value}
+                index={1}
+                created={false}
+                data={myReminderList}
+              />
+            </AsyncDataRenderer>
           </Box>
         </Box>
       </StyledContentWrapper>

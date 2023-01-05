@@ -20,3 +20,13 @@ export interface Receiver {
   nguoiDung: string;
   tenGoiNho: string;
 }
+
+export interface Reminder {
+  maNN: number;
+  soTK: string;
+  hoTen: string;
+  noiDungNN: string;
+  soTien: number;
+  ngayTao: string;
+  trangThai: 'pending' | 'completed';
+}
