@@ -5,6 +5,7 @@ export interface UserInfo {
   soTK: string;
   soDu: number;
 }
+
 export interface TransactionHistory {
   maCK: number;
   nguoiGui: string;
@@ -13,4 +14,9 @@ export interface TransactionHistory {
   ngayCK: string;
   noiDungCK: string;
   loaiCK: 'transfer' | 'receive' | 'debt';
+}
+
+export interface Receiver {
+  nguoiDung: string;
+  tenGoiNho: string;
 }

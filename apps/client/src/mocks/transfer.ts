@@ -1,23 +1,23 @@
-import { TransactionHistory } from '../types';
+import { Receiver, TransactionHistory } from '../types';
 
 export const RECEIVER_LIST = [
   {
-    name: 'Hồ Lâm Bảo Khuyên',
-    accountNumber: '123456789',
+    tenGoiNho: 'Hồ Lâm Bảo Khuyên',
+    nguoiDung: '123456789',
   },
   {
-    name: 'La Ngọc Hồng Phúc',
-    accountNumber: '123456780',
+    tenGoiNho: 'La Ngọc Hồng Phúc',
+    nguoiDung: '123456780',
   },
   {
-    name: 'Nguyễn Thu Thảo Châu',
-    accountNumber: '123456777',
+    tenGoiNho: 'Nguyễn Thu Thảo Châu',
+    nguoiDung: '123456777',
   },
   {
-    name: 'Nguyễn Mai Xuân Huyên',
-    accountNumber: '123456721',
+    tenGoiNho: 'Nguyễn Mai Xuân Huyên',
+    nguoiDung: '123456721',
   },
-];
+] as Receiver[];
 
 export const TRANSACTION_HISTORY = {
   lichSuGiaoDich: [

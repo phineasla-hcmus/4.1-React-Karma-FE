@@ -1,10 +1,12 @@
 /* eslint-disable import/no-cycle */
 import { createSlice } from '@reduxjs/toolkit';
 
+import { Receiver } from '../../types';
+
 import { apiSlice } from './apiSlice';
 
 const initialState = {
-  savedList: [],
+  savedList: [] as Receiver[],
 };
 
 export const savedListSlice = createSlice({

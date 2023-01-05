@@ -9,15 +9,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import AsyncDataRenderer from '../../../components/AsyncDataRenderer';
 import Layout from '../../../components/Layout';
 import {
   StyledBreadCrumbs,
   StyledContentWrapper,
 } from '../../../components/styles';
 import { RECEIVER_LIST } from '../../../mocks/transfer';
+import { useGetSavedListQuery } from '../../../redux/slices/savedListSlice';
+import { Receiver } from '../../../types';
 
 import ReceiverInfoCard from './ReceiverInfoCard';
 
@@ -62,6 +65,14 @@ export default function ReceiverManagement() {
     });
   };
 
+  const { isLoading: getSavedListLoading, data: getSavedListData } =
+    useGetSavedListQuery({});
+
+  const savedList = useMemo(
+    () => getSavedListData || RECEIVER_LIST,
+    [getSavedListData]
+  ) as Receiver[];
+
   return (
     <Layout>
       <StyledContentWrapper>
@@ -69,33 +80,35 @@ export default function ReceiverManagement() {
           <Link to="/">Trang chủ</Link>
           <Typography color="text.primary">Quản lý người nhận</Typography>
         </StyledBreadCrumbs>
-        <Box mt={2}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '1.25rem',
-            }}
-          >
-            <Typography variant="h6">Danh sách người nhận</Typography>
-            <Button
-              variant="contained"
-              onClick={handleClickOpenAddReceiverDialog}
+        <AsyncDataRenderer loading={getSavedListLoading}>
+          <Box mt={2}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1.25rem',
+              }}
             >
-              Thêm người nhận
-            </Button>
+              <Typography variant="h6">Danh sách người nhận</Typography>
+              <Button
+                variant="contained"
+                onClick={handleClickOpenAddReceiverDialog}
+              >
+                Thêm người nhận
+              </Button>
+            </Box>
+            {savedList.map((item) => (
+              <ReceiverInfoCard
+                key={item.nguoiDung}
+                name={item.tenGoiNho}
+                accountNumber={item.nguoiDung}
+                onClickDelete={handleClickOpenDeleteReceiverDialog}
+                onClickEdit={() => handleClickOpenEditReceiverDialog(item)}
+              />
+            ))}
           </Box>
-          {RECEIVER_LIST.map((item) => (
-            <ReceiverInfoCard
-              key={item.accountNumber}
-              name={item.name}
-              accountNumber={item.accountNumber}
-              onClickDelete={handleClickOpenDeleteReceiverDialog}
-              onClickEdit={() => handleClickOpenEditReceiverDialog(item)}
-            />
-          ))}
-        </Box>
+        </AsyncDataRenderer>
       </StyledContentWrapper>
       <Dialog open={openAddReceiver} onClose={handleCloseAddReceiverDialog}>
         <DialogTitle>Thêm người nhận</DialogTitle>
