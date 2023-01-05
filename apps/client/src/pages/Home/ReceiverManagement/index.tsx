@@ -1,6 +1,8 @@
 import {
+  Backdrop,
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -9,7 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { FormEvent, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import AsyncDataRenderer from '../../../components/AsyncDataRenderer';
@@ -19,7 +21,12 @@ import {
   StyledContentWrapper,
 } from '../../../components/styles';
 import { RECEIVER_LIST } from '../../../mocks/transfer';
-import { useGetSavedListQuery } from '../../../redux/slices/savedListSlice';
+import {
+  useAddUserToSavedListMutation,
+  useDeleteUserSavedListByIdMutation,
+  useGetSavedListQuery,
+  useUpdateUserSavedListByIdMutation,
+} from '../../../redux/slices/savedListSlice';
 import { Receiver } from '../../../types';
 
 import ReceiverInfoCard from './ReceiverInfoCard';
@@ -32,6 +39,7 @@ export default function ReceiverManagement() {
   const [openAddReceiver, setOpenAddReceiver] = useState(false);
   const [openDeleteReceiver, setOpenDeleteReceiver] = useState(false);
   const [openEditReceiver, setOpenEditReceiver] = useState(false);
+  const [selectedDeleteUser, setSelectedDeleteUser] = useState('');
 
   const handleClickOpenAddReceiverDialog = () => {
     setOpenAddReceiver(true);
@@ -41,28 +49,25 @@ export default function ReceiverManagement() {
     setOpenAddReceiver(false);
   };
 
-  const handleClickOpenDeleteReceiverDialog = () => {
+  const handleClickOpenDeleteReceiverDialog = (receiver: Receiver) => {
     setOpenDeleteReceiver(true);
+    setSelectedDeleteUser(receiver.nguoiDung);
   };
 
   const handleCloseDeleteReceiverDialog = () => {
     setOpenDeleteReceiver(false);
   };
 
-  const handleClickOpenEditReceiverDialog = (receiver: any) => {
+  const handleClickOpenEditReceiverDialog = (receiver: Receiver) => {
     setOpenEditReceiver(true);
     setValues({
-      accountNumber: receiver.accountNumber,
-      name: receiver.name,
+      accountNumber: receiver.nguoiDung,
+      name: receiver.tenGoiNho,
     });
   };
 
   const handleCloseEditReceiverDialog = () => {
     setOpenEditReceiver(false);
-    setValues({
-      accountNumber: '',
-      name: '',
-    });
   };
 
   const { isLoading: getSavedListLoading, data: getSavedListData } =
@@ -72,6 +77,65 @@ export default function ReceiverManagement() {
     () => getSavedListData || RECEIVER_LIST,
     [getSavedListData]
   ) as Receiver[];
+
+  const [addUserToSavedList, { isLoading: addUserLoading }] =
+    useAddUserToSavedListMutation();
+
+  const handleAddUserToSavedList = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    setOpenAddReceiver(false);
+
+    const payload = {
+      nguoiDung: data.get('soTK'),
+      tenGoiNho: data.get('tenGoiNho'),
+    };
+
+    try {
+      await addUserToSavedList(payload);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const [updateUser, { isLoading: updateUserLoading }] =
+    useUpdateUserSavedListByIdMutation();
+
+  const handleEditUserInSavedList = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    setOpenEditReceiver(false);
+
+    const payload = {
+      soTK: data.get('soTK'),
+      tenGoiNho: data.get('tenGoiNho'),
+    };
+
+    try {
+      await updateUser({ soTK: payload.soTK, payload });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const [deleteUser, { isLoading: deleteUserLoading }] =
+    useDeleteUserSavedListByIdMutation();
+
+  const handleDeleteUserInSavedList = async () => {
+    setOpenDeleteReceiver(false);
+
+    try {
+      await deleteUser(selectedDeleteUser);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
   return (
     <Layout>
@@ -103,7 +167,7 @@ export default function ReceiverManagement() {
                 key={item.nguoiDung}
                 name={item.tenGoiNho}
                 accountNumber={item.nguoiDung}
-                onClickDelete={handleClickOpenDeleteReceiverDialog}
+                onClickDelete={() => handleClickOpenDeleteReceiverDialog(item)}
                 onClickEdit={() => handleClickOpenEditReceiverDialog(item)}
               />
             ))}
@@ -113,58 +177,65 @@ export default function ReceiverManagement() {
       <Dialog open={openAddReceiver} onClose={handleCloseAddReceiverDialog}>
         <DialogTitle>Thêm người nhận</DialogTitle>
         <DialogContent>
-          <TextField
-            name="addAccountNumber"
-            required
-            margin="dense"
-            label="Số tài khoản"
-            type="number"
-            fullWidth
-          />
-          <TextField
-            name="addName"
-            margin="dense"
-            label="Tên gợi nhớ"
-            fullWidth
-          />
+          <Box component="form" onSubmit={handleAddUserToSavedList}>
+            <TextField
+              name="soTK"
+              required
+              margin="dense"
+              label="Số tài khoản"
+              type="number"
+              fullWidth
+            />
+            <TextField
+              name="tenGoiNho"
+              margin="dense"
+              label="Tên gợi nhớ"
+              fullWidth
+            />
+            <DialogActions sx={{ paddingRight: 0 }}>
+              <Button variant="outlined" onClick={handleCloseAddReceiverDialog}>
+                Hủy
+              </Button>
+              <Button variant="contained" type="submit">
+                Lưu
+              </Button>
+            </DialogActions>
+          </Box>
         </DialogContent>
-        <DialogActions sx={{ marginRight: '1rem' }}>
-          <Button variant="outlined" onClick={handleCloseAddReceiverDialog}>
-            Hủy
-          </Button>
-          <Button variant="contained" onClick={handleCloseAddReceiverDialog}>
-            Lưu
-          </Button>
-        </DialogActions>
       </Dialog>
       <Dialog open={openEditReceiver} onClose={handleCloseEditReceiverDialog}>
         <DialogTitle>Chỉnh sửa người nhận</DialogTitle>
         <DialogContent>
-          <TextField
-            value={values.accountNumber}
-            name="editAccountNumber"
-            required
-            margin="dense"
-            label="Số tài khoản"
-            type="number"
-            fullWidth
-          />
-          <TextField
-            value={values.name}
-            name="editName"
-            margin="dense"
-            label="Tên gợi nhớ"
-            fullWidth
-          />
+          <Box component="form" onSubmit={handleEditUserInSavedList}>
+            <TextField
+              value={values.accountNumber}
+              name="soTK"
+              required
+              margin="dense"
+              label="Số tài khoản"
+              type="number"
+              fullWidth
+            />
+            <TextField
+              value={values.name}
+              name="tenGoiNho"
+              margin="dense"
+              label="Tên gợi nhớ"
+              fullWidth
+            />
+            <DialogActions sx={{ paddingRight: 0 }}>
+              <Button
+                variant="outlined"
+                onClick={handleCloseEditReceiverDialog}
+              >
+                Hủy
+              </Button>
+              <Button type="submit" variant="contained">
+                Lưu
+              </Button>
+            </DialogActions>
+          </Box>
         </DialogContent>
-        <DialogActions sx={{ marginRight: '1rem' }}>
-          <Button variant="outlined" onClick={handleCloseEditReceiverDialog}>
-            Hủy
-          </Button>
-          <Button variant="contained" onClick={handleCloseEditReceiverDialog}>
-            Lưu
-          </Button>
-        </DialogActions>
       </Dialog>
       <Dialog
         open={openDeleteReceiver}
@@ -180,11 +251,17 @@ export default function ReceiverManagement() {
           <Button variant="outlined" onClick={handleCloseDeleteReceiverDialog}>
             Hủy
           </Button>
-          <Button variant="contained" onClick={handleCloseDeleteReceiverDialog}>
+          <Button variant="contained" onClick={handleDeleteUserInSavedList}>
             Xoá
           </Button>
         </DialogActions>
       </Dialog>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={addUserLoading || updateUserLoading || deleteUserLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Layout>
   );
 }

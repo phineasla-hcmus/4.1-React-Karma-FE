@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Backdrop,
   Box,
-  Button,
   CircularProgress,
   Container,
   Step,
@@ -55,10 +54,6 @@ function TransferMoney() {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
   };
 
   const dispatch = useDispatch();
