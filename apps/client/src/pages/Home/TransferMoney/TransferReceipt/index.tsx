@@ -1,5 +1,5 @@
-import { Alert, Box, Card, Typography } from '@mui/material';
-import React from 'react';
+import { Alert, Box, Button, Card, TextField, Typography } from '@mui/material';
+import React, { FormEvent } from 'react';
 
 import { formatMoney } from '../../../../utils';
 
@@ -10,14 +10,20 @@ import {
   StyledTitle,
 } from './styles';
 
-export default function TransferReceipt() {
+interface TransferReceiptProps {
+  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+export default function TransferReceipt({
+  handleSubmit,
+}: TransferReceiptProps) {
   return (
     <Box>
       <Alert severity="success">Giao dịch thành công</Alert>
       <Card sx={{ padding: '1rem', marginTop: '2rem', textAlign: 'center' }}>
         <Typography variant="h6">Chuyển Tiền</Typography>
         <Typography variant="caption">24/12/2022 17:56</Typography>
-        <Typography variant="h5">-{formatMoney(100000)}</Typography>
+        <Typography variant="h5">-{formatMoney(100000)} VND</Typography>
         <Box
           sx={{
             borderRadius: '0.5rem',
@@ -49,6 +55,19 @@ export default function TransferReceipt() {
           </StyledRow>
         </Box>
       </Card>
+      <Box mt={1} component="form" onSubmit={handleSubmit}>
+        <Typography variant="h6">Lưu lại thông tin người nhận?</Typography>
+        <TextField
+          fullWidth
+          sx={{ display: 'block' }}
+          margin="normal"
+          label="Tên gợi nhớ"
+          name="tenGoiNho"
+        />
+        <Button variant="contained" type="submit">
+          Lưu
+        </Button>
+      </Box>
     </Box>
   );
 }

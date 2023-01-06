@@ -36,6 +36,11 @@ const themeOptions: ThemeOptionsOld = {
         },
       },
     },
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: { color: 'red' },
+      },
+    },
   },
 };
 
