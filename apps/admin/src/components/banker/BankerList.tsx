@@ -6,29 +6,23 @@ import {
   Datagrid,
   TextField,
   EditButton,
-  TextInput,
   DeleteWithConfirmButton,
   FunctionField,
 } from 'react-admin';
 
 import { formatPhoneNumber } from '../../utils/helpers';
 
-const bankerFilters = [
-  <TextInput source="q" label="Search" alwaysOn />,
-  // <ReferenceInput source="userId" label="User" reference="users" />,
-];
-
 export function BankerList() {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
-    <List filters={bankerFilters}>
+    <List>
       {isSmall ? (
         <SimpleList
           primaryText={(record) => record.nhanVien.hoTen}
           secondaryText={(record) => record.nhanVien.sdt}
         />
       ) : (
-        <Datagrid>
+        <Datagrid bulkActionButtons={false}>
           <TextField source="id" label="ID" sortable={false} />
           <TextField
             source="nhanVien.hoTen"

@@ -28,7 +28,7 @@ export function InterbankList() {
           tertiaryText={(record) => record.email}
         />
       ) : (
-        <Datagrid>
+        <Datagrid bulkActionButtons={false}>
           <TextField source="id" label="ID" sortable={false} />
           <TextField source="tkTrong" label="Account" sortable={false} />
           <TextField
