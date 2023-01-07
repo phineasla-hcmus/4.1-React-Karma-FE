@@ -33,6 +33,11 @@ export function UserList() {
           <TextField source="id" label="ID" sortable={false} />
           <TextField source="tenDangNhap" label="Username" sortable={false} />
           <TextField
+            source="taiKhoanThanhToan.soTK"
+            label="Account number"
+            sortable={false}
+          />
+          <TextField
             source="khachHang.hoTen"
             label="Fullname"
             sortable={false}
