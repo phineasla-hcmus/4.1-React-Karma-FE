@@ -21,7 +21,7 @@ const userFilters = [
 export function UserList() {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
-    <List filters={userFilters}>
+    <List filters={userFilters} exporter={false}>
       {isSmall ? (
         <SimpleList
           primaryText={(record) => record.khachHang.hoTen}
@@ -29,11 +29,15 @@ export function UserList() {
           tertiaryText={(record) => record.khachHang.sdt}
         />
       ) : (
-        <Datagrid>
-          <TextField source="id" label="ID" />
-          <TextField source="tenDangNhap" label="Username" />
-          <TextField source="khachHang.hoTen" label="Fullname" />
-          <EmailField source="khachHang.email" label="Email" />
+        <Datagrid bulkActionButtons={false}>
+          <TextField source="id" label="ID" sortable={false} />
+          <TextField source="tenDangNhap" label="Username" sortable={false} />
+          <TextField
+            source="khachHang.hoTen"
+            label="Fullname"
+            sortable={false}
+          />
+          <EmailField source="khachHang.email" label="Email" sortable={false} />
           <FunctionField
             source="nhanVien.sdt"
             label="Phone"

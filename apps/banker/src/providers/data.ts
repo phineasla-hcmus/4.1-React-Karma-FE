@@ -19,16 +19,23 @@ const httpClient = fetchUtils.fetchJson;
 export type GetQueryParams = {
   page: string;
   size: string;
+  sender?: string;
+  receiver?: string;
 };
 
 export default {
   getList: async (resource: string, params: GetListParams) => {
     const { page, perPage } = params.pagination;
-    const defaultQueryParams = {
+    const { sender, receiver } = params.filter;
+    let defaultQueryParams = {
       page: `${page}`,
       size: perPage.toString(),
+      sender: '',
     };
-    const query: GetQueryParams = defaultQueryParams;
+    if (sender) defaultQueryParams = { ...defaultQueryParams, sender };
+    const query = defaultQueryParams;
+    console.log(query);
+
     return httpClient(
       `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
       {

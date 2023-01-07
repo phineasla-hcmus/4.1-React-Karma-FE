@@ -26,7 +26,7 @@ function App() {
       loginPage={Login}
     >
       <Resource
-        name="users"
+        name="clients"
         list={UserList}
         edit={UserEdit}
         create={UserCreate}
