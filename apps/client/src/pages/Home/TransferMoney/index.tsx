@@ -90,17 +90,6 @@ function TransferMoney() {
     }
 
     if (activeStep === 1) {
-      try {
-        const { soTK, soTien } = transferInfo;
-        await requestOTPForTransfer({ soTK, soTien });
-        setOpen(true);
-      } catch (error) {
-        console.log('error', error);
-        return;
-      }
-    }
-
-    if (activeStep === 2) {
       const payload = {
         soTK: transferInfo.soTK,
         tenGoiNho: data.get('tenGoiNho'),
@@ -112,8 +101,13 @@ function TransferMoney() {
         console.log('error', error);
         return;
       }
-
-      navigate('/');
+      try {
+        const { soTK, soTien } = transferInfo;
+        await requestOTPForTransfer({ soTK, soTien });
+        setOpen(true);
+      } catch (error) {
+        console.log('error', error);
+      }
     }
   };
 
@@ -163,9 +157,7 @@ function TransferMoney() {
                 activeStep={activeStep}
               />
             )}
-            {activeStep === 2 && (
-              <TransferReceipt handleSubmit={handleSubmit} />
-            )}
+            {activeStep === 2 && <TransferReceipt />}
           </Box>
         </Container>
       </StyledContentWrapper>
