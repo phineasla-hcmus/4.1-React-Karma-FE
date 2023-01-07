@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Avatar, Box, Grid, IconButton, Typography } from '@mui/material';
+import { Avatar, Box, Card, Grid, IconButton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
@@ -35,33 +35,37 @@ function Home() {
     <Layout>
       <StyledContentWrapper>
         <AsyncDataRenderer loading={isLoading}>
-          <Box
+          <Card
             sx={{
+              padding: '1.5rem',
               width: 'fit-content',
-              display: 'flex',
-              justifyContent: 'space-between',
+              marginBottom: '1rem',
             }}
           >
-            <Typography variant="h6">
-              Số dư khả dụng:{' '}
-              <Typography sx={{ marginLeft: '0.2rem' }} component="span">
-                {showBalance
-                  ? formatMoney(userInfo.soDu).concat(' VND')
-                  : '*********'}
+            <Typography sx={{ fontSize: '2rem' }}>{userInfo.soTK}</Typography>
+            <Typography variant="h6">{userInfo.hoTen}</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="h6">
+                Số dư khả dụng:{' '}
+                <Typography sx={{ marginLeft: '0.2rem' }} component="span">
+                  {showBalance
+                    ? formatMoney(userInfo.soDu).concat(' VND')
+                    : '*********'}
+                </Typography>
               </Typography>
-            </Typography>
-            <IconButton
-              aria-label="toggle balance visibility"
-              onClick={handleClickShowBalance}
-              edge="end"
-            >
-              {showBalance ? (
-                <VisibilityOff sx={{ fontSize: '1.25rem' }} />
-              ) : (
-                <Visibility sx={{ fontSize: '1.25rem' }} />
-              )}
-            </IconButton>
-          </Box>
+              <IconButton
+                aria-label="toggle balance visibility"
+                onClick={handleClickShowBalance}
+                edge="end"
+              >
+                {showBalance ? (
+                  <VisibilityOff sx={{ fontSize: '1.25rem' }} />
+                ) : (
+                  <Visibility sx={{ fontSize: '1.25rem' }} />
+                )}
+              </IconButton>
+            </Box>
+          </Card>
           <Grid container>
             <Grid item xs={12} sx={{ display: 'flex' }}>
               <StyledClickableCard

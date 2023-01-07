@@ -112,13 +112,11 @@ export default function ReceiverManagement() {
 
     setOpenEditReceiver(false);
 
-    const payload = {
-      soTK: data.get('soTK'),
-      tenGoiNho: data.get('tenGoiNho'),
-    };
-
     try {
-      await updateUser({ soTK: payload.soTK, payload });
+      await updateUser({
+        soTK: data.get('soTK'),
+        payload: data.get('tenGoiNho'),
+      });
     } catch (error) {
       console.log('error', error);
     }
