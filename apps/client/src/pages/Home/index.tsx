@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Avatar, Box, Card, Grid, IconButton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
@@ -10,6 +10,7 @@ import { formatMoney } from '../../utils';
 import { setUserInfo, useUserInfoQuery } from '../../redux/slices/authSlice';
 import AsyncDataRenderer from '../../components/AsyncDataRenderer';
 import { USER_INFO } from '../../mocks/auth';
+import { RootState } from '../../redux/store';
 
 import { StyledClickableCard } from './styles';
 
@@ -22,13 +23,20 @@ function Home() {
     setShowBalance((v) => !v);
   }, []);
 
-  const { isLoading, data } = useUserInfoQuery({});
   const dispatch = useDispatch();
+
+  const userInfoFromReducer = useSelector(
+    (state: RootState) => state.auth.userInfo
+  );
+
+  const { isLoading, data } = useUserInfoQuery(undefined, {
+    skip: userInfoFromReducer.hoTen.length > 0,
+  });
 
   const userInfo = useMemo(() => data || USER_INFO, [data]);
 
   useEffect(() => {
-    dispatch(setUserInfo(userInfo));
+    if (!userInfoFromReducer.hoTen.length) dispatch(setUserInfo(userInfo));
   }, [userInfo]);
 
   return (

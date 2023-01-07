@@ -49,9 +49,10 @@ export const reminderApi = apiSlice.injectEndpoints({
       invalidatesTags: ['Data'],
     }),
     checkOutReminder: build.mutation({
-      query: (id) => ({
+      query: ({ id, payload }) => ({
         url: `user/reminders/${id}`,
         method: 'PATCH',
+        body: payload,
       }),
       invalidatesTags: ['Data'],
     }),

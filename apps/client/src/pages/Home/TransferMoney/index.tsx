@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Backdrop,
@@ -42,7 +42,6 @@ function TransferMoney() {
   const [activeStep, setActiveStep] = useState(0);
   const [open, setOpen] = useState(false);
   const [otp, setOTP] = useState('');
-  const navigate = useNavigate();
 
   const handleChangeOTP = (event: ChangeEvent<HTMLInputElement>) => {
     setOTP(event.target.value);
@@ -70,6 +69,8 @@ function TransferMoney() {
   const transferInfo = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
+
+  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -102,8 +103,8 @@ function TransferMoney() {
         return;
       }
       try {
-        const { soTK, soTien } = transferInfo;
-        await requestOTPForTransfer({ soTK, soTien });
+        const { soTien, soTK: nguoiNhan } = transferInfo;
+        await requestOTPForTransfer({ soTK, nguoiNhan, soTien });
         setOpen(true);
       } catch (error) {
         console.log('error', error);
