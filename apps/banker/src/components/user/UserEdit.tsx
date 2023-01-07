@@ -4,17 +4,10 @@ import {
   SimpleForm,
   TextInput,
   required,
-  FunctionField,
   useRecordContext,
+  NumberInput,
 } from 'react-admin';
-import {
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  Box,
-  Stack,
-} from '@mui/material';
+import { Typography, Card, CardContent, Box, Stack } from '@mui/material';
 
 import { formatAccountNumber, formatNumber } from '../../utils/helpers';
 
@@ -90,13 +83,17 @@ function Aside() {
 
 export function UserEdit() {
   return (
-    <Edit aside={<Aside />}>
+    <Edit aside={<Aside />} redirect={false}>
       <SimpleForm>
         <Typography variant="h5" mb={3}>
           Recharge
         </Typography>
-        <TextInput
-          source="Amount recharge"
+        <Box sx={{ display: 'hidden' }}>
+          <TextInput source="maNV" hidden />
+        </Box>
+        <NumberInput
+          source="soTienThem"
+          label="Amount recharge"
           type="number"
           validate={[required()]}
         />

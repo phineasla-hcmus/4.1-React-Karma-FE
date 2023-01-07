@@ -19,22 +19,17 @@ const httpClient = fetchUtils.fetchJson;
 export type GetQueryParams = {
   page: string;
   size: string;
-  sender?: string;
-  receiver?: string;
 };
 
 export default {
   getList: async (resource: string, params: GetListParams) => {
     const { page, perPage } = params.pagination;
-    const { sender, receiver } = params.filter;
-    let defaultQueryParams = {
+    const defaultQueryParams = {
       page: `${page}`,
       size: perPage.toString(),
       sender: '',
     };
-    if (sender) defaultQueryParams = { ...defaultQueryParams, sender };
     const query = defaultQueryParams;
-    console.log(query);
 
     return httpClient(
       `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
@@ -71,7 +66,7 @@ export default {
       }));
     }
 
-    return httpClient(`${apiUrl}/${resource}`, {
+    return httpClient(`${apiUrl}/${resource}/all`, {
       method: 'GET',
     }).then(({ json }) => ({
       data: json.data,
@@ -87,6 +82,12 @@ export default {
   },
 
   update: async (resource: string, params: UpdateParams) => {
+    if (resource === 'clients') {
+      return httpClient(`${apiUrl}/bankers/${params.data.maNV}/recharge`, {
+        method: 'PATCH',
+        body: JSON.stringify(params.data),
+      }).then(() => ({ data: { id: params.id, ...params.data } }));
+    }
     return httpClient(`${apiUrl}/${resource}/${params.id}`, {
       method: 'PATCH',
       body: JSON.stringify(params.data),

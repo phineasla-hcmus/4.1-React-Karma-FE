@@ -7,21 +7,15 @@ import {
   TextField,
   EmailField,
   EditButton,
-  TextInput,
   FunctionField,
 } from 'react-admin';
 
 import { formatPhoneNumber } from '../../utils/helpers';
 
-const userFilters = [
-  <TextInput source="q" label="Search" alwaysOn />,
-  // <ReferenceInput source="userId" label="User" reference="users" />,
-];
-
 export function UserList() {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
-    <List filters={userFilters} exporter={false}>
+    <List exporter={false}>
       {isSmall ? (
         <SimpleList
           primaryText={(record) => record.khachHang.hoTen}
