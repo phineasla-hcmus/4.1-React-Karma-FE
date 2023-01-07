@@ -45,8 +45,14 @@ export const transferApi = apiSlice.injectEndpoints({
       }),
     }),
     getTransactionHistory: build.query({
-      query: (accountNo) => ({
-        url: `user/transactions/${accountNo}`,
+      query: () => ({
+        url: 'user/transactions',
+        method: 'GET',
+      }),
+    }),
+    getReminderCheckoutHistory: build.query({
+      query: () => ({
+        url: 'user/transactions/reminders',
         method: 'GET',
       }),
     }),
@@ -61,4 +67,5 @@ export const {
   useMakeInternalTransferMutation,
   useRequestOTPForTransferMutation,
   useGetTransactionHistoryQuery,
+  useGetReminderCheckoutHistoryQuery,
 } = transferApi;

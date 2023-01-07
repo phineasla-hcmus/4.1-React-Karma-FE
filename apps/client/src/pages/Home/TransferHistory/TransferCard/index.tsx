@@ -8,7 +8,7 @@ export interface TransferCardProps {
   title: string;
   description: string;
   dateTime: string;
-  amount: number;
+  amount: string;
 }
 
 function TransferCard({
@@ -52,11 +52,10 @@ function TransferCard({
           sx={{
             fontSize: '1.1rem',
             fontWeight: 'bold',
-            color: type === 'receive' ? '#FFD700' : 'red',
+            color: amount.includes('+') ? '#FFD700' : 'red',
           }}
         >
-          {type === 'receive' ? '+' : '-'}
-          {formatMoney(amount)} VND
+          {amount}
         </Typography>
       </Box>
     </Card>
