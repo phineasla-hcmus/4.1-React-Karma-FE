@@ -23,7 +23,15 @@ export function UserList() {
           tertiaryText={(record) => record.khachHang.sdt}
         />
       ) : (
-        <Datagrid bulkActionButtons={false}>
+        <Datagrid
+          bulkActionButtons={false}
+          sx={{
+            '.MuiTableCell-head': {
+              background: '#e6e0f3',
+              fontWeight: 700,
+            },
+          }}
+        >
           <TextField source="id" label="ID" sortable={false} />
           <TextField source="tenDangNhap" label="Username" sortable={false} />
           <TextField

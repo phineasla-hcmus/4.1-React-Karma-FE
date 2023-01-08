@@ -10,7 +10,15 @@ import {
 export function TransactionList() {
   return (
     <List exporter={false}>
-      <Datagrid bulkActionButtons={false}>
+      <Datagrid
+        bulkActionButtons={false}
+        sx={{
+          '.MuiTableCell-head': {
+            background: '#e6e0f3',
+            fontWeight: 700,
+          },
+        }}
+      >
         <TextField source="id" label="Transaction ID" sortable={false} />
         <FunctionField
           source="nguoiChuyen"

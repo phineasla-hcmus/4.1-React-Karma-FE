@@ -11,6 +11,7 @@ import {
 } from 'react-admin';
 
 import { formatPhoneNumber } from '../../utils/helpers';
+import { theme } from '../../theme';
 
 export function BankerList() {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
@@ -22,7 +23,15 @@ export function BankerList() {
           secondaryText={(record) => record.nhanVien.sdt}
         />
       ) : (
-        <Datagrid bulkActionButtons={false}>
+        <Datagrid
+          bulkActionButtons={false}
+          sx={{
+            '.MuiTableCell-head': {
+              background: '#e6e0f3',
+              fontWeight: 700,
+            },
+          }}
+        >
           <TextField source="id" label="ID" sortable={false} />
           <TextField
             source="nhanVien.hoTen"
