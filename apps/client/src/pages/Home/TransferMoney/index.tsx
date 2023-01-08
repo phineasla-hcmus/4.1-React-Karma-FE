@@ -82,8 +82,14 @@ function TransferMoney() {
     const data = new FormData(event.currentTarget);
 
     if (activeStep === 0) {
+      console.log('arr', data.get('soTK')?.toString().split(' - '));
+      const tenTKFromData = data.get('tenTK')?.toString() || '';
       const transferInfo = {
-        soTK: data.get('soTK'),
+        soTK: data.get('soTK')?.toString().split(' - ')[1],
+        tenTK:
+          tenTKFromData.length > 0
+            ? data.get('tenTK')
+            : data.get('soTK')?.toString().split(' - ')[0],
         nganHang: data.get('nganHang'),
         soTien: data.get('soTien'),
         noiDungCK: data.get('noiDungCK'),
@@ -124,9 +130,10 @@ function TransferMoney() {
     try {
       const payload = { ...transferInfo, otp };
 
-      if (transferInfo.nganHang.length > 0) {
-        await makeAnExternalTransfer(_omit(payload, 'phiCK'));
-      } else await makeAnInternalTransfer(_omit(payload, 'nganHang'));
+      if (transferInfo.nganHang?.length > 0) {
+        await makeAnExternalTransfer(_omit(payload, ['phiCK', 'tenTK']));
+      } else
+        await makeAnInternalTransfer(_omit(payload, ['nganHang', 'tenTK']));
       handleNext();
     } catch (error) {
       console.log('error', error);

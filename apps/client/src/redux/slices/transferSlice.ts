@@ -6,6 +6,7 @@ import { apiSlice } from './apiSlice';
 const initialState = {
   transferInfo: {
     soTK: '',
+    tenTK: '',
     nganHang: '',
     soTien: 0,
     noiDungCK: '',
@@ -68,6 +69,12 @@ export const transferApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getInternalPaymentAccountInfo: build.query({
+      query: (id) => ({
+        url: `payment-accounts/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -81,4 +88,5 @@ export const {
   useRequestOTPForTransferMutation,
   useGetTransactionHistoryQuery,
   useGetReminderCheckoutHistoryQuery,
+  useGetInternalPaymentAccountInfoQuery,
 } = transferApi;
