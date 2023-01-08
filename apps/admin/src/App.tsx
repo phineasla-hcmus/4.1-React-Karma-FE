@@ -37,6 +37,14 @@ function App() {
         list={InterbankList}
         icon={CurrencyExchangeIcon}
       />
+
+      <Resource
+        name="banks"
+        list={InterbankList}
+        recordRepresentation="tenNH"
+        options={{ label: ' ' }}
+        icon={() => <div />}
+      />
     </Admin>
   );
 }

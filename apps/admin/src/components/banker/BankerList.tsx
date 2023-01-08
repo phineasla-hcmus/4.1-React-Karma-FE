@@ -16,7 +16,7 @@ import { theme } from '../../theme';
 export function BankerList() {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
-    <List>
+    <List exporter={false}>
       {isSmall ? (
         <SimpleList
           primaryText={(record) => record.nhanVien.hoTen}
