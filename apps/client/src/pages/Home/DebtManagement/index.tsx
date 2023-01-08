@@ -75,25 +75,15 @@ export default function DebtManagement() {
     [reminderListData]
   ) as Reminder[];
 
-  const [
-    getMyReminderList,
-    { isLoading: myReminderListLoading, data: myReminderListData },
-  ] = reminderApi.endpoints.getMyReminderList.useLazyQuery();
-
-  const myReminderList = useMemo(
-    () => myReminderListData || MY_REMINDER_LIST,
-    [reminderListData]
-  ) as Reminder[];
-
   const handleChange = useCallback(
     (event: SyntheticEvent, newValue: number) => {
       switch (newValue) {
         case 0:
-          getReminderList({});
+          getReminderList('others');
           break;
 
         case 1:
-          getMyReminderList({});
+          getReminderList('me');
           break;
 
         default:
@@ -110,7 +100,7 @@ export default function DebtManagement() {
   };
 
   useEffect(() => {
-    getReminderList({});
+    getReminderList('others');
   }, []);
 
   const { isLoading: getSavedListLoading, data: getSavedListData } =
@@ -182,12 +172,12 @@ export default function DebtManagement() {
             <AsyncDataRenderer loading={reminderListLoading}>
               <DebtTab value={value} index={0} created data={reminderList} />
             </AsyncDataRenderer>
-            <AsyncDataRenderer loading={myReminderListLoading}>
+            <AsyncDataRenderer loading={reminderListLoading}>
               <DebtTab
                 value={value}
                 index={1}
                 created={false}
-                data={myReminderList}
+                data={reminderList}
               />
             </AsyncDataRenderer>
           </Box>
