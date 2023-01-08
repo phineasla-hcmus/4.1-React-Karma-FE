@@ -10,7 +10,13 @@ import {
   Switch,
   TextField,
 } from '@mui/material';
-import React, { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import AsyncDataRenderer from '../../../../components/AsyncDataRenderer';
 import { RECEIVER_LIST } from '../../../../mocks/transfer';
@@ -28,7 +34,6 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
   const [payment, setPayment] = useState('');
   const [transferType, setTransferType] = useState('');
   const [bank, setBank] = useState('');
-  const [soTK, setSoTK] = useState('');
   const [tenTK, setTenTK] = useState('');
 
   const handleSelectChooseFromList = (event: ChangeEvent<HTMLInputElement>) => {
@@ -51,14 +56,21 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
     getInternalPaymentAccountInfo,
     {
       isLoading: internalPaymentAccountInfoLoading,
-      data: internalPaymentAccountInfo,
+      data: { data: internalPaymentAccountInfo = {} } = {},
     },
   ] = transferApi.endpoints.getInternalPaymentAccountInfo.useLazyQuery();
 
-  const handleLoadAccountName = async () => {
-    await getInternalPaymentAccountInfo(soTK);
-    setTenTK(internalPaymentAccountInfo?.hoTen || 'Hồ Lâm Bảo Khuyên');
+  const handleLoadAccountName = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
+  ) => {
+    if (e.target.value.length > 0) {
+      getInternalPaymentAccountInfo(e.target.value);
+    }
   };
+
+  useEffect(() => {
+    setTenTK(internalPaymentAccountInfo?.hoTen);
+  }, [internalPaymentAccountInfo]);
 
   const { isLoading: savedListLoading, data: savedListData } =
     useGetContactListQuery({});
@@ -142,9 +154,6 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
             margin="normal"
             label="Số tài khoản"
             name="soTK"
-            onChange={(event) => {
-              setSoTK(event.target.value);
-            }}
             onBlur={handleLoadAccountName}
           />
         )}
@@ -157,6 +166,9 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
               label="Tên chủ tài khoản"
               name="tenTK"
               value={tenTK}
+              InputLabelProps={{
+                shrink: true,
+              }}
               InputProps={{ readOnly: true }}
             />
           </AsyncDataRenderer>
