@@ -6,9 +6,11 @@ import { apiSlice } from './apiSlice';
 const initialState = {
   transferInfo: {
     soTK: '',
+    nganHang: '',
     soTien: 0,
     noiDungCK: '',
-    hinhThucThanhToan: '',
+    loaiCK: '',
+    phiCK: '',
   },
 };
 
@@ -30,6 +32,16 @@ export const transferApi = apiSlice.injectEndpoints({
           'Content-type': 'application/json',
         },
         url: 'user/transfer',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    makeExternalTransfer: build.mutation({
+      query: (payload) => ({
+        headers: {
+          'Content-type': 'application/json',
+        },
+        url: 'external/transfer',
         method: 'POST',
         body: payload,
       }),
@@ -65,6 +77,7 @@ export default transferSlice.reducer;
 
 export const {
   useMakeInternalTransferMutation,
+  useMakeExternalTransferMutation,
   useRequestOTPForTransferMutation,
   useGetTransactionHistoryQuery,
   useGetReminderCheckoutHistoryQuery,

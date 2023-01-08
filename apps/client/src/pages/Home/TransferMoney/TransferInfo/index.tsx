@@ -66,7 +66,7 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
             <MenuItem value="external">Chuyển khoản liên ngân hàng</MenuItem>
           </Select>
         </FormControl>
-        {transferType === 'Chuyển khoản liên ngân hàng' && (
+        {transferType === 'external' && (
           <FormControl sx={{ marginTop: '1rem', width: '100%' }} required>
             <InputLabel id="bank-select-label">Ngân hàng</InputLabel>
             <Select

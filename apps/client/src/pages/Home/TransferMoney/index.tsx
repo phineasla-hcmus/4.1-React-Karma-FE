@@ -11,6 +11,7 @@ import {
   Stepper,
   Typography,
 } from '@mui/material';
+import _omit from 'lodash/omit';
 
 import Layout from '../../../components/Layout';
 import {
@@ -20,6 +21,7 @@ import {
 import OTPModal from '../../../components/OTPModal';
 import {
   setTransferInfo,
+  useMakeExternalTransferMutation,
   useMakeInternalTransferMutation,
   useRequestOTPForTransferMutation,
 } from '../../../redux/slices/transferSlice';
@@ -60,6 +62,9 @@ function TransferMoney() {
   const [makeAnInternalTransfer, { isLoading: internalTransferLoading }] =
     useMakeInternalTransferMutation();
 
+  const [makeAnExternalTransfer, { isLoading: externalTransferLoading }] =
+    useMakeExternalTransferMutation();
+
   const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
     useRequestOTPForTransferMutation();
 
@@ -79,6 +84,7 @@ function TransferMoney() {
     if (activeStep === 0) {
       const transferInfo = {
         soTK: data.get('soTK'),
+        nganHang: data.get('nganHang'),
         soTien: data.get('soTien'),
         noiDungCK: data.get('noiDungCK'),
         loaiCK: data.get('loaiCK'),
@@ -117,7 +123,10 @@ function TransferMoney() {
 
     try {
       const payload = { ...transferInfo, otp };
-      await makeAnInternalTransfer(payload);
+
+      if (transferInfo.nganHang.length > 0) {
+        await makeAnExternalTransfer(_omit(payload, 'phiCK'));
+      } else await makeAnInternalTransfer(_omit(payload, 'nganHang'));
       handleNext();
     } catch (error) {
       console.log('error', error);
@@ -175,7 +184,12 @@ function TransferMoney() {
       />
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={requestOTPLoading || internalTransferLoading || addUserLoading}
+        open={
+          requestOTPLoading ||
+          internalTransferLoading ||
+          externalTransferLoading ||
+          addUserLoading
+        }
       >
         <CircularProgress color="inherit" />
       </Backdrop>
