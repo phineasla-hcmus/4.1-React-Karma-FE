@@ -1,15 +1,33 @@
 /* eslint-disable react/require-default-props */
 import {
+  Backdrop,
+  Box,
   Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
+  Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { FormEvent, useState } from 'react';
+import { useSelector } from 'react-redux';
 
+import {
+  useCheckOutReminderMutation,
+  useDismissReminderByIdMutation,
+} from '../../../../redux/slices/reminderSlice';
+import { useRequestOTPForTransferMutation } from '../../../../redux/slices/transferSlice';
+import { RootState } from '../../../../redux/store';
+import { Reminder } from '../../../../types';
 import { formatMoney } from '../../../../utils';
 
 interface ReceivedColumn {
@@ -103,61 +121,200 @@ const createdColumns: readonly CreatedColumn[] = [
 
 interface DebtTableProps {
   created: boolean;
-  paid?: boolean;
-  onClickDelete: any;
+  completed?: boolean;
+  data: Reminder[];
 }
 
 export default function DebtTable({
   created,
-  paid = false,
-  onClickDelete,
+  completed = false,
+  data,
 }: DebtTableProps) {
+  const [openDeleteDebtDialog, setOpenDeleteDebtDialog] = useState(false);
+  const [openPayDebtDialog, setOpenPayDebtDialog] = useState(false);
+  const [selectedDebt, setSelectedDebt] = useState(0);
+  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+
+  const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
+    useRequestOTPForTransferMutation();
+
+  const handleOpenDeleteDebtDialog = (reminder: Reminder) => {
+    setSelectedDebt(reminder.maNN);
+    setOpenDeleteDebtDialog(true);
+  };
+
+  const handleCloseDeleteDebtDialog = () => {
+    setOpenDeleteDebtDialog(false);
+  };
+
+  const handleOpenPayDebtDialog = async (reminder: Reminder) => {
+    await requestOTPForTransfer({
+      soTK,
+      nguoiNhan: reminder.soTK,
+      soTien: reminder.soTien,
+    });
+
+    setSelectedDebt(reminder.maNN);
+    setOpenPayDebtDialog(true);
+  };
+
+  const handleClosePayDebtDialog = () => {
+    setOpenPayDebtDialog(false);
+  };
+
+  const [dismissReminder, { isLoading: dismissReminderLoading }] =
+    useDismissReminderByIdMutation();
+
+  const handleDismissReminder = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    setOpenDeleteDebtDialog(false);
+
+    const payload = {
+      noiDung: data.get('noiDung'),
+    };
+
+    try {
+      await dismissReminder({ id: selectedDebt, payload });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const [checkOutReminder, { isLoading: checkoutReminderLoading }] =
+    useCheckOutReminderMutation();
+
+  const handleCheckoutReminder = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    setOpenPayDebtDialog(false);
+
+    try {
+      await checkOutReminder({ id: selectedDebt, payload: data.get('otp') });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   return (
-    <TableContainer>
-      <Table stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell key="index">STT</TableCell>
-            {created
-              ? createdColumns.map((column) => (
-                  <TableCell key={column.id}>{column.label}</TableCell>
-                ))
-              : receivedColumns.map((column) => (
-                  <TableCell key={column.id}>{column.label}</TableCell>
-                ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow hover tabIndex={-1}>
-            <TableCell>1</TableCell>
-            <TableCell>0123456789</TableCell>
-            <TableCell>Ho Lam Bao Khuyen</TableCell>
-            <TableCell>16:06 27/12/2022</TableCell>
-            <TableCell>{formatMoney(50000)} VND</TableCell>
-            <TableCell>Làm ơn trả tiền cho mình nhé</TableCell>
-            {!paid && (
-              <>
-                {!created && (
-                  <TableCell sx={{ maxWidth: '5rem' }}>
-                    <Button variant="contained" color="success">
-                      Thanh toán
-                    </Button>
-                  </TableCell>
+    <>
+      <TableContainer>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell key="index">STT</TableCell>
+              {created
+                ? createdColumns.map((column) => (
+                    <TableCell key={column.id}>{column.label}</TableCell>
+                  ))
+                : receivedColumns.map((column) => (
+                    <TableCell key={column.id}>{column.label}</TableCell>
+                  ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((item, index) => (
+              <TableRow key={item.maNN} hover tabIndex={-1}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{item.soTK}</TableCell>
+                <TableCell>{item.hoTen}</TableCell>
+                <TableCell>{item.ngayTao}</TableCell>
+                <TableCell>{formatMoney(item.soTien)} VND</TableCell>
+                <TableCell>{item.noiDungNN}</TableCell>
+                {!completed && (
+                  <>
+                    {!created && (
+                      <TableCell sx={{ maxWidth: '5rem' }}>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          onClick={() => handleOpenPayDebtDialog(item)}
+                        >
+                          Thanh toán
+                        </Button>
+                      </TableCell>
+                    )}
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => handleOpenDeleteDebtDialog(item)}
+                      >
+                        Xoá
+                      </Button>
+                    </TableCell>
+                  </>
                 )}
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={onClickDelete}
-                  >
-                    Xoá
-                  </Button>
-                </TableCell>
-              </>
-            )}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Dialog open={openDeleteDebtDialog} onClose={handleCloseDeleteDebtDialog}>
+        <DialogTitle>Xoá nhắc nợ</DialogTitle>
+        <DialogContent>
+          <Box component="form" onSubmit={handleDismissReminder}>
+            <DialogContentText>
+              Bạn có chắc muốn xoá nhắc nợ này?
+            </DialogContentText>
+            <TextField
+              name="noiDung"
+              required
+              margin="dense"
+              label="Nội dung"
+              fullWidth
+              multiline
+              rows={4}
+            />
+            <DialogActions sx={{ paddingRight: 0 }}>
+              <Button variant="outlined" onClick={handleCloseDeleteDebtDialog}>
+                Hủy
+              </Button>
+              <Button variant="contained" type="submit">
+                Xoá
+              </Button>
+            </DialogActions>
+          </Box>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={openPayDebtDialog} onClose={handleClosePayDebtDialog}>
+        <DialogTitle>Thanh toán nhắc nợ</DialogTitle>
+        <DialogContent>
+          <Box component="form" onSubmit={handleCheckoutReminder}>
+            <DialogContentText>
+              Bạn có chắc muốn thanh toán nhắc nợ này?
+            </DialogContentText>
+            <TextField
+              name="otp"
+              required
+              margin="dense"
+              label="Mã OTP"
+              fullWidth
+            />
+            <Typography variant="caption">
+              Vui lòng nhập mã OTP đã được gửi đến email của bạn
+            </Typography>
+            <DialogActions sx={{ paddingRight: 0 }}>
+              <Button variant="outlined" onClick={handleClosePayDebtDialog}>
+                Hủy
+              </Button>
+              <Button type="submit" variant="contained">
+                Thanh toán
+              </Button>
+            </DialogActions>
+          </Box>
+        </DialogContent>
+      </Dialog>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={
+          dismissReminderLoading || requestOTPLoading || checkoutReminderLoading
+        }
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
   );
 }

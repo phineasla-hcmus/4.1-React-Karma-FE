@@ -1,14 +1,17 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+  Backdrop,
   Box,
-  Button,
+  CircularProgress,
   Container,
   Step,
   StepLabel,
   Stepper,
   Typography,
 } from '@mui/material';
+import _omit from 'lodash/omit';
 
 import Layout from '../../../components/Layout';
 import {
@@ -16,6 +19,14 @@ import {
   StyledContentWrapper,
 } from '../../../components/styles';
 import OTPModal from '../../../components/OTPModal';
+import {
+  setTransferInfo,
+  useMakeExternalTransferMutation,
+  useMakeInternalTransferMutation,
+  useRequestOTPForTransferMutation,
+} from '../../../redux/slices/transferSlice';
+import { RootState } from '../../../redux/store';
+import { useAddUserToSavedListMutation } from '../../../redux/slices/savedListSlice';
 
 import TransferInfo from './TransferInfo';
 import TransferConfirmation from './TransferConfirmation';
@@ -27,6 +38,8 @@ const steps = [
   'Hoá đơn',
 ];
 
+const TRANSFER_FEE = 10000;
+
 function TransferMoney() {
   const [activeStep, setActiveStep] = useState(0);
   const [open, setOpen] = useState(false);
@@ -37,10 +50,6 @@ function TransferMoney() {
   };
 
   const handleNext = () => {
-    if (activeStep === 1) {
-      setOpen(true);
-      return;
-    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -48,8 +57,87 @@ function TransferMoney() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
+  const dispatch = useDispatch();
+
+  const [makeAnInternalTransfer, { isLoading: internalTransferLoading }] =
+    useMakeInternalTransferMutation();
+
+  const [makeAnExternalTransfer, { isLoading: externalTransferLoading }] =
+    useMakeExternalTransferMutation();
+
+  const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
+    useRequestOTPForTransferMutation();
+
+  const [addUserToSavedList, { isLoading: addUserLoading }] =
+    useAddUserToSavedListMutation();
+
+  const transferInfo = useSelector(
+    (state: RootState) => state.transfer.transferInfo
+  );
+
+  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    if (activeStep === 0) {
+      console.log('arr', data.get('soTK')?.toString().split(' - '));
+      const tenTKFromData = data.get('tenTK')?.toString() || '';
+      const transferInfo = {
+        soTK: data.get('soTK')?.toString().split(' - ')[1],
+        tenTK:
+          tenTKFromData.length > 0
+            ? data.get('tenTK')
+            : data.get('soTK')?.toString().split(' - ')[0],
+        nganHang: data.get('nganHang'),
+        soTien: data.get('soTien'),
+        noiDungCK: data.get('noiDungCK'),
+        loaiCK: data.get('loaiCK'),
+        phiCK: TRANSFER_FEE,
+      };
+
+      dispatch(setTransferInfo(transferInfo));
+
+      handleNext();
+    }
+
+    if (activeStep === 1) {
+      const payload = {
+        soTK: transferInfo.soTK,
+        tenGoiNho: data.get('tenGoiNho'),
+      };
+
+      try {
+        await addUserToSavedList(payload);
+      } catch (error) {
+        console.log('error', error);
+        return;
+      }
+      try {
+        const { soTien, soTK: nguoiNhan } = transferInfo;
+        await requestOTPForTransfer({ soTK, nguoiNhan, soTien });
+        setOpen(true);
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  };
+
+  const handleTransferRequest = async () => {
+    setOpen(false);
+
+    try {
+      const payload = { ...transferInfo, otp };
+
+      if (transferInfo.nganHang?.length > 0) {
+        await makeAnExternalTransfer(_omit(payload, ['phiCK', 'tenTK']));
+      } else
+        await makeAnInternalTransfer(_omit(payload, ['nganHang', 'tenTK']));
+      handleNext();
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   return (
@@ -73,39 +161,21 @@ function TransferMoney() {
               );
             })}
           </Stepper>
-          {activeStep === steps.length ? (
-            <>
-              <Typography sx={{ mt: 2, mb: 1 }}>
-                Chuyển tiền thành công!
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Box sx={{ flex: '1 1 auto' }} />
-                <Button onClick={handleReset}>Reset</Button>
-              </Box>
-            </>
-          ) : (
-            <>
-              <Box mt={2} mb={1}>
-                {activeStep === 0 && <TransferInfo />}
-                {activeStep === 1 && <TransferConfirmation />}
-                {activeStep === 2 && <TransferReceipt />}
-              </Box>
-              {activeStep !== 2 && (
-                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                  <Button
-                    color="inherit"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                  <Box sx={{ flex: '1 1 auto' }} />
-                  <Button onClick={handleNext}>Next</Button>
-                </Box>
-              )}
-            </>
-          )}
+          <Box mt={2} mb={1}>
+            {activeStep === 0 && (
+              <TransferInfo
+                handleSubmit={handleSubmit}
+                activeStep={activeStep}
+              />
+            )}
+            {activeStep === 1 && (
+              <TransferConfirmation
+                handleSubmit={handleSubmit}
+                activeStep={activeStep}
+              />
+            )}
+            {activeStep === 2 && <TransferReceipt />}
+          </Box>
         </Container>
       </StyledContentWrapper>
       <OTPModal
@@ -116,13 +186,20 @@ function TransferMoney() {
         onClickCancel={() => {
           setOpen(false);
         }}
-        onClickConfirm={() => {
-          console.log('otp', otp);
-          setOpen(false);
-          setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        }}
+        onClickConfirm={handleTransferRequest}
         handleChangeOTP={handleChangeOTP}
       />
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={
+          requestOTPLoading ||
+          internalTransferLoading ||
+          externalTransferLoading ||
+          addUserLoading
+        }
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Layout>
   );
 }

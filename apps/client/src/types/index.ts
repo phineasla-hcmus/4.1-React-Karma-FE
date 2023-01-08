@@ -1,4 +1,47 @@
-export interface Item {
-  id: string;
-  value: string;
+export interface UserInfo {
+  hoTen: string;
+  email: string;
+  sdt: string;
+  soTK: string;
+  soDu: number;
+}
+
+export interface TransactionHistory {
+  maCK: number;
+  nguoiGui: string;
+  nguoiNhan: string;
+  tenNguoiGui: string;
+  tenNguoiNhan: string;
+  soTien: number;
+  ngayCK: string;
+  noiDungCK: string;
+  loai: 'transfer' | 'receive';
+  loaiCK: 'sender' | 'receiver';
+  phiCK: number;
+}
+
+export interface Receiver {
+  nguoiDung: string;
+  tenGoiNho: string;
+}
+
+export interface Reminder {
+  maNN: number;
+  soTK: string;
+  hoTen: string;
+  noiDungNN: string;
+  soTien: number;
+  ngayTao: string;
+  trangThai: 'pending' | 'completed';
+}
+
+export interface ReminderCheckoutHistory {
+  maCK: number;
+  nguoiGui: string;
+  nguoiNhan: string;
+  tenNguoiGui: string;
+  tenNguoiNhan: string;
+  soTien: number;
+  ngayCK: string;
+  noiDungCK: string;
 }
