@@ -1,7 +1,9 @@
 import { Alert, Box, Card, Typography } from '@mui/material';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-import { formatMoney } from '../../../../utils';
+import { RootState } from '../../../../redux/store';
+import { formatDateTime, formatMoney } from '../../../../utils';
 
 import {
   StyledContentBox,
@@ -11,40 +13,45 @@ import {
 } from './styles';
 
 export default function TransferReceipt() {
+  const { soTK, tenTK, soTien, noiDungCK, loaiCK } = useSelector(
+    (state: RootState) => state.transfer.transferInfo
+  );
+
   return (
     <Box>
       <Alert severity="success">Giao dịch thành công</Alert>
       <Card sx={{ padding: '1rem', marginTop: '2rem', textAlign: 'center' }}>
-        <Typography variant="h6">Chuyển Tiền</Typography>
-        <Typography variant="caption">24/12/2022 17:56</Typography>
-        <Typography variant="h5">-{formatMoney(100000)} VND</Typography>
+        <Typography variant="caption">{formatDateTime(new Date())}</Typography>
+        <Typography variant="h5">-{formatMoney(soTien)} VND</Typography>
         <Box
           sx={{
             borderRadius: '0.5rem',
-            width: '40rem',
+            width: '70rem',
             margin: '2rem auto',
           }}
         >
           <StyledRow>
-            <StyledTitle>Từ</StyledTitle>
-            <StyledContentBox>
-              <Typography>Nguyen Ngoc Thanh Tam</Typography>
-              <Typography>123456780</Typography>
-            </StyledContentBox>
-          </StyledRow>
-          <StyledDivider />
-          <StyledRow>
             <StyledTitle>Đến</StyledTitle>
             <StyledContentBox>
-              <Typography>Ho Lam Bao Khuyen</Typography>
-              <Typography>123456789</Typography>
+              <Typography>
+                {tenTK} - {soTK}
+              </Typography>
             </StyledContentBox>
           </StyledRow>
           <StyledDivider />
           <StyledRow>
             <StyledTitle>Mô tả</StyledTitle>
             <StyledContentBox>
-              <Typography>Chuyển tiền nè</Typography>
+              <Typography>{noiDungCK}</Typography>
+            </StyledContentBox>
+          </StyledRow>
+          <StyledDivider />
+          <StyledRow>
+            <StyledTitle>Hình thức thanh toán</StyledTitle>
+            <StyledContentBox>
+              <Typography>
+                {loaiCK === 'sender' ? 'Người nhận' : 'Ngưởi gửi'} trả phí
+              </Typography>
             </StyledContentBox>
           </StyledRow>
         </Box>
