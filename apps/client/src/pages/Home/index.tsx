@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Avatar, Box, Grid, IconButton, Typography } from '@mui/material';
+import { Avatar, Box, Card, Grid, IconButton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
@@ -10,6 +10,7 @@ import { formatMoney } from '../../utils';
 import { setUserInfo, useUserInfoQuery } from '../../redux/slices/authSlice';
 import AsyncDataRenderer from '../../components/AsyncDataRenderer';
 import { USER_INFO } from '../../mocks/auth';
+import { RootState } from '../../redux/store';
 
 import { StyledClickableCard } from './styles';
 
@@ -22,46 +23,57 @@ function Home() {
     setShowBalance((v) => !v);
   }, []);
 
-  const { isLoading, data } = useUserInfoQuery({});
   const dispatch = useDispatch();
+
+  const userInfoFromReducer = useSelector(
+    (state: RootState) => state.auth.userInfo
+  );
+
+  const { isLoading, data } = useUserInfoQuery(undefined, {
+    skip: userInfoFromReducer.hoTen.length > 0,
+  });
 
   const userInfo = useMemo(() => data || USER_INFO, [data]);
 
   useEffect(() => {
-    dispatch(setUserInfo(userInfo));
+    if (!userInfoFromReducer.hoTen.length) dispatch(setUserInfo(userInfo));
   }, [userInfo]);
 
   return (
     <Layout>
       <StyledContentWrapper>
         <AsyncDataRenderer loading={isLoading}>
-          <Box
+          <Card
             sx={{
+              padding: '1.5rem',
               width: 'fit-content',
-              display: 'flex',
-              justifyContent: 'space-between',
+              marginBottom: '1rem',
             }}
           >
-            <Typography variant="h6">
-              Số dư khả dụng:{' '}
-              <Typography sx={{ marginLeft: '0.2rem' }} component="span">
-                {showBalance
-                  ? formatMoney(userInfo.soDu).concat(' VND')
-                  : '*********'}
+            <Typography sx={{ fontSize: '2rem' }}>{userInfo.soTK}</Typography>
+            <Typography variant="h6">{userInfo.hoTen}</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="h6">
+                Số dư khả dụng:{' '}
+                <Typography sx={{ marginLeft: '0.2rem' }} component="span">
+                  {showBalance
+                    ? formatMoney(userInfo.soDu).concat(' VND')
+                    : '*********'}
+                </Typography>
               </Typography>
-            </Typography>
-            <IconButton
-              aria-label="toggle balance visibility"
-              onClick={handleClickShowBalance}
-              edge="end"
-            >
-              {showBalance ? (
-                <VisibilityOff sx={{ fontSize: '1.25rem' }} />
-              ) : (
-                <Visibility sx={{ fontSize: '1.25rem' }} />
-              )}
-            </IconButton>
-          </Box>
+              <IconButton
+                aria-label="toggle balance visibility"
+                onClick={handleClickShowBalance}
+                edge="end"
+              >
+                {showBalance ? (
+                  <VisibilityOff sx={{ fontSize: '1.25rem' }} />
+                ) : (
+                  <Visibility sx={{ fontSize: '1.25rem' }} />
+                )}
+              </IconButton>
+            </Box>
+          </Card>
           <Grid container>
             <Grid item xs={12} sx={{ display: 'flex' }}>
               <StyledClickableCard

@@ -6,9 +6,12 @@ import { apiSlice } from './apiSlice';
 const initialState = {
   transferInfo: {
     soTK: '',
+    tenTK: '',
+    nganHang: '',
     soTien: 0,
     noiDungCK: '',
-    hinhThucThanhToan: '',
+    loaiCK: '',
+    phiCK: '',
   },
 };
 
@@ -34,6 +37,16 @@ export const transferApi = apiSlice.injectEndpoints({
         body: payload,
       }),
     }),
+    makeExternalTransfer: build.mutation({
+      query: (payload) => ({
+        headers: {
+          'Content-type': 'application/json',
+        },
+        url: 'external/transfer',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
     requestOTPForTransfer: build.mutation({
       query: (payload) => ({
         headers: {
@@ -45,8 +58,20 @@ export const transferApi = apiSlice.injectEndpoints({
       }),
     }),
     getTransactionHistory: build.query({
-      query: (accountNo) => ({
-        url: `user/transactions/${accountNo}`,
+      query: () => ({
+        url: 'user/transactions',
+        method: 'GET',
+      }),
+    }),
+    getReminderCheckoutHistory: build.query({
+      query: () => ({
+        url: 'user/transactions/reminders',
+        method: 'GET',
+      }),
+    }),
+    getInternalPaymentAccountInfo: build.query({
+      query: (id) => ({
+        url: `payment-accounts/${id}`,
         method: 'GET',
       }),
     }),
@@ -59,6 +84,9 @@ export default transferSlice.reducer;
 
 export const {
   useMakeInternalTransferMutation,
+  useMakeExternalTransferMutation,
   useRequestOTPForTransferMutation,
   useGetTransactionHistoryQuery,
+  useGetReminderCheckoutHistoryQuery,
+  useGetInternalPaymentAccountInfoQuery,
 } = transferApi;

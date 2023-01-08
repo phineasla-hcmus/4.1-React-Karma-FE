@@ -10,10 +10,14 @@ export interface TransactionHistory {
   maCK: number;
   nguoiGui: string;
   nguoiNhan: string;
+  tenNguoiGui: string;
+  tenNguoiNhan: string;
   soTien: number;
   ngayCK: string;
   noiDungCK: string;
-  loaiCK: 'transfer' | 'receive' | 'debt';
+  loai: 'transfer' | 'receive';
+  loaiCK: 'sender' | 'receiver';
+  phiCK: number;
 }
 
 export interface Receiver {
@@ -29,4 +33,15 @@ export interface Reminder {
   soTien: number;
   ngayTao: string;
   trangThai: 'pending' | 'completed';
+}
+
+export interface ReminderCheckoutHistory {
+  maCK: number;
+  nguoiGui: string;
+  nguoiNhan: string;
+  tenNguoiGui: string;
+  tenNguoiNhan: string;
+  soTien: number;
+  ngayCK: string;
+  noiDungCK: string;
 }

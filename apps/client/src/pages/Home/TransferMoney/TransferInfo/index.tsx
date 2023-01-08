@@ -10,9 +10,13 @@ import {
   Switch,
   TextField,
 } from '@mui/material';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useMemo, useState } from 'react';
 
-// TODO: Get receiver list from external bank
+import AsyncDataRenderer from '../../../../components/AsyncDataRenderer';
+import { RECEIVER_LIST } from '../../../../mocks/transfer';
+import { useGetSavedListQuery } from '../../../../redux/slices/savedListSlice';
+import { transferApi } from '../../../../redux/slices/transferSlice';
+import { Receiver } from '../../../../types';
 
 interface TransferInfoProps {
   activeStep: number;
@@ -21,17 +25,14 @@ interface TransferInfoProps {
 
 function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
   const [chooseFromList, setChooseFromList] = useState(false);
-  const [receiver, setReceiver] = useState('');
   const [payment, setPayment] = useState('');
   const [transferType, setTransferType] = useState('');
   const [bank, setBank] = useState('');
+  const [soTK, setSoTK] = useState('');
+  const [tenTK, setTenTK] = useState('');
 
   const handleSelectChooseFromList = (event: ChangeEvent<HTMLInputElement>) => {
     setChooseFromList(event.target.checked);
-  };
-
-  const handleSelectReceiver = (event: SelectChangeEvent) => {
-    setReceiver(event.target.value as string);
   };
 
   const handleSelectPayment = (event: SelectChangeEvent) => {
@@ -45,6 +46,27 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
   const handleSelectBank = (event: SelectChangeEvent) => {
     setBank(event.target.value as string);
   };
+
+  const [
+    getInternalPaymentAccountInfo,
+    {
+      isLoading: internalPaymentAccountInfoLoading,
+      data: internalPaymentAccountInfo,
+    },
+  ] = transferApi.endpoints.getInternalPaymentAccountInfo.useLazyQuery();
+
+  const handleLoadAccountName = async () => {
+    await getInternalPaymentAccountInfo(soTK);
+    setTenTK(internalPaymentAccountInfo?.hoTen || 'Hồ Lâm Bảo Khuyên');
+  };
+
+  const { isLoading: savedListLoading, data: savedListData } =
+    useGetSavedListQuery({});
+
+  const savedList = useMemo(
+    () => savedListData || RECEIVER_LIST,
+    [savedListData]
+  ) as Receiver[];
 
   return (
     <Box>
@@ -66,7 +88,7 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
             <MenuItem value="external">Chuyển khoản liên ngân hàng</MenuItem>
           </Select>
         </FormControl>
-        {transferType === 'Chuyển khoản liên ngân hàng' && (
+        {transferType === 'external' && (
           <FormControl sx={{ marginTop: '1rem', width: '100%' }} required>
             <InputLabel id="bank-select-label">Ngân hàng</InputLabel>
             <Select
@@ -94,21 +116,23 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
           />
         </FormControl>
         {chooseFromList ? (
-          <FormControl sx={{ marginTop: '1rem', width: '100%' }} required>
-            <InputLabel id="receiver-select-label">Số tài khoản</InputLabel>
-            <Select
-              name="soTK"
-              labelId="receiver-select-label"
-              id="receiver-select"
-              value={receiver}
-              label="Số tài khoản"
-              onChange={handleSelectReceiver}
-            >
-              <MenuItem value="123456789">123456789</MenuItem>
-              <MenuItem value="123456789">123456789</MenuItem>
-              <MenuItem value="123456789">123456789</MenuItem>
-            </Select>
-          </FormControl>
+          <AsyncDataRenderer loading={savedListLoading}>
+            <FormControl sx={{ marginTop: '1rem', width: '100%' }} required>
+              <InputLabel id="receiver-select-label">Số tài khoản</InputLabel>
+              <Select
+                name="soTK"
+                labelId="receiver-select-label"
+                id="receiver-select"
+                label="Số tài khoản"
+              >
+                {savedList?.map((item) => (
+                  <MenuItem value={`${item.tenGoiNho} - ${item.nguoiDung}`}>
+                    {item.tenGoiNho} - {item.nguoiDung}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </AsyncDataRenderer>
         ) : (
           <TextField
             type="number"
@@ -118,7 +142,24 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
             margin="normal"
             label="Số tài khoản"
             name="soTK"
+            onChange={(event) => {
+              setSoTK(event.target.value);
+            }}
+            onBlur={handleLoadAccountName}
           />
+        )}
+        {!chooseFromList && (
+          <AsyncDataRenderer loading={internalPaymentAccountInfoLoading}>
+            <TextField
+              fullWidth
+              sx={{ display: 'block' }}
+              margin="normal"
+              label="Tên chủ tài khoản"
+              name="tenTK"
+              value={tenTK}
+              InputProps={{ readOnly: true }}
+            />
+          </AsyncDataRenderer>
         )}
         <TextField
           required

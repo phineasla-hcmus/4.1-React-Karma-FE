@@ -22,7 +22,7 @@ export const savedListApi = apiSlice.injectEndpoints({
         url: 'user/saved-list',
         method: 'GET',
       }),
-      providesTags: ['Data'],
+      providesTags: ['savedList'],
     }),
     addUserToSavedList: build.mutation({
       query: (payload) => ({
@@ -33,7 +33,7 @@ export const savedListApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: payload,
       }),
-      invalidatesTags: ['Data'],
+      invalidatesTags: ['savedList'],
     }),
     updateUserSavedListById: build.mutation({
       query: ({ soTK, payload }) => ({
@@ -41,14 +41,14 @@ export const savedListApi = apiSlice.injectEndpoints({
         method: 'PATCH',
         body: payload,
       }),
-      invalidatesTags: ['Data'],
+      invalidatesTags: ['savedList'],
     }),
     deleteUserSavedListById: build.mutation({
       query: (id) => ({
         url: `user/saved-list/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Data'],
+      invalidatesTags: ['savedList'],
     }),
   }),
 });

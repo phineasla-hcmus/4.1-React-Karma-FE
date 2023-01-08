@@ -1,4 +1,8 @@
-import { Receiver, TransactionHistory } from '../types';
+import {
+  Receiver,
+  ReminderCheckoutHistory,
+  TransactionHistory,
+} from '../types';
 
 export const RECEIVER_LIST = [
   {
@@ -23,30 +27,54 @@ export const TRANSACTION_HISTORY = {
   lichSuGiaoDich: [
     {
       maCK: 1,
-      nguoiGui: 'Nguyễn Ngọc Thanh Tâm',
-      nguoiNhan: 'Hồ Lâm Bảo Khuyên',
+      nguoiGui: '111222333444',
+      nguoiNhan: '123467891654',
+      tenNguoiGui: 'Nguyễn Ngọc Thanh Tâm',
+      tenNguoiNhan: 'Hồ Lâm Bảo Khuyên',
       soTien: 100000,
       ngayCK: '20:39 04/01/2023',
       noiDungCK: 'Trả tiền ăn bữa thứ 6',
-      loaiCK: 'transfer',
+      loai: 'transfer',
+      loaiCK: 'sender',
+      phiCK: 30000,
     },
     {
       maCK: 2,
-      nguoiGui: 'Nguyễn Ngọc Thanh Tâm',
-      nguoiNhan: 'Nguyễn Thu Thảo Châu',
-      soTien: 200000,
-      ngayCK: '20:39 04/01/2023',
-      noiDungCK: 'Cảm ơn đã cho mượn tiền nha',
-      loaiCK: 'debt',
-    },
-    {
-      maCK: 3,
-      nguoiGui: 'La Ngọc Hồng Phúc',
-      nguoiNhan: 'Nguyễn Ngọc Thanh Tâm',
+      nguoiGui: '111222333444',
+      nguoiNhan: '123467891654',
+      tenNguoiGui: 'La Ngọc Hồng Phúc',
+      tenNguoiNhan: 'Nguyễn Ngọc Thanh Tâm',
       soTien: 200000,
       ngayCK: '20:39 04/01/2023',
       noiDungCK: 'Trả tiền Haidilao nè',
-      loaiCK: 'receive',
+      loai: 'receive',
+      loaiCK: 'receiver',
+      phiCK: 30000,
     },
   ] as TransactionHistory[],
+};
+
+export const REMINDER_CHECKOUT_HISTORY = {
+  lichSuGiaoDich: [
+    {
+      maCK: 3,
+      nguoiGui: '111222333444',
+      nguoiNhan: '123467891654',
+      tenNguoiGui: 'Nguyễn Ngọc Thanh Tâm',
+      tenNguoiNhan: 'Nguyễn Thu Thảo Châu',
+      soTien: 200000,
+      ngayCK: '20:39 04/01/2023',
+      noiDungCK: 'Cảm ơn đã cho mượn tiền nha',
+    },
+    {
+      maCK: 4,
+      nguoiGui: '123467891654',
+      nguoiNhan: '111222333444',
+      tenNguoiGui: 'Nguyễn Thị Minh Thu',
+      tenNguoiNhan: 'Nguyễn Ngọc Thanh Tâm',
+      soTien: 50000,
+      ngayCK: '20:39 04/01/2023',
+      noiDungCK: 'Cảm ơn đã cho mượn tiền nha',
+    },
+  ] as ReminderCheckoutHistory[],
 };

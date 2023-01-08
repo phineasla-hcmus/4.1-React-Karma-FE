@@ -20,14 +20,14 @@ export const reminderApi = apiSlice.injectEndpoints({
         url: 'user/reminders',
         method: 'GET',
       }),
-      providesTags: ['Data'],
+      providesTags: ['reminderList'],
     }),
     getMyReminderList: build.query({
       query: () => ({
         url: 'user/myReminders',
         method: 'GET',
       }),
-      providesTags: ['Data'],
+      providesTags: ['reminderList'],
     }),
     createReminder: build.mutation({
       query: (payload) => ({
@@ -38,7 +38,7 @@ export const reminderApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: payload,
       }),
-      invalidatesTags: ['Data'],
+      invalidatesTags: ['reminderList'],
     }),
     dismissReminderById: build.mutation({
       query: ({ id, payload }) => ({
@@ -46,14 +46,15 @@ export const reminderApi = apiSlice.injectEndpoints({
         method: 'DELETE',
         body: payload,
       }),
-      invalidatesTags: ['Data'],
+      invalidatesTags: ['reminderList'],
     }),
     checkOutReminder: build.mutation({
-      query: (id) => ({
+      query: ({ id, payload }) => ({
         url: `user/reminders/${id}`,
         method: 'PATCH',
+        body: payload,
       }),
-      invalidatesTags: ['Data'],
+      invalidatesTags: ['reminderList'],
     }),
   }),
 });

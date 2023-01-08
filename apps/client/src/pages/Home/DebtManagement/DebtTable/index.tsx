@@ -16,13 +16,17 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
 import React, { FormEvent, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   useCheckOutReminderMutation,
   useDismissReminderByIdMutation,
 } from '../../../../redux/slices/reminderSlice';
+import { useRequestOTPForTransferMutation } from '../../../../redux/slices/transferSlice';
+import { RootState } from '../../../../redux/store';
 import { Reminder } from '../../../../types';
 import { formatMoney } from '../../../../utils';
 
@@ -129,6 +133,10 @@ export default function DebtTable({
   const [openDeleteDebtDialog, setOpenDeleteDebtDialog] = useState(false);
   const [openPayDebtDialog, setOpenPayDebtDialog] = useState(false);
   const [selectedDebt, setSelectedDebt] = useState(0);
+  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+
+  const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
+    useRequestOTPForTransferMutation();
 
   const handleOpenDeleteDebtDialog = (reminder: Reminder) => {
     setSelectedDebt(reminder.maNN);
@@ -139,7 +147,13 @@ export default function DebtTable({
     setOpenDeleteDebtDialog(false);
   };
 
-  const handleOpenPayDebtDialog = (reminder: Reminder) => {
+  const handleOpenPayDebtDialog = async (reminder: Reminder) => {
+    await requestOTPForTransfer({
+      soTK,
+      nguoiNhan: reminder.soTK,
+      soTien: reminder.soTien,
+    });
+
     setSelectedDebt(reminder.maNN);
     setOpenPayDebtDialog(true);
   };
@@ -171,11 +185,14 @@ export default function DebtTable({
   const [checkOutReminder, { isLoading: checkoutReminderLoading }] =
     useCheckOutReminderMutation();
 
-  const handleCheckoutReminder = async () => {
+  const handleCheckoutReminder = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
     setOpenPayDebtDialog(false);
 
     try {
-      await checkOutReminder(selectedDebt);
+      await checkOutReminder({ id: selectedDebt, payload: data.get('otp') });
     } catch (error) {
       console.log('error', error);
     }
@@ -265,22 +282,36 @@ export default function DebtTable({
       <Dialog open={openPayDebtDialog} onClose={handleClosePayDebtDialog}>
         <DialogTitle>Thanh toán nhắc nợ</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Bạn có chắc muốn thanh toán nhắc nợ này?
-          </DialogContentText>
-          <DialogActions sx={{ paddingRight: 0 }}>
-            <Button variant="outlined" onClick={handleClosePayDebtDialog}>
-              Hủy
-            </Button>
-            <Button variant="contained" onClick={handleCheckoutReminder}>
-              Thanh toán
-            </Button>
-          </DialogActions>
+          <Box component="form" onSubmit={handleCheckoutReminder}>
+            <DialogContentText>
+              Bạn có chắc muốn thanh toán nhắc nợ này?
+            </DialogContentText>
+            <TextField
+              name="otp"
+              required
+              margin="dense"
+              label="Mã OTP"
+              fullWidth
+            />
+            <Typography variant="caption">
+              Vui lòng nhập mã OTP đã được gửi đến email của bạn
+            </Typography>
+            <DialogActions sx={{ paddingRight: 0 }}>
+              <Button variant="outlined" onClick={handleClosePayDebtDialog}>
+                Hủy
+              </Button>
+              <Button type="submit" variant="contained">
+                Thanh toán
+              </Button>
+            </DialogActions>
+          </Box>
         </DialogContent>
       </Dialog>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={dismissReminderLoading || checkoutReminderLoading}
+        open={
+          dismissReminderLoading || requestOTPLoading || checkoutReminderLoading
+        }
       >
         <CircularProgress color="inherit" />
       </Backdrop>

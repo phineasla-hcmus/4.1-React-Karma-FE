@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Backdrop,
@@ -11,6 +11,7 @@ import {
   Stepper,
   Typography,
 } from '@mui/material';
+import _omit from 'lodash/omit';
 
 import Layout from '../../../components/Layout';
 import {
@@ -20,6 +21,7 @@ import {
 import OTPModal from '../../../components/OTPModal';
 import {
   setTransferInfo,
+  useMakeExternalTransferMutation,
   useMakeInternalTransferMutation,
   useRequestOTPForTransferMutation,
 } from '../../../redux/slices/transferSlice';
@@ -42,7 +44,6 @@ function TransferMoney() {
   const [activeStep, setActiveStep] = useState(0);
   const [open, setOpen] = useState(false);
   const [otp, setOTP] = useState('');
-  const navigate = useNavigate();
 
   const handleChangeOTP = (event: ChangeEvent<HTMLInputElement>) => {
     setOTP(event.target.value);
@@ -61,6 +62,9 @@ function TransferMoney() {
   const [makeAnInternalTransfer, { isLoading: internalTransferLoading }] =
     useMakeInternalTransferMutation();
 
+  const [makeAnExternalTransfer, { isLoading: externalTransferLoading }] =
+    useMakeExternalTransferMutation();
+
   const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
     useRequestOTPForTransferMutation();
 
@@ -71,13 +75,22 @@ function TransferMoney() {
     (state: RootState) => state.transfer.transferInfo
   );
 
+  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     if (activeStep === 0) {
+      console.log('arr', data.get('soTK')?.toString().split(' - '));
+      const tenTKFromData = data.get('tenTK')?.toString() || '';
       const transferInfo = {
-        soTK: data.get('soTK'),
+        soTK: data.get('soTK')?.toString().split(' - ')[1],
+        tenTK:
+          tenTKFromData.length > 0
+            ? data.get('tenTK')
+            : data.get('soTK')?.toString().split(' - ')[0],
+        nganHang: data.get('nganHang'),
         soTien: data.get('soTien'),
         noiDungCK: data.get('noiDungCK'),
         loaiCK: data.get('loaiCK'),
@@ -90,17 +103,6 @@ function TransferMoney() {
     }
 
     if (activeStep === 1) {
-      try {
-        const { soTK, soTien } = transferInfo;
-        await requestOTPForTransfer({ soTK, soTien });
-        setOpen(true);
-      } catch (error) {
-        console.log('error', error);
-        return;
-      }
-    }
-
-    if (activeStep === 2) {
       const payload = {
         soTK: transferInfo.soTK,
         tenGoiNho: data.get('tenGoiNho'),
@@ -112,8 +114,13 @@ function TransferMoney() {
         console.log('error', error);
         return;
       }
-
-      navigate('/');
+      try {
+        const { soTien, soTK: nguoiNhan } = transferInfo;
+        await requestOTPForTransfer({ soTK, nguoiNhan, soTien });
+        setOpen(true);
+      } catch (error) {
+        console.log('error', error);
+      }
     }
   };
 
@@ -122,7 +129,11 @@ function TransferMoney() {
 
     try {
       const payload = { ...transferInfo, otp };
-      await makeAnInternalTransfer(payload);
+
+      if (transferInfo.nganHang?.length > 0) {
+        await makeAnExternalTransfer(_omit(payload, ['phiCK', 'tenTK']));
+      } else
+        await makeAnInternalTransfer(_omit(payload, ['nganHang', 'tenTK']));
       handleNext();
     } catch (error) {
       console.log('error', error);
@@ -163,9 +174,7 @@ function TransferMoney() {
                 activeStep={activeStep}
               />
             )}
-            {activeStep === 2 && (
-              <TransferReceipt handleSubmit={handleSubmit} />
-            )}
+            {activeStep === 2 && <TransferReceipt />}
           </Box>
         </Container>
       </StyledContentWrapper>
@@ -182,7 +191,12 @@ function TransferMoney() {
       />
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={requestOTPLoading || internalTransferLoading || addUserLoading}
+        open={
+          requestOTPLoading ||
+          internalTransferLoading ||
+          externalTransferLoading ||
+          addUserLoading
+        }
       >
         <CircularProgress color="inherit" />
       </Backdrop>

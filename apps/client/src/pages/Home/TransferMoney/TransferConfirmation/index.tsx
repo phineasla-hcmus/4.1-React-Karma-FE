@@ -1,5 +1,14 @@
-import { Box, Button, Card, Typography } from '@mui/material';
-import React, { FormEvent } from 'react';
+import {
+  Box,
+  Button,
+  Card,
+  FormControl,
+  FormControlLabel,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../../redux/store';
@@ -16,7 +25,15 @@ function TransferConfirmation({
   activeStep,
   handleSubmit,
 }: TransferConfirmationProps) {
-  const { soTK, soTien, noiDungCK, hinhThucThanhToan } = useSelector(
+  const [saveReceiverInfo, setSaveReceiverInfo] = useState(false);
+
+  const handleSelectSaveReceiverInfo = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    setSaveReceiverInfo(event.target.checked);
+  };
+
+  const { soTK, tenTK, soTien, noiDungCK, loaiCK } = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
 
@@ -26,7 +43,9 @@ function TransferConfirmation({
         <Card sx={{ padding: '1rem' }}>
           <StyledRow>
             <StyledTitle>Đến</StyledTitle>
-            <Typography sx={{ width: '100%' }}>{soTK}</Typography>
+            <Typography sx={{ width: '100%' }}>
+              {tenTK} - {soTK}
+            </Typography>
           </StyledRow>
           <StyledRow>
             <StyledTitle>Số tiền</StyledTitle>
@@ -41,11 +60,29 @@ function TransferConfirmation({
           <StyledRow>
             <StyledTitle>Hình thức thanh toán</StyledTitle>
             <Typography sx={{ width: '100%' }}>
-              {hinhThucThanhToan === 'sender'
-                ? 'Người gửi trả'
-                : 'Người nhận trả'}
+              {loaiCK === 'sender' ? 'Người gửi trả' : 'Người nhận trả'}
             </Typography>
           </StyledRow>
+          <FormControl sx={{ display: 'block' }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={saveReceiverInfo}
+                  onChange={handleSelectSaveReceiverInfo}
+                />
+              }
+              label="Lưu lại thông tin người nhận"
+            />
+          </FormControl>
+          {saveReceiverInfo && (
+            <TextField
+              fullWidth
+              sx={{ display: 'block' }}
+              margin="normal"
+              label="Tên gợi nhớ"
+              name="tenGoiNho"
+            />
+          )}
         </Card>
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
           <Button
