@@ -9,6 +9,7 @@ import type {
   CreateParams,
   DeleteParams,
 } from 'react-admin';
+import { LegendToggleRounded } from '@mui/icons-material';
 
 import { Paginated } from '../types/generics';
 
@@ -19,24 +20,38 @@ const httpClient = fetchUtils.fetchJson;
 export type GetQueryParams = {
   page: string;
   size: string;
+  bankID?: string;
+  from?: string;
+  to?: string;
 };
 
 export default {
   getList: async (resource: string, params: GetListParams) => {
     const { page, perPage } = params.pagination;
-    const defaultQueryParams = {
+    let defaultQueryParams: GetQueryParams = {
       page: `${page}`,
       size: perPage.toString(),
     };
-    const query: GetQueryParams = defaultQueryParams;
-    if (resource === 'statistic') {
-      return httpClient(`${apiUrl}/interbank/${resource}`, {
-        method: 'GET',
-      }).then(({ json }: { json: Paginated<unknown> }) => ({
-        data: json.data,
-        total: json.total,
-      }));
+
+    if (params.filter.bankID) {
+      defaultQueryParams = {
+        ...defaultQueryParams,
+        bankID: `${params.filter.bankID}`,
+      };
     }
+    if (params.filter.from) {
+      defaultQueryParams = {
+        ...defaultQueryParams,
+        from: `${new Date(params.filter.from)}`,
+      };
+    }
+    if (params.filter.to) {
+      defaultQueryParams = {
+        ...defaultQueryParams,
+        to: `${new Date(params.filter.to)}`,
+      };
+    }
+    const query: GetQueryParams = defaultQueryParams;
     return httpClient(
       `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
       {

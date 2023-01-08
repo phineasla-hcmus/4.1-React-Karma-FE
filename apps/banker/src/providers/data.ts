@@ -27,8 +27,10 @@ export default {
     const defaultQueryParams = {
       page: `${page}`,
       size: perPage.toString(),
+      sender: '',
     };
-    const query: GetQueryParams = defaultQueryParams;
+    const query = defaultQueryParams;
+
     return httpClient(
       `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
       {
@@ -64,7 +66,7 @@ export default {
       }));
     }
 
-    return httpClient(`${apiUrl}/${resource}`, {
+    return httpClient(`${apiUrl}/${resource}/all`, {
       method: 'GET',
     }).then(({ json }) => ({
       data: json.data,
@@ -80,6 +82,12 @@ export default {
   },
 
   update: async (resource: string, params: UpdateParams) => {
+    if (resource === 'clients') {
+      return httpClient(`${apiUrl}/bankers/${params.data.maNV}/recharge`, {
+        method: 'PATCH',
+        body: JSON.stringify(params.data),
+      }).then(() => ({ data: { id: params.id, ...params.data } }));
+    }
     return httpClient(`${apiUrl}/${resource}/${params.id}`, {
       method: 'PATCH',
       body: JSON.stringify(params.data),

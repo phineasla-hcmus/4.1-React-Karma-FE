@@ -7,21 +7,15 @@ import {
   TextField,
   EmailField,
   EditButton,
-  TextInput,
   FunctionField,
 } from 'react-admin';
 
 import { formatPhoneNumber } from '../../utils/helpers';
 
-const userFilters = [
-  <TextInput source="q" label="Search" alwaysOn />,
-  // <ReferenceInput source="userId" label="User" reference="users" />,
-];
-
 export function UserList() {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
-    <List filters={userFilters}>
+    <List exporter={false}>
       {isSmall ? (
         <SimpleList
           primaryText={(record) => record.khachHang.hoTen}
@@ -29,11 +23,28 @@ export function UserList() {
           tertiaryText={(record) => record.khachHang.sdt}
         />
       ) : (
-        <Datagrid>
-          <TextField source="id" label="ID" />
-          <TextField source="tenDangNhap" label="Username" />
-          <TextField source="khachHang.hoTen" label="Fullname" />
-          <EmailField source="khachHang.email" label="Email" />
+        <Datagrid
+          bulkActionButtons={false}
+          sx={{
+            '.MuiTableCell-head': {
+              background: '#e6e0f3',
+              fontWeight: 700,
+            },
+          }}
+        >
+          <TextField source="id" label="ID" sortable={false} />
+          <TextField source="tenDangNhap" label="Username" sortable={false} />
+          <TextField
+            source="taiKhoanThanhToan.soTK"
+            label="Account number"
+            sortable={false}
+          />
+          <TextField
+            source="khachHang.hoTen"
+            label="Fullname"
+            sortable={false}
+          />
+          <EmailField source="khachHang.email" label="Email" sortable={false} />
           <FunctionField
             source="nhanVien.sdt"
             label="Phone"
