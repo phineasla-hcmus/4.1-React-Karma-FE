@@ -6,10 +6,11 @@ import { apiSlice } from './apiSlice';
 const initialState = {
   transferInfo: {
     soTK: '',
+    nguoiNhan: '',
     tenTK: '',
     nganHang: '',
     soTien: 0,
-    noiDungCK: '',
+    noiDung: '',
     loaiCK: '',
     phiCK: '',
   },

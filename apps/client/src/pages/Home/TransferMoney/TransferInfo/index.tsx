@@ -1,3 +1,4 @@
+import { TextFieldsRounded } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -183,6 +184,7 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
           name="soTien"
         />
         <TextField
+          required
           fullWidth
           sx={{ display: 'block' }}
           margin="normal"
