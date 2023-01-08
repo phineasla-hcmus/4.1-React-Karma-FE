@@ -14,7 +14,7 @@ import React, { ChangeEvent, FormEvent, useMemo, useState } from 'react';
 
 import AsyncDataRenderer from '../../../../components/AsyncDataRenderer';
 import { RECEIVER_LIST } from '../../../../mocks/transfer';
-import { useGetSavedListQuery } from '../../../../redux/slices/savedListSlice';
+import { useGetContactListQuery } from '../../../../redux/slices/contactSlice';
 import { transferApi } from '../../../../redux/slices/transferSlice';
 import { Receiver } from '../../../../types';
 
@@ -61,7 +61,7 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
   };
 
   const { isLoading: savedListLoading, data: savedListData } =
-    useGetSavedListQuery({});
+    useGetContactListQuery({});
 
   const savedList = useMemo(
     () => savedListData || RECEIVER_LIST,

@@ -22,11 +22,11 @@ import {
 } from '../../../components/styles';
 import { RECEIVER_LIST } from '../../../mocks/transfer';
 import {
-  useAddUserToSavedListMutation,
-  useDeleteUserSavedListByIdMutation,
-  useGetSavedListQuery,
-  useUpdateUserSavedListByIdMutation,
-} from '../../../redux/slices/savedListSlice';
+  useAddUserToContactListMutation,
+  useDeleteUserContactListByIdMutation,
+  useGetContactListQuery,
+  useUpdateUserContactListByIdMutation,
+} from '../../../redux/slices/contactSlice';
 import { Receiver } from '../../../types';
 
 import ReceiverInfoCard from './ReceiverInfoCard';
@@ -71,7 +71,7 @@ export default function ReceiverManagement() {
   };
 
   const { isLoading: getSavedListLoading, data: getSavedListData } =
-    useGetSavedListQuery({});
+    useGetContactListQuery({});
 
   const savedList = useMemo(
     () => getSavedListData || RECEIVER_LIST,
@@ -79,7 +79,7 @@ export default function ReceiverManagement() {
   ) as Receiver[];
 
   const [addUserToSavedList, { isLoading: addUserLoading }] =
-    useAddUserToSavedListMutation();
+    useAddUserToContactListMutation();
 
   const handleAddUserToSavedList = async (
     event: FormEvent<HTMLFormElement>
@@ -102,7 +102,7 @@ export default function ReceiverManagement() {
   };
 
   const [updateUser, { isLoading: updateUserLoading }] =
-    useUpdateUserSavedListByIdMutation();
+    useUpdateUserContactListByIdMutation();
 
   const handleEditUserInSavedList = async (
     event: FormEvent<HTMLFormElement>
@@ -123,7 +123,7 @@ export default function ReceiverManagement() {
   };
 
   const [deleteUser, { isLoading: deleteUserLoading }] =
-    useDeleteUserSavedListByIdMutation();
+    useDeleteUserContactListByIdMutation();
 
   const handleDeleteUserInSavedList = async () => {
     setOpenDeleteReceiver(false);

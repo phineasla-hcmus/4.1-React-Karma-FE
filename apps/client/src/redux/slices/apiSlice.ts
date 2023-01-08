@@ -17,6 +17,6 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ['savedList', 'reminderList'],
+  tagTypes: ['contactList', 'reminderList'],
   endpoints: () => ({}),
 });

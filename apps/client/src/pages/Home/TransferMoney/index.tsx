@@ -26,7 +26,7 @@ import {
   useRequestOTPForTransferMutation,
 } from '../../../redux/slices/transferSlice';
 import { RootState } from '../../../redux/store';
-import { useAddUserToSavedListMutation } from '../../../redux/slices/savedListSlice';
+import { useAddUserToContactListMutation } from '../../../redux/slices/contactSlice';
 
 import TransferInfo from './TransferInfo';
 import TransferConfirmation from './TransferConfirmation';
@@ -69,7 +69,7 @@ function TransferMoney() {
     useRequestOTPForTransferMutation();
 
   const [addUserToSavedList, { isLoading: addUserLoading }] =
-    useAddUserToSavedListMutation();
+    useAddUserToContactListMutation();
 
   const transferInfo = useSelector(
     (state: RootState) => state.transfer.transferInfo

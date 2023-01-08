@@ -2,7 +2,7 @@
 import { combineReducers } from 'redux';
 
 import authReducer from './slices/authSlice';
-import savedListReducer from './slices/savedListSlice';
+import savedListReducer from './slices/contactSlice';
 import reminderReducer from './slices/reminderSlice';
 import transferReducer from './slices/transferSlice';
 import { apiSlice } from './slices/apiSlice';

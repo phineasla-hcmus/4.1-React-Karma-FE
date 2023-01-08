@@ -44,7 +44,7 @@ import {
   reminderApi,
   useCreateReminderMutation,
 } from '../../../redux/slices/reminderSlice';
-import { useGetSavedListQuery } from '../../../redux/slices/savedListSlice';
+import { useGetContactListQuery } from '../../../redux/slices/contactSlice';
 import { RootState } from '../../../redux/store';
 import { Receiver, Reminder } from '../../../types';
 
@@ -114,7 +114,7 @@ export default function DebtManagement() {
   }, []);
 
   const { isLoading: getSavedListLoading, data: getSavedListData } =
-    useGetSavedListQuery({});
+    useGetContactListQuery({});
 
   const savedList = useMemo(
     () => getSavedListData || RECEIVER_LIST,
