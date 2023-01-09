@@ -18,9 +18,6 @@ const authSlice = createSlice({
     token: '',
   },
   reducers: {
-    setToken: (state, { payload }) => {
-      state.token = payload;
-    },
     setUserInfo: (state, { payload }) => {
       state.userInfo = payload;
     },
@@ -34,7 +31,7 @@ export const authApi = apiSlice.injectEndpoints({
         headers: {
           'Content-type': 'application/json',
         },
-        url: 'login',
+        url: 'auth/login',
         method: 'POST',
         body: payload,
       }),
@@ -52,6 +49,6 @@ export const authApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { setToken, setUserInfo } = authSlice.actions;
+export const { setUserInfo } = authSlice.actions;
 export default authSlice.reducer;
 export const { useLoginMutation, useUserInfoQuery } = authApi;

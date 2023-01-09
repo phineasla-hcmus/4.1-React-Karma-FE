@@ -5,13 +5,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Alert,
   Avatar,
+  Backdrop,
   Box,
   Button,
+  CircularProgress,
   Container,
   Grid,
   IconButton,
@@ -21,9 +22,8 @@ import {
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-// import axios from '../../api/axios';
 import LocationContext from '../../context/LocationProvider';
-import { setToken, useLoginMutation } from '../../redux/slices/authSlice';
+import { useLoginMutation } from '../../redux/slices/authSlice';
 
 import { StyledCaptchaWrapper } from './styles';
 
@@ -31,6 +31,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { registerLocation } = useContext(LocationContext);
+  const navigate = useNavigate();
 
   const handleClickShowPassword = useCallback(() => {
     setShowPassword((v) => !v);
@@ -42,8 +43,7 @@ function Login() {
 
   const captchaRef = useRef<ReCAPTCHA>(null);
 
-  const dispatch = useDispatch();
-  const [login] = useLoginMutation();
+  const [login, { isLoading: loginLoading }] = useLoginMutation();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,33 +58,23 @@ function Login() {
 
     const data = new FormData(event.currentTarget);
 
-    await login(
+    const result = await login(
       JSON.stringify({
         tenDangNhap: data.get('username'),
         matKhau: data.get('password'),
+        recaptchaValue: token,
       })
     );
 
-    dispatch(setToken('sfsdfsdfsdfsdfsdf'));
+    if ('error' in result) {
+      setError('Tên đăng nhập hoặc mật khẩu không hợp lệ');
+      return;
+    }
 
-    // try {
-    //   const response = await axios.post(
-    //     '/login',
-    //     JSON.stringify({
-    //       username: data.get('username'),
-    //       password: data.get('password'),
-    //     }),
-    //     {
-    //       headers: { 'Content-Type': 'application/json' },
-    //       withCredentials: true,
-    //     }
-    //   );
-    //   console.log('response', response);
-    //   const accessToken = response?.data?.accessToken;
-    //   setError('');
-    // } catch (err) {
-    //   setError('Đăng nhập thất bại');
-    // }
+    localStorage.setItem('ACCESS_TOKEN', result.data.data.accessToken);
+    localStorage.setItem('REFRESH_TOKEN', result.data.data.refreshToken);
+
+    navigate('/');
   };
 
   return (
@@ -170,6 +160,12 @@ function Login() {
           </Box>
         </Box>
       </Container>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loginLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Box>
   );
 }
