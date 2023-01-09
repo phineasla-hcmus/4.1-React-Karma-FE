@@ -22,7 +22,10 @@ import React, {
 import AsyncDataRenderer from '../../../../components/AsyncDataRenderer';
 import { RECEIVER_LIST } from '../../../../mocks/transfer';
 import { useGetContactListQuery } from '../../../../redux/slices/contactSlice';
-import { transferApi } from '../../../../redux/slices/transferSlice';
+import {
+  transferApi,
+  useGetExternalPaymentAccountInfoMutation,
+} from '../../../../redux/slices/transferSlice';
 import { Receiver } from '../../../../types';
 
 interface TransferInfoProps {
@@ -61,17 +64,42 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
     },
   ] = transferApi.endpoints.getInternalPaymentAccountInfo.useLazyQuery();
 
+  const [
+    getExternalPaymentAccountInfo,
+    {
+      isLoading: externalPaymentAccountInfoLoading,
+      data: { data: { data: externalPaymentAccountInfo = {} } = {} } = {},
+    },
+  ] = useGetExternalPaymentAccountInfoMutation();
+
   const handleLoadAccountName = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
   ) => {
     if (e.target.value.length > 0) {
-      getInternalPaymentAccountInfo(e.target.value);
+      if (transferType === 'internal') {
+        getInternalPaymentAccountInfo(e.target.value);
+      }
+
+      if (transferType === 'external') {
+        getExternalPaymentAccountInfo({
+          id: e.target.value,
+          nganHang: bank,
+        });
+      }
     }
   };
 
   useEffect(() => {
-    setTenTK(internalPaymentAccountInfo?.hoTen);
-  }, [internalPaymentAccountInfo]);
+    if (transferType === 'internal' && internalPaymentAccountInfo) {
+      setTenTK(internalPaymentAccountInfo.hoTen);
+    }
+
+    if (transferType === 'external' && externalPaymentAccountInfo.lastName) {
+      setTenTK(
+        `${externalPaymentAccountInfo.lastName} ${externalPaymentAccountInfo.firstName}`
+      );
+    }
+  }, [internalPaymentAccountInfo, externalPaymentAccountInfo, transferType]);
 
   const { isLoading: savedListLoading, data: savedListData } =
     useGetContactListQuery({});
@@ -159,7 +187,12 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
           />
         )}
         {!chooseFromList && (
-          <AsyncDataRenderer loading={internalPaymentAccountInfoLoading}>
+          <AsyncDataRenderer
+            loading={
+              internalPaymentAccountInfoLoading ||
+              externalPaymentAccountInfoLoading
+            }
+          >
             <TextField
               fullWidth
               sx={{ display: 'block' }}

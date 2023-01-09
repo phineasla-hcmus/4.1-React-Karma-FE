@@ -45,7 +45,7 @@ export const savedListApi = apiSlice.injectEndpoints({
     }),
     deleteUserContactListById: build.mutation({
       query: (id) => ({
-        url: `user/contacts/${id}`,
+        url: `/contacts/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['contactList'],

@@ -11,7 +11,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { FormEvent, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { Link } from 'react-router-dom';
 
 import AsyncDataRenderer from '../../../components/AsyncDataRenderer';
@@ -104,6 +110,13 @@ export default function ReceiverManagement() {
   const [updateUser, { isLoading: updateUserLoading }] =
     useUpdateUserContactListByIdMutation();
 
+  const handleChangeName = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setValues((v) => ({ ...v, name: event.target.value }));
+    },
+    []
+  );
+
   const handleEditUserInSavedList = async (
     event: FormEvent<HTMLFormElement>
   ) => {
@@ -115,7 +128,9 @@ export default function ReceiverManagement() {
     try {
       await updateUser({
         soTK: data.get('soTK'),
-        payload: data.get('tenGoiNho'),
+        payload: {
+          tenGoiNho: data.get('tenGoiNho'),
+        },
       });
     } catch (error) {
       console.log('error', error);
@@ -208,11 +223,11 @@ export default function ReceiverManagement() {
             <TextField
               value={values.accountNumber}
               name="soTK"
-              required
               margin="dense"
               label="Số tài khoản"
               type="number"
               fullWidth
+              InputProps={{ readOnly: true }}
             />
             <TextField
               value={values.name}
@@ -220,6 +235,7 @@ export default function ReceiverManagement() {
               margin="dense"
               label="Tên gợi nhớ"
               fullWidth
+              onChange={handleChangeName}
             />
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button

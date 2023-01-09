@@ -76,6 +76,16 @@ export const transferApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getExternalPaymentAccountInfo: build.mutation({
+      query: (payload) => ({
+        headers: {
+          'Content-type': 'application/json',
+        },
+        url: 'external/account',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -90,4 +100,5 @@ export const {
   useGetTransactionHistoryQuery,
   useGetReminderCheckoutHistoryQuery,
   useGetInternalPaymentAccountInfoQuery,
+  useGetExternalPaymentAccountInfoMutation,
 } = transferApi;

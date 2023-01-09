@@ -152,8 +152,6 @@ function TransferMoney() {
     }
   };
 
-  console.log('data', internalTransferError);
-
   return (
     <Layout>
       <StyledContentWrapper>
