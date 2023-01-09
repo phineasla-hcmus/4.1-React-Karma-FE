@@ -74,8 +74,8 @@ export default function ReceiverManagement() {
     useGetContactListQuery({});
 
   const savedList = useMemo(
-    () => getSavedListData || RECEIVER_LIST,
-    [getSavedListData]
+    () => getSavedListData?.data || RECEIVER_LIST,
+    [getSavedListData?.data]
   ) as Receiver[];
 
   const [addUserToSavedList, { isLoading: addUserLoading }] =

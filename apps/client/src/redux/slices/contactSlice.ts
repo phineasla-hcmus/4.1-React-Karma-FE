@@ -19,7 +19,7 @@ export const savedListApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getContactList: build.query({
       query: () => ({
-        url: 'user/contacts',
+        url: 'contacts/all',
         method: 'GET',
       }),
       providesTags: ['contactList'],
@@ -29,7 +29,7 @@ export const savedListApi = apiSlice.injectEndpoints({
         headers: {
           'Content-type': 'application/json',
         },
-        url: 'user/contacts',
+        url: 'contacts',
         method: 'POST',
         body: payload,
       }),
@@ -37,7 +37,7 @@ export const savedListApi = apiSlice.injectEndpoints({
     }),
     updateUserContactListById: build.mutation({
       query: ({ soTK, payload }) => ({
-        url: `user/contacts/${soTK}`,
+        url: `contacts/${soTK}`,
         method: 'PATCH',
         body: payload,
       }),

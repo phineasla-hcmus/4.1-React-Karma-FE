@@ -35,10 +35,15 @@ export const authApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: payload,
       }),
-      // query: (user) => {
-      //   console.log('user login: ', user);
-      //   return '';
-      // },
+    }),
+    logout: build.mutation({
+      query: () => ({
+        headers: {
+          'Content-type': 'application/json',
+        },
+        url: 'auth/logout',
+        method: 'POST',
+      }),
     }),
     userInfo: build.query({
       query: () => ({
@@ -51,4 +56,5 @@ export const authApi = apiSlice.injectEndpoints({
 
 export const { setUserInfo } = authSlice.actions;
 export default authSlice.reducer;
-export const { useLoginMutation, useUserInfoQuery } = authApi;
+export const { useLoginMutation, useLogoutMutation, useUserInfoQuery } =
+  authApi;
