@@ -11,7 +11,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { FormEvent, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { Link } from 'react-router-dom';
 
 import AsyncDataRenderer from '../../../components/AsyncDataRenderer';
@@ -22,11 +28,11 @@ import {
 } from '../../../components/styles';
 import { RECEIVER_LIST } from '../../../mocks/transfer';
 import {
-  useAddUserToSavedListMutation,
-  useDeleteUserSavedListByIdMutation,
-  useGetSavedListQuery,
-  useUpdateUserSavedListByIdMutation,
-} from '../../../redux/slices/savedListSlice';
+  useAddUserToContactListMutation,
+  useDeleteUserContactListByIdMutation,
+  useGetContactListQuery,
+  useUpdateUserContactListByIdMutation,
+} from '../../../redux/slices/contactSlice';
 import { Receiver } from '../../../types';
 
 import ReceiverInfoCard from './ReceiverInfoCard';
@@ -71,15 +77,15 @@ export default function ReceiverManagement() {
   };
 
   const { isLoading: getSavedListLoading, data: getSavedListData } =
-    useGetSavedListQuery({});
+    useGetContactListQuery({});
 
   const savedList = useMemo(
-    () => getSavedListData || RECEIVER_LIST,
-    [getSavedListData]
+    () => getSavedListData?.data || RECEIVER_LIST,
+    [getSavedListData?.data]
   ) as Receiver[];
 
   const [addUserToSavedList, { isLoading: addUserLoading }] =
-    useAddUserToSavedListMutation();
+    useAddUserToContactListMutation();
 
   const handleAddUserToSavedList = async (
     event: FormEvent<HTMLFormElement>
@@ -102,7 +108,14 @@ export default function ReceiverManagement() {
   };
 
   const [updateUser, { isLoading: updateUserLoading }] =
-    useUpdateUserSavedListByIdMutation();
+    useUpdateUserContactListByIdMutation();
+
+  const handleChangeName = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setValues((v) => ({ ...v, name: event.target.value }));
+    },
+    []
+  );
 
   const handleEditUserInSavedList = async (
     event: FormEvent<HTMLFormElement>
@@ -115,7 +128,9 @@ export default function ReceiverManagement() {
     try {
       await updateUser({
         soTK: data.get('soTK'),
-        payload: data.get('tenGoiNho'),
+        payload: {
+          tenGoiNho: data.get('tenGoiNho'),
+        },
       });
     } catch (error) {
       console.log('error', error);
@@ -123,7 +138,7 @@ export default function ReceiverManagement() {
   };
 
   const [deleteUser, { isLoading: deleteUserLoading }] =
-    useDeleteUserSavedListByIdMutation();
+    useDeleteUserContactListByIdMutation();
 
   const handleDeleteUserInSavedList = async () => {
     setOpenDeleteReceiver(false);
@@ -208,11 +223,11 @@ export default function ReceiverManagement() {
             <TextField
               value={values.accountNumber}
               name="soTK"
-              required
               margin="dense"
               label="Số tài khoản"
               type="number"
               fullWidth
+              InputProps={{ readOnly: true }}
             />
             <TextField
               value={values.name}
@@ -220,6 +235,7 @@ export default function ReceiverManagement() {
               margin="dense"
               label="Tên gợi nhớ"
               fullWidth
+              onChange={handleChangeName}
             />
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button

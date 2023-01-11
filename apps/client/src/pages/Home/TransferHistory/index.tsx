@@ -28,7 +28,7 @@ const texts = {
 };
 
 function TransferHistory() {
-  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+  const userInfo = useSelector((state: RootState) => state.auth.user);
 
   const [
     getTransactionHistory,

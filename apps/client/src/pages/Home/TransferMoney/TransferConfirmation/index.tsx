@@ -33,7 +33,7 @@ function TransferConfirmation({
     setSaveReceiverInfo(event.target.checked);
   };
 
-  const { soTK, tenTK, soTien, noiDungCK, loaiCK } = useSelector(
+  const { nguoiNhan, tenTK, soTien, noiDung, loaiCK } = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
 
@@ -44,7 +44,7 @@ function TransferConfirmation({
           <StyledRow>
             <StyledTitle>Đến</StyledTitle>
             <Typography sx={{ width: '100%' }}>
-              {tenTK} - {soTK}
+              {tenTK} - {nguoiNhan}
             </Typography>
           </StyledRow>
           <StyledRow>
@@ -55,7 +55,7 @@ function TransferConfirmation({
           </StyledRow>
           <StyledRow>
             <StyledTitle>Mô tả</StyledTitle>
-            <Typography sx={{ width: '100%' }}>{noiDungCK}</Typography>
+            <Typography sx={{ width: '100%' }}>{noiDung}</Typography>
           </StyledRow>
           <StyledRow>
             <StyledTitle>Hình thức thanh toán</StyledTitle>

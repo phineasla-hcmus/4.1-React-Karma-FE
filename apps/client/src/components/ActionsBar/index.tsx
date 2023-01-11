@@ -1,7 +1,9 @@
 import React, { MouseEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {
+  Backdrop,
   Box,
+  CircularProgress,
   IconButton,
   ListItemButton,
   ListItemIcon,
@@ -13,15 +15,32 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 
+import { useLogoutMutation } from '../../redux/slices/authSlice';
+
 function ActionsBar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const [logout, { isLoading: logoutLoading }] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    const result = await logout({});
+
+    if ('error' in result) {
+      return;
+    }
+
+    localStorage.removeItem('ACCESS_TOKEN');
+    localStorage.removeItem('REFRESH_TOKEN');
+    navigate('/login');
   };
 
   return (
@@ -94,11 +113,7 @@ function ActionsBar() {
           </ListItemButton>
         </MenuItem>
         <MenuItem>
-          <ListItemButton
-            sx={{ padding: 0 }}
-            href="/logout"
-            LinkComponent={Link}
-          >
+          <ListItemButton sx={{ padding: 0 }} onClick={handleLogout}>
             <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>
@@ -106,6 +121,12 @@ function ActionsBar() {
           </ListItemButton>
         </MenuItem>
       </Menu>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={logoutLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 }

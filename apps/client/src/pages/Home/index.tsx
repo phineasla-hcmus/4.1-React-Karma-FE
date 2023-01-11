@@ -26,17 +26,15 @@ function Home() {
   const dispatch = useDispatch();
 
   const userInfoFromReducer = useSelector(
-    (state: RootState) => state.auth.userInfo
+    (state: RootState) => state.auth.user
   );
 
-  const { isLoading, data } = useUserInfoQuery(undefined, {
-    skip: userInfoFromReducer.hoTen.length > 0,
-  });
+  const { isLoading, data } = useUserInfoQuery({});
 
   const userInfo = useMemo(() => data || USER_INFO, [data]);
 
   useEffect(() => {
-    if (!userInfoFromReducer.hoTen.length) dispatch(setUserInfo(userInfo));
+    dispatch(setUserInfo(userInfo));
   }, [userInfo]);
 
   return (

@@ -11,10 +11,10 @@ import DebtManagement from './pages/Home/DebtManagement';
 import TransferHistory from './pages/Home/TransferHistory';
 import TransferMoney from './pages/Home/TransferMoney';
 import Login from './pages/Login';
-import RequireAuth from './pages/RequireAuth';
 import ResetPassword from './pages/ResetPassword';
 import Unauthorized from './pages/Unauthorized';
 import VerifyRequest from './pages/VerifyRequest';
+import RequireAuth from './components/RequireAuth';
 
 function App() {
   return (
@@ -25,16 +25,16 @@ function App() {
         <Route path="/verify-request" element={<VerifyRequest />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/transaction-history" element={<TransferHistory />} />
-        <Route path="/receiver-management" element={<ReceiverManagement />} />
-        <Route path="/debt-management" element={<DebtManagement />} />
-        <Route path="/transfer" element={<TransferMoney />} />
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/transaction-history" element={<TransferHistory />} />
+          <Route path="/receiver-management" element={<ReceiverManagement />} />
+          <Route path="/debt-management" element={<DebtManagement />} />
+          <Route path="/transfer" element={<TransferMoney />} />
+        </Route>
 
         <Route element={<PersistLogin />}>
-          <Route element={<RequireAuth allowedRoles={['Client']} />}>
-            <Route path="/change-password" element={<ChangePassword />} />
-          </Route>
+          <Route path="/change-password" element={<ChangePassword />} />
         </Route>
       </Routes>
     </LocationContextProvider>

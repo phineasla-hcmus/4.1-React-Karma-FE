@@ -13,7 +13,7 @@ import {
 } from './styles';
 
 export default function TransferReceipt() {
-  const { soTK, tenTK, soTien, noiDungCK, loaiCK } = useSelector(
+  const { nguoiNhan, tenTK, soTien, noiDung, loaiCK } = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
 
@@ -34,7 +34,7 @@ export default function TransferReceipt() {
             <StyledTitle>Đến</StyledTitle>
             <StyledContentBox>
               <Typography>
-                {tenTK} - {soTK}
+                {tenTK} - {nguoiNhan}
               </Typography>
             </StyledContentBox>
           </StyledRow>
@@ -42,7 +42,7 @@ export default function TransferReceipt() {
           <StyledRow>
             <StyledTitle>Mô tả</StyledTitle>
             <StyledContentBox>
-              <Typography>{noiDungCK}</Typography>
+              <Typography>{noiDung}</Typography>
             </StyledContentBox>
           </StyledRow>
           <StyledDivider />
@@ -50,7 +50,7 @@ export default function TransferReceipt() {
             <StyledTitle>Hình thức thanh toán</StyledTitle>
             <StyledContentBox>
               <Typography>
-                {loaiCK === 'sender' ? 'Người nhận' : 'Ngưởi gửi'} trả phí
+                {loaiCK === 'sender' ? 'Người nhận' : 'Người gửi'} trả phí
               </Typography>
             </StyledContentBox>
           </StyledRow>

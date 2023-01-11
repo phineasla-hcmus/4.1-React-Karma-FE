@@ -6,10 +6,11 @@ import { apiSlice } from './apiSlice';
 const initialState = {
   transferInfo: {
     soTK: '',
+    nguoiNhan: '',
     tenTK: '',
     nganHang: '',
     soTien: 0,
-    noiDungCK: '',
+    noiDung: '',
     loaiCK: '',
     phiCK: '',
   },
@@ -75,6 +76,16 @@ export const transferApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getExternalPaymentAccountInfo: build.mutation({
+      query: (payload) => ({
+        headers: {
+          'Content-type': 'application/json',
+        },
+        url: 'external/account',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -89,4 +100,5 @@ export const {
   useGetTransactionHistoryQuery,
   useGetReminderCheckoutHistoryQuery,
   useGetInternalPaymentAccountInfoQuery,
+  useGetExternalPaymentAccountInfoMutation,
 } = transferApi;

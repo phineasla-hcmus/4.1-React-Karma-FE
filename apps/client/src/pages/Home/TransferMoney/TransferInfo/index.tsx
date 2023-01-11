@@ -1,3 +1,4 @@
+import { TextFieldsRounded } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -10,12 +11,21 @@ import {
   Switch,
   TextField,
 } from '@mui/material';
-import React, { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import AsyncDataRenderer from '../../../../components/AsyncDataRenderer';
 import { RECEIVER_LIST } from '../../../../mocks/transfer';
-import { useGetSavedListQuery } from '../../../../redux/slices/savedListSlice';
-import { transferApi } from '../../../../redux/slices/transferSlice';
+import { useGetContactListQuery } from '../../../../redux/slices/contactSlice';
+import {
+  transferApi,
+  useGetExternalPaymentAccountInfoMutation,
+} from '../../../../redux/slices/transferSlice';
 import { Receiver } from '../../../../types';
 
 interface TransferInfoProps {
@@ -28,7 +38,6 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
   const [payment, setPayment] = useState('');
   const [transferType, setTransferType] = useState('');
   const [bank, setBank] = useState('');
-  const [soTK, setSoTK] = useState('');
   const [tenTK, setTenTK] = useState('');
 
   const handleSelectChooseFromList = (event: ChangeEvent<HTMLInputElement>) => {
@@ -51,17 +60,49 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
     getInternalPaymentAccountInfo,
     {
       isLoading: internalPaymentAccountInfoLoading,
-      data: internalPaymentAccountInfo,
+      data: { data: internalPaymentAccountInfo = {} } = {},
     },
   ] = transferApi.endpoints.getInternalPaymentAccountInfo.useLazyQuery();
 
-  const handleLoadAccountName = async () => {
-    await getInternalPaymentAccountInfo(soTK);
-    setTenTK(internalPaymentAccountInfo?.hoTen || 'Hồ Lâm Bảo Khuyên');
+  const [
+    getExternalPaymentAccountInfo,
+    {
+      isLoading: externalPaymentAccountInfoLoading,
+      data: { data: { data: externalPaymentAccountInfo = {} } = {} } = {},
+    },
+  ] = useGetExternalPaymentAccountInfoMutation();
+
+  const handleLoadAccountName = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
+  ) => {
+    if (e.target.value.length > 0) {
+      if (transferType === 'internal') {
+        getInternalPaymentAccountInfo(e.target.value);
+      }
+
+      if (transferType === 'external') {
+        getExternalPaymentAccountInfo({
+          id: e.target.value,
+          nganHang: bank,
+        });
+      }
+    }
   };
 
+  useEffect(() => {
+    if (transferType === 'internal' && internalPaymentAccountInfo) {
+      setTenTK(internalPaymentAccountInfo.hoTen);
+    }
+
+    if (transferType === 'external' && externalPaymentAccountInfo.lastName) {
+      setTenTK(
+        `${externalPaymentAccountInfo.lastName} ${externalPaymentAccountInfo.firstName}`
+      );
+    }
+  }, [internalPaymentAccountInfo, externalPaymentAccountInfo, transferType]);
+
   const { isLoading: savedListLoading, data: savedListData } =
-    useGetSavedListQuery({});
+    useGetContactListQuery({});
 
   const savedList = useMemo(
     () => savedListData || RECEIVER_LIST,
@@ -142,14 +183,16 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
             margin="normal"
             label="Số tài khoản"
             name="soTK"
-            onChange={(event) => {
-              setSoTK(event.target.value);
-            }}
             onBlur={handleLoadAccountName}
           />
         )}
         {!chooseFromList && (
-          <AsyncDataRenderer loading={internalPaymentAccountInfoLoading}>
+          <AsyncDataRenderer
+            loading={
+              internalPaymentAccountInfoLoading ||
+              externalPaymentAccountInfoLoading
+            }
+          >
             <TextField
               fullWidth
               sx={{ display: 'block' }}
@@ -157,6 +200,9 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
               label="Tên chủ tài khoản"
               name="tenTK"
               value={tenTK}
+              InputLabelProps={{
+                shrink: true,
+              }}
               InputProps={{ readOnly: true }}
             />
           </AsyncDataRenderer>
@@ -171,6 +217,7 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
           name="soTien"
         />
         <TextField
+          required
           fullWidth
           sx={{ display: 'block' }}
           margin="normal"
