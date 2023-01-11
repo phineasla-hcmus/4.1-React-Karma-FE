@@ -55,7 +55,7 @@ export default function DebtManagement() {
   const [openAddDebtDialog, setOpenAddDebtDialog] = useState(false);
   const [chooseFromList, setChooseFromList] = useState(false);
 
-  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+  const { soTK } = useSelector((state: RootState) => state.auth.user);
 
   const handleOpenAddDebtDialog = useCallback(() => {
     setOpenAddDebtDialog(true);

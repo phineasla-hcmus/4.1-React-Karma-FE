@@ -79,7 +79,7 @@ function TransferMoney() {
     (state: RootState) => state.transfer.transferInfo
   );
 
-  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+  const { soTK } = useSelector((state: RootState) => state.auth.user);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

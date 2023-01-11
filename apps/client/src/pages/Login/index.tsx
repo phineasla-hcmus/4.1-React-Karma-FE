@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Alert,
@@ -23,7 +24,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import LocationContext from '../../context/LocationProvider';
-import { useLoginMutation } from '../../redux/slices/authSlice';
+import { setCredentials, useLoginMutation } from '../../redux/slices/authSlice';
 
 import { StyledCaptchaWrapper } from './styles';
 
@@ -44,6 +45,7 @@ function Login() {
   const captchaRef = useRef<ReCAPTCHA>(null);
 
   const [login, { isLoading: loginLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,21 +60,27 @@ function Login() {
 
     const data = new FormData(event.currentTarget);
 
-    const result = await login(
-      JSON.stringify({
-        tenDangNhap: data.get('username'),
-        matKhau: data.get('password'),
-        recaptchaValue: token,
-      })
-    );
+    try {
+      const result = await login(
+        JSON.stringify({
+          tenDangNhap: data.get('username'),
+          matKhau: data.get('password'),
+          recaptchaValue: token,
+        })
+      );
 
-    if ('error' in result) {
-      setError('Tên đăng nhập hoặc mật khẩu không hợp lệ');
-      return;
+      if ('error' in result) {
+        setError('Tên đăng nhập hoặc mật khẩu không hợp lệ');
+        return;
+      }
+
+      localStorage.setItem('ACCESS_TOKEN', result.data.data.accessToken);
+      localStorage.setItem('REFRESH_TOKEN', result.data.data.refreshToken);
+
+      // dispatch(setCredentials({ ...result.data.data, user: 'Tam Nguyen' }));
+    } catch (error) {
+      console.log('error', error);
     }
-
-    localStorage.setItem('ACCESS_TOKEN', result.data.data.accessToken);
-    localStorage.setItem('REFRESH_TOKEN', result.data.data.refreshToken);
 
     navigate('/');
   };

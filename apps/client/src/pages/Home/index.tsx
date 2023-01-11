@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
 import { formatMoney } from '../../utils';
-import { setUserInfo, useUserInfoQuery } from '../../redux/slices/authSlice';
+import { setCredentials, useUserInfoQuery } from '../../redux/slices/authSlice';
 import AsyncDataRenderer from '../../components/AsyncDataRenderer';
 import { USER_INFO } from '../../mocks/auth';
 import { RootState } from '../../redux/store';
@@ -26,23 +26,23 @@ function Home() {
   const dispatch = useDispatch();
 
   const userInfoFromReducer = useSelector(
-    (state: RootState) => state.auth.userInfo
+    (state: RootState) => state.auth.user
   );
 
-  const { isLoading, data } = useUserInfoQuery(undefined, {
-    skip: userInfoFromReducer.hoTen.length > 0,
-  });
+  // const { isLoading, data } = useUserInfoQuery(undefined, {
+  //   skip: userInfoFromReducer.hoTen.length > 0,
+  // });
 
-  const userInfo = useMemo(() => data || USER_INFO, [data]);
+  const userInfo = useMemo(() => USER_INFO, []);
 
-  useEffect(() => {
-    if (!userInfoFromReducer.hoTen.length) dispatch(setUserInfo(userInfo));
-  }, [userInfo]);
+  // useEffect(() => {
+  //   if (!userInfoFromReducer.hoTen.length) dispatch(setCredentials(userInfo));
+  // }, [userInfo]);
 
   return (
     <Layout>
       <StyledContentWrapper>
-        <AsyncDataRenderer loading={isLoading}>
+        <AsyncDataRenderer loading={false}>
           <Card
             sx={{
               padding: '1.5rem',

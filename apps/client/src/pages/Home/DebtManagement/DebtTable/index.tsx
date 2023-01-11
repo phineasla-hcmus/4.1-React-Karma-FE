@@ -133,7 +133,7 @@ export default function DebtTable({
   const [openDeleteDebtDialog, setOpenDeleteDebtDialog] = useState(false);
   const [openPayDebtDialog, setOpenPayDebtDialog] = useState(false);
   const [selectedDebt, setSelectedDebt] = useState(0);
-  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+  const { soTK } = useSelector((state: RootState) => state.auth.user);
 
   const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
     useRequestOTPForTransferMutation();

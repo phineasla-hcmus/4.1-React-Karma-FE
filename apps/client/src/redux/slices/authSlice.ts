@@ -2,24 +2,39 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { UserInfo } from '../../types';
+import { RootState } from '../store';
 
 import { apiSlice } from './apiSlice';
 
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    userInfo: {
+    user: {
       hoTen: '',
       email: '',
       sdt: '',
       soTK: '',
       soDu: 0,
     } as UserInfo,
-    token: '',
+    token: null,
   },
   reducers: {
-    setUserInfo: (state, { payload }) => {
-      state.userInfo = payload;
+    setCredentials: (state, action) => {
+      const { user, accessToken } = action.payload;
+      state.user = user;
+      state.token = accessToken;
+    },
+    logOut: (state) => {
+      // state.user = {
+      //   hoTen: '',
+      //   email: '',
+      //   sdt: '',
+      //   soTK: '',
+      //   soDu: 0,
+      // } as UserInfo;
+      // state.token = null;
+      localStorage.removeItem('ACCESS_TOKEN');
+      localStorage.removeItem('REFRESH_TOKEN');
     },
   },
 });
@@ -54,7 +69,8 @@ export const authApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { setUserInfo } = authSlice.actions;
+export const { setCredentials, logOut } = authSlice.actions;
 export default authSlice.reducer;
 export const { useLoginMutation, useLogoutMutation, useUserInfoQuery } =
   authApi;
+export const selectCurrentToken = (state: RootState) => state.auth.token;
