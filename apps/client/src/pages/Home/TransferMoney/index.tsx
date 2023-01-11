@@ -111,7 +111,7 @@ function TransferMoney() {
 
     if (activeStep === 1) {
       const payload = {
-        soTK: transferInfo.soTK,
+        nguoiDung: transferInfo.soTK,
         tenGoiNho: data.get('tenGoiNho'),
       };
 
