@@ -13,7 +13,7 @@ import {
 } from './styles';
 
 export default function TransferReceipt() {
-  const { soTK, tenTK, soTien, noiDung, loaiCK } = useSelector(
+  const { nguoiNhan, tenTK, soTien, noiDung, loaiCK } = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
 
@@ -34,7 +34,7 @@ export default function TransferReceipt() {
             <StyledTitle>Đến</StyledTitle>
             <StyledContentBox>
               <Typography>
-                {tenTK} - {soTK}
+                {tenTK} - {nguoiNhan}
               </Typography>
             </StyledContentBox>
           </StyledRow>

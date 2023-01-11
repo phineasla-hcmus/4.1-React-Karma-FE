@@ -11,7 +11,7 @@ import {
 import axios from '../../api/axios';
 import { RootState } from '../store';
 
-import { logOut, setCredentials } from './authSlice';
+import { logOut } from './authSlice';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:3003',

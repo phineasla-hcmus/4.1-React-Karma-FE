@@ -24,7 +24,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import LocationContext from '../../context/LocationProvider';
-import { setCredentials, useLoginMutation } from '../../redux/slices/authSlice';
+import { useLoginMutation } from '../../redux/slices/authSlice';
 
 import { StyledCaptchaWrapper } from './styles';
 

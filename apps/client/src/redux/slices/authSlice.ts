@@ -19,10 +19,8 @@ const authSlice = createSlice({
     token: null,
   },
   reducers: {
-    setCredentials: (state, action) => {
-      const { user, accessToken } = action.payload;
-      state.user = user;
-      state.token = accessToken;
+    setUserInfo: (state, { payload }) => {
+      state.user = payload;
     },
     logOut: (state) => {
       // state.user = {
@@ -69,7 +67,7 @@ export const authApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { setCredentials, logOut } = authSlice.actions;
+export const { setUserInfo, logOut } = authSlice.actions;
 export default authSlice.reducer;
 export const { useLoginMutation, useLogoutMutation, useUserInfoQuery } =
   authApi;
