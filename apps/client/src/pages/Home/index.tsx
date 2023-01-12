@@ -29,12 +29,18 @@ function Home() {
     (state: RootState) => state.auth.user
   );
 
-  const { isLoading, data } = useUserInfoQuery({});
+  const { isLoading, data: { data: userInfoData = {} } = {} } =
+    useUserInfoQuery({});
 
-  const userInfo = useMemo(() => data || USER_INFO, [data]);
+  const userInfo = useMemo(() => userInfoData || USER_INFO, [userInfoData]);
+
+  const paymentAccountInfo = useMemo(
+    () => userInfoData.taiKhoanThanhToan,
+    [userInfoData]
+  );
 
   useEffect(() => {
-    dispatch(setUserInfo(userInfo));
+    if (!userInfoFromReducer.hoTen?.length) dispatch(setUserInfo(userInfo));
   }, [userInfo]);
 
   return (
@@ -48,14 +54,15 @@ function Home() {
               marginBottom: '1rem',
             }}
           >
-            <Typography sx={{ fontSize: '2rem' }}>{userInfo.soTK}</Typography>
-            <Typography variant="h6">{userInfo.hoTen}</Typography>
+            <Typography sx={{ fontSize: '2rem' }}>
+              {paymentAccountInfo.soTK}
+            </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h6">
                 Số dư khả dụng:{' '}
                 <Typography sx={{ marginLeft: '0.2rem' }} component="span">
                   {showBalance
-                    ? formatMoney(userInfo.soDu).concat(' VND')
+                    ? formatMoney(paymentAccountInfo.soDu).concat(' VND')
                     : '*********'}
                 </Typography>
               </Typography>
@@ -71,6 +78,7 @@ function Home() {
                 )}
               </IconButton>
             </Box>
+            <Typography variant="h6">{userInfo.hoTen}</Typography>
           </Card>
           <Grid container>
             <Grid item xs={12} sx={{ display: 'flex' }}>
