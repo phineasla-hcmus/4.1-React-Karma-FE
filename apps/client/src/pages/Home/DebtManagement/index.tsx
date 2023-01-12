@@ -29,7 +29,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import AsyncDataRenderer from '../../../components/AsyncDataRenderer';
@@ -38,14 +37,13 @@ import {
   StyledBreadCrumbs,
   StyledContentWrapper,
 } from '../../../components/styles';
-import { MY_REMINDER_LIST, REMINDER_LIST } from '../../../mocks/reminder';
+import { REMINDER_LIST } from '../../../mocks/reminder';
 import { RECEIVER_LIST } from '../../../mocks/transfer';
 import {
   reminderApi,
   useCreateReminderMutation,
 } from '../../../redux/slices/reminderSlice';
 import { useGetContactListQuery } from '../../../redux/slices/contactSlice';
-import { RootState } from '../../../redux/store';
 import { Receiver, Reminder } from '../../../types';
 
 import DebtTab from './DebtTab';
@@ -55,7 +53,7 @@ export default function DebtManagement() {
   const [openAddDebtDialog, setOpenAddDebtDialog] = useState(false);
   const [chooseFromList, setChooseFromList] = useState(false);
 
-  const { soTK } = useSelector((state: RootState) => state.auth.user);
+  const soTK = localStorage.getItem('SOTK');
 
   const handleOpenAddDebtDialog = useCallback(() => {
     setOpenAddDebtDialog(true);

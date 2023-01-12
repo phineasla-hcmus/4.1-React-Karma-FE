@@ -2,15 +2,13 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Avatar, Box, Card, Grid, IconButton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
 import { formatMoney } from '../../utils';
-import { setUserInfo, useUserInfoQuery } from '../../redux/slices/authSlice';
+import { useUserInfoQuery } from '../../redux/slices/authSlice';
 import AsyncDataRenderer from '../../components/AsyncDataRenderer';
 import { USER_INFO } from '../../mocks/auth';
-import { RootState } from '../../redux/store';
 
 import { StyledClickableCard } from './styles';
 
@@ -23,12 +21,6 @@ function Home() {
     setShowBalance((v) => !v);
   }, []);
 
-  const dispatch = useDispatch();
-
-  const userInfoFromReducer = useSelector(
-    (state: RootState) => state.auth.user
-  );
-
   const { isLoading, data: { data: userInfoData = {} } = {} } =
     useUserInfoQuery({});
 
@@ -40,8 +32,8 @@ function Home() {
   );
 
   useEffect(() => {
-    if (!userInfoFromReducer.hoTen?.length) dispatch(setUserInfo(userInfo));
-  }, [userInfo]);
+    localStorage.setItem('SOTK', paymentAccountInfo?.soTK);
+  }, [paymentAccountInfo]);
 
   return (
     <Layout>
@@ -55,14 +47,14 @@ function Home() {
             }}
           >
             <Typography sx={{ fontSize: '2rem' }}>
-              {paymentAccountInfo.soTK}
+              {paymentAccountInfo?.soTK}
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h6">
                 Số dư khả dụng:{' '}
                 <Typography sx={{ marginLeft: '0.2rem' }} component="span">
                   {showBalance
-                    ? formatMoney(paymentAccountInfo.soDu).concat(' VND')
+                    ? formatMoney(paymentAccountInfo?.soDu).concat(' VND')
                     : '*********'}
                 </Typography>
               </Typography>
