@@ -19,7 +19,7 @@ export const savedListApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getContactList: build.query({
       query: () => ({
-        url: 'contacts/all',
+        url: 'user/contacts/all',
         method: 'GET',
       }),
       providesTags: ['contactList'],
@@ -29,7 +29,7 @@ export const savedListApi = apiSlice.injectEndpoints({
         headers: {
           'Content-type': 'application/json',
         },
-        url: 'contacts',
+        url: 'user/contacts',
         method: 'POST',
         body: payload,
       }),
@@ -37,7 +37,7 @@ export const savedListApi = apiSlice.injectEndpoints({
     }),
     updateUserContactListById: build.mutation({
       query: ({ soTK, payload }) => ({
-        url: `contacts/${soTK}`,
+        url: `user/contacts/${soTK}`,
         method: 'PATCH',
         body: payload,
       }),
@@ -45,7 +45,7 @@ export const savedListApi = apiSlice.injectEndpoints({
     }),
     deleteUserContactListById: build.mutation({
       query: (id) => ({
-        url: `/contacts/${id}`,
+        url: `user/contacts/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['contactList'],
