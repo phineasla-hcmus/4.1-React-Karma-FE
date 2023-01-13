@@ -24,6 +24,7 @@ function App() {
       dataProvider={dataProvider}
       authProvider={authProvider}
       loginPage={Login}
+      requireAuth
     >
       <Resource
         name="bankers"
