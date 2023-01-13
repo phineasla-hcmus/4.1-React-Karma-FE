@@ -20,7 +20,7 @@ export default function DebtTab({ data, value, index, created }: DebtTabProps) {
       pendingList: data.filter((item) => item.trangThai === 'pending'),
       completedList: data.filter((item) => item.trangThai === 'completed'),
     };
-  }, []);
+  }, [data]);
 
   return (
     <>

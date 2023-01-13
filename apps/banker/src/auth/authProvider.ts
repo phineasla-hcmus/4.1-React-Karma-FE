@@ -22,11 +22,15 @@ export const authProvider = {
       if (response.status < 200 || response.status >= 300) {
         throw new Error(response.statusText);
       }
-      response.json().then((response) => {
-        localStorage.setItem('ACCESS_TOKEN', response.data.accessToken);
-        localStorage.setItem('REFRESH_TOKEN', response.data.refreshToken);
-        return response.json();
-      });
+      response
+        .json()
+        .then((response) => {
+          localStorage.setItem('ACCESS_TOKEN', response.data.accessToken);
+          localStorage.setItem('REFRESH_TOKEN', response.data.refreshToken);
+        })
+        .catch(() => {
+          throw new Error('Network error');
+        });
     });
 
     // .then(({ accessToken, refreshToken }) => {

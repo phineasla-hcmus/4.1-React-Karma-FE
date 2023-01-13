@@ -35,8 +35,8 @@ export interface Receiver {
 
 export interface Reminder {
   maNN: number;
-  soTK: string;
-  hoTen: string;
+  soTKNguoiGui: string;
+  soTKNguoiNhan: string;
   noiDungNN: string;
   soTien: number;
   ngayTao: string;

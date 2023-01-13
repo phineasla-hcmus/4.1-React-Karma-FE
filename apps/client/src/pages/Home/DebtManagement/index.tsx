@@ -93,7 +93,7 @@ export default function DebtManagement() {
 
       setValue(newValue);
     },
-    []
+    [getReminderList]
   );
 
   const handleSelectChooseFromList = (event: ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +102,7 @@ export default function DebtManagement() {
 
   useEffect(() => {
     getReminderList('others');
-  }, []);
+  }, [getReminderList]);
 
   const {
     isLoading: getSavedListLoading,
@@ -124,19 +124,17 @@ export default function DebtManagement() {
     setOpenAddDebtDialog(false);
 
     const payload = {
-      nguoiNhan: data.get('nguoiNhan'),
+      soTKNguoiNhan: data.get('nguoiNhan'),
       soTK,
-      soTien: data.get('soTien'),
+      soTien: Number(data.get('soTien')),
       noiDung: data.get('noiDung'),
     };
 
-    console.log('payload', payload);
-
-    // try {
-    //   await createReminder(payload);
-    // } catch (error) {
-    //   console.log('error', error);
-    // }
+    try {
+      await createReminder(payload);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   return (
