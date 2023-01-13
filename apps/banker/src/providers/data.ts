@@ -14,7 +14,16 @@ import { Paginated } from '../types/generics';
 
 const apiUrl = 'http://localhost:3003';
 
-const httpClient = fetchUtils.fetchJson;
+const httpClient = (url: string, options: any) => {
+  if (!options.headers) {
+    options.headers = new Headers({ Accept: 'application/json' });
+  }
+  const token = localStorage.getItem('ACCESS_TOKEN');
+  if (token) {
+    options.headers.set('Authorization', `Bearer ${token}`);
+  }
+  return fetchUtils.fetchJson(url, options);
+};
 
 export type GetQueryParams = {
   page: string;

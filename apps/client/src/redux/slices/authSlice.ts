@@ -15,6 +15,12 @@ const authSlice = createSlice({
       sdt: '',
       soTK: '',
       soDu: 0,
+      taiKhoanThanhToan: {
+        soTK: '',
+        soDu: 0,
+        maTK: 0,
+        hoatDong: false,
+      },
     } as UserInfo,
     token: null,
   },

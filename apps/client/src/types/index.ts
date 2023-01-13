@@ -4,6 +4,14 @@ export interface UserInfo {
   sdt: string;
   soTK: string;
   soDu: number;
+  taiKhoanThanhToan: PaymentAccountInfo;
+}
+
+export interface PaymentAccountInfo {
+  soTK: string;
+  soDu: number;
+  maTK: number;
+  hoatDong: boolean;
 }
 
 export interface TransactionHistory {

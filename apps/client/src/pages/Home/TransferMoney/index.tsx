@@ -79,7 +79,7 @@ function TransferMoney() {
     (state: RootState) => state.transfer.transferInfo
   );
 
-  const { soTK } = useSelector((state: RootState) => state.auth.user);
+  const soTK = localStorage.getItem('SOTK');
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -111,11 +111,11 @@ function TransferMoney() {
 
     if (activeStep === 1) {
       const payload = {
-        nguoiDung: transferInfo.soTK,
-        tenGoiNho: data.get('tenGoiNho'),
+        nguoiDung: transferInfo.nguoiNhan,
+        tenGoiNho: data.get('tenGoiNho')?.toString(),
       };
 
-      if (payload.tenGoiNho) {
+      if (payload.tenGoiNho !== undefined) {
         try {
           await addUserToSavedList(payload);
         } catch (error) {

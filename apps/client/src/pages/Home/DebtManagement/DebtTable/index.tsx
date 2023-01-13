@@ -19,14 +19,12 @@ import {
   Typography,
 } from '@mui/material';
 import React, { FormEvent, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import {
   useCheckOutReminderMutation,
   useDismissReminderByIdMutation,
 } from '../../../../redux/slices/reminderSlice';
 import { useRequestOTPForTransferMutation } from '../../../../redux/slices/transferSlice';
-import { RootState } from '../../../../redux/store';
 import { Reminder } from '../../../../types';
 import { formatMoney } from '../../../../utils';
 
@@ -133,7 +131,7 @@ export default function DebtTable({
   const [openDeleteDebtDialog, setOpenDeleteDebtDialog] = useState(false);
   const [openPayDebtDialog, setOpenPayDebtDialog] = useState(false);
   const [selectedDebt, setSelectedDebt] = useState(0);
-  const { soTK } = useSelector((state: RootState) => state.auth.user);
+  const soTK = localStorage.getItem('SOTK');
 
   const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
     useRequestOTPForTransferMutation();

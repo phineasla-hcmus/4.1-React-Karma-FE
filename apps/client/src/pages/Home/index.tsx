@@ -2,15 +2,13 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Avatar, Box, Card, Grid, IconButton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Layout from '../../components/Layout';
 import { StyledContentWrapper } from '../../components/styles';
 import { formatMoney } from '../../utils';
-import { setUserInfo, useUserInfoQuery } from '../../redux/slices/authSlice';
+import { useUserInfoQuery } from '../../redux/slices/authSlice';
 import AsyncDataRenderer from '../../components/AsyncDataRenderer';
 import { USER_INFO } from '../../mocks/auth';
-import { RootState } from '../../redux/store';
 
 import { StyledClickableCard } from './styles';
 
@@ -23,19 +21,19 @@ function Home() {
     setShowBalance((v) => !v);
   }, []);
 
-  const dispatch = useDispatch();
+  const { isLoading, data: { data: userInfoData = {} } = {} } =
+    useUserInfoQuery({});
 
-  const userInfoFromReducer = useSelector(
-    (state: RootState) => state.auth.user
+  const userInfo = useMemo(() => userInfoData || USER_INFO, [userInfoData]);
+
+  const paymentAccountInfo = useMemo(
+    () => userInfoData.taiKhoanThanhToan,
+    [userInfoData]
   );
 
-  const { isLoading, data } = useUserInfoQuery({});
-
-  const userInfo = useMemo(() => data || USER_INFO, [data]);
-
   useEffect(() => {
-    dispatch(setUserInfo(userInfo));
-  }, [userInfo]);
+    localStorage.setItem('SOTK', paymentAccountInfo?.soTK);
+  }, [paymentAccountInfo]);
 
   return (
     <Layout>
@@ -48,14 +46,15 @@ function Home() {
               marginBottom: '1rem',
             }}
           >
-            <Typography sx={{ fontSize: '2rem' }}>{userInfo.soTK}</Typography>
-            <Typography variant="h6">{userInfo.hoTen}</Typography>
+            <Typography sx={{ fontSize: '2rem' }}>
+              {paymentAccountInfo?.soTK}
+            </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h6">
                 Số dư khả dụng:{' '}
                 <Typography sx={{ marginLeft: '0.2rem' }} component="span">
                   {showBalance
-                    ? formatMoney(userInfo.soDu).concat(' VND')
+                    ? formatMoney(paymentAccountInfo?.soDu).concat(' VND')
                     : '*********'}
                 </Typography>
               </Typography>
@@ -71,6 +70,7 @@ function Home() {
                 )}
               </IconButton>
             </Box>
+            <Typography variant="h6">{userInfo.hoTen}</Typography>
           </Card>
           <Grid container>
             <Grid item xs={12} sx={{ display: 'flex' }}>
