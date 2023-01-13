@@ -1,6 +1,7 @@
 import React, { FormEvent, useCallback, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLogin, useNotify } from 'react-admin';
 import {
   Alert,
   Avatar,
@@ -31,10 +32,13 @@ function Login() {
 
   const captchaRef = useRef<ReCAPTCHA>(null);
 
+  const login = useLogin();
+  const notify = useNotify();
+
   // const [login, { isLoading: loginLoading }] = useLoginMutation();
   const dispatch = useDispatch();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const token = captchaRef.current?.getValue();
@@ -46,6 +50,14 @@ function Login() {
     }
 
     const data = new FormData(event.currentTarget);
+
+    console.log(data.get('username'));
+
+    login({
+      tenDangNhap: data.get('username'),
+      matKhau: data.get('password'),
+      recaptchaValue: token,
+    }).catch(() => notify('Invalid email or password'));
 
     // try {
     //   const result = await login(

@@ -65,7 +65,10 @@ export default function DebtManagement() {
 
   const [
     getReminderList,
-    { isLoading: reminderListLoading, data: reminderListData },
+    {
+      isLoading: reminderListLoading,
+      data: { data: reminderListData = [] } = {},
+    },
   ] = reminderApi.endpoints.getReminderList.useLazyQuery();
 
   const reminderList = useMemo(
@@ -101,8 +104,10 @@ export default function DebtManagement() {
     getReminderList('others');
   }, []);
 
-  const { isLoading: getSavedListLoading, data: getSavedListData } =
-    useGetContactListQuery({});
+  const {
+    isLoading: getSavedListLoading,
+    data: { data: getSavedListData = [] } = {},
+  } = useGetContactListQuery({});
 
   const savedList = useMemo(
     () => getSavedListData || RECEIVER_LIST,
@@ -125,11 +130,13 @@ export default function DebtManagement() {
       noiDung: data.get('noiDung'),
     };
 
-    try {
-      await createReminder(payload);
-    } catch (error) {
-      console.log('error', error);
-    }
+    console.log('payload', payload);
+
+    // try {
+    //   await createReminder(payload);
+    // } catch (error) {
+    //   console.log('error', error);
+    // }
   };
 
   return (
