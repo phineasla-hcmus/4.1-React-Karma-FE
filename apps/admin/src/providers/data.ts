@@ -13,7 +13,7 @@ import { LegendToggleRounded } from '@mui/icons-material';
 
 import { Paginated } from '../types/generics';
 
-const apiUrl = process.env.BACKEND_URL;
+const apiUrl = 'http://localhost:3003';
 
 const httpClient = fetchUtils.fetchJson;
 
