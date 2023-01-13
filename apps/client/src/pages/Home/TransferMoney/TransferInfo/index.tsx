@@ -101,8 +101,10 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
     }
   }, [internalPaymentAccountInfo, externalPaymentAccountInfo, transferType]);
 
-  const { isLoading: savedListLoading, data: savedListData } =
-    useGetContactListQuery({});
+  const {
+    isLoading: savedListLoading,
+    data: { data: savedListData = [] } = {},
+  } = useGetContactListQuery({});
 
   const savedList = useMemo(
     () => savedListData || RECEIVER_LIST,
@@ -158,21 +160,25 @@ function TransferInfo({ activeStep, handleSubmit }: TransferInfoProps) {
         </FormControl>
         {chooseFromList ? (
           <AsyncDataRenderer loading={savedListLoading}>
-            <FormControl sx={{ marginTop: '1rem', width: '100%' }} required>
-              <InputLabel id="receiver-select-label">Số tài khoản</InputLabel>
-              <Select
-                name="soTK"
-                labelId="receiver-select-label"
-                id="receiver-select"
-                label="Số tài khoản"
-              >
-                {savedList?.map((item) => (
-                  <MenuItem value={`${item.tenGoiNho} - ${item.nguoiDung}`}>
-                    {item.tenGoiNho} - {item.nguoiDung}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {savedList ? (
+              <FormControl sx={{ marginTop: '1rem', width: '100%' }} required>
+                <InputLabel id="receiver-select-label">Số tài khoản</InputLabel>
+                <Select
+                  name="soTK"
+                  labelId="receiver-select-label"
+                  id="receiver-select"
+                  label="Số tài khoản"
+                >
+                  {savedList?.map((item) => (
+                    <MenuItem value={`${item.tenGoiNho} - ${item.nguoiDung}`}>
+                      {item.tenGoiNho} - {item.nguoiDung}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : (
+              'Chưa có người nhận nào'
+            )}
           </AsyncDataRenderer>
         ) : (
           <TextField

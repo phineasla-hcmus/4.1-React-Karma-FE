@@ -1,8 +1,6 @@
 import { Avatar, Box, Card, Typography } from '@mui/material';
 import React, { useCallback } from 'react';
 
-import { formatMoney } from '../../../../utils';
-
 export interface TransferCardProps {
   type: 'transfer' | 'receive' | 'debt';
   title: string;
@@ -52,7 +50,7 @@ function TransferCard({
           sx={{
             fontSize: '1.1rem',
             fontWeight: 'bold',
-            color: amount.includes('+') ? '#FFD700' : 'red',
+            color: amount.includes('+') ? '#008000' : 'red',
           }}
         >
           {amount}
