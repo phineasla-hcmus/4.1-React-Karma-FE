@@ -51,7 +51,7 @@ function Login() {
 
     const data = new FormData(event.currentTarget);
 
-    console.log(data.get('username'));
+    // console.log(data.get('username'));
 
     login({
       tenDangNhap: data.get('username'),

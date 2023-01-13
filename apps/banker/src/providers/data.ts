@@ -9,6 +9,7 @@ import type {
   CreateParams,
   DeleteParams,
 } from 'react-admin';
+import jwt from 'jwt-decode'; // import dependency
 
 import { Paginated } from '../types/generics';
 
@@ -92,10 +93,15 @@ export default {
 
   update: async (resource: string, params: UpdateParams) => {
     if (resource === 'clients') {
-      return httpClient(`${apiUrl}/bankers/${params.data.maNV}/recharge`, {
+      const token = localStorage.getItem('ACCESS_TOKEN');
+      const decoded: { maTK: number } = jwt(token || '');
+
+      return httpClient(`${apiUrl}/bankers/recharge`, {
         method: 'PATCH',
         body: JSON.stringify(params.data),
-      }).then(() => ({ data: { id: params.id, ...params.data } }));
+      }).then(() => ({
+        data: { id: params.id, maNV: decoded.maTK, ...params.data },
+      }));
     }
     return httpClient(`${apiUrl}/${resource}/${params.id}`, {
       method: 'PATCH',
