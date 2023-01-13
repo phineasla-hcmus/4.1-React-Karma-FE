@@ -88,9 +88,6 @@ export function UserEdit() {
         <Typography variant="h5" mb={3}>
           Recharge
         </Typography>
-        <Box sx={{ display: 'hidden' }}>
-          <TextInput source="maNV" hidden />
-        </Box>
         <NumberInput
           source="soTienThem"
           label="Amount recharge"

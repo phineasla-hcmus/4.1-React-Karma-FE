@@ -140,6 +140,12 @@ function Login() {
                 ),
               }}
             />
+            <StyledCaptchaWrapper>
+              <ReCAPTCHA
+                sitekey={process.env.REACT_APP_SITE_KEY || ''}
+                ref={captchaRef}
+              />
+            </StyledCaptchaWrapper>
             <Button
               type="submit"
               fullWidth
@@ -157,12 +163,6 @@ function Login() {
                 <Link to="/forgot-password">Forgot password</Link>
               </Grid>
             </Grid>
-            <StyledCaptchaWrapper>
-              <ReCAPTCHA
-                sitekey={process.env.REACT_APP_SITE_KEY || ''}
-                ref={captchaRef}
-              />
-            </StyledCaptchaWrapper>
           </Box>
         </Box>
       </Container>
