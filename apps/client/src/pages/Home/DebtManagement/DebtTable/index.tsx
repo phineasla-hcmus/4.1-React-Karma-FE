@@ -26,7 +26,7 @@ import {
 } from '../../../../redux/slices/reminderSlice';
 import { useRequestOTPForTransferMutation } from '../../../../redux/slices/transferSlice';
 import { Reminder } from '../../../../types';
-import { formatMoney } from '../../../../utils';
+import { formatDateTime, formatMoney } from '../../../../utils';
 
 interface ReceivedColumn {
   id:
@@ -91,11 +91,6 @@ const receivedColumns: readonly ReceivedColumn[] = [
 const createdColumns: readonly CreatedColumn[] = [
   { id: 'soTaiKhoan', label: 'Số tài khoản' },
   {
-    id: 'tenNguoiNhan',
-    label: 'Người nhận',
-    minWidth: 200,
-  },
-  {
     id: 'thoiGian',
     label: 'Thời gian',
     minWidth: 150,
@@ -148,7 +143,7 @@ export default function DebtTable({
   const handleOpenPayDebtDialog = async (reminder: Reminder) => {
     await requestOTPForTransfer({
       soTK,
-      nguoiNhan: reminder.soTK,
+      nguoiNhan: reminder.soTKNguoiGui,
       soTien: reminder.soTien,
     });
 
@@ -169,12 +164,13 @@ export default function DebtTable({
 
     setOpenDeleteDebtDialog(false);
 
-    const payload = {
-      noiDung: data.get('noiDung'),
-    };
-
     try {
-      await dismissReminder({ id: selectedDebt, payload });
+      await dismissReminder({
+        id: selectedDebt,
+        payload: {
+          noiDungXoa: data.get('noiDung'),
+        },
+      });
     } catch (error) {
       console.log('error', error);
     }
@@ -190,7 +186,14 @@ export default function DebtTable({
     setOpenPayDebtDialog(false);
 
     try {
-      await checkOutReminder({ id: selectedDebt, payload: data.get('otp') });
+      await checkOutReminder({
+        id: selectedDebt,
+        payload: {
+          otp: Number(data.get('otp')),
+          noiDung: 'Giải quyết nhắc nợ',
+          loaiCK: 'sender',
+        },
+      });
     } catch (error) {
       console.log('error', error);
     }
@@ -216,9 +219,10 @@ export default function DebtTable({
             {data.map((item, index) => (
               <TableRow key={item.maNN} hover tabIndex={-1}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.soTK}</TableCell>
-                <TableCell>{item.hoTen}</TableCell>
-                <TableCell>{item.ngayTao}</TableCell>
+                <TableCell>
+                  {created ? item.soTKNguoiNhan : item.soTKNguoiGui}
+                </TableCell>
+                <TableCell>{formatDateTime(new Date(item.ngayTao))}</TableCell>
                 <TableCell>{formatMoney(item.soTien)} VND</TableCell>
                 <TableCell>{item.noiDungNN}</TableCell>
                 {!completed && (
