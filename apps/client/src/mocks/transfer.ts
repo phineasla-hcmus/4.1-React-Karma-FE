@@ -54,27 +54,25 @@ export const TRANSACTION_HISTORY = {
   ] as TransactionHistory[],
 };
 
-export const REMINDER_CHECKOUT_HISTORY = {
-  lichSuGiaoDich: [
-    {
-      maCK: 3,
-      nguoiChuyen: '111222333444',
-      nguoiNhan: '123467891654',
-      tenNguoiGui: 'Nguyễn Ngọc Thanh Tâm',
-      tenNguoiNhan: 'Nguyễn Thu Thảo Châu',
-      soTien: 200000,
-      ngayCK: '20:39 04/01/2023',
-      noiDungCK: 'Cảm ơn đã cho mượn tiền nha',
-    },
-    {
-      maCK: 4,
-      nguoiChuyen: '123467891654',
-      nguoiNhan: '111222333444',
-      tenNguoiGui: 'Nguyễn Thị Minh Thu',
-      tenNguoiNhan: 'Nguyễn Ngọc Thanh Tâm',
-      soTien: 50000,
-      ngayCK: '20:39 04/01/2023',
-      noiDungCK: 'Cảm ơn đã cho mượn tiền nha',
-    },
-  ] as ReminderCheckoutHistory[],
-};
+export const REMINDER_CHECKOUT_HISTORY = [
+  {
+    maCK: 3,
+    nguoiChuyen: '111222333444',
+    nguoiNhan: '123467891654',
+    tenNguoiGui: 'Nguyễn Ngọc Thanh Tâm',
+    tenNguoiNhan: 'Nguyễn Thu Thảo Châu',
+    soTien: 200000,
+    ngayCK: '20:39 04/01/2023',
+    noiDungCK: 'Cảm ơn đã cho mượn tiền nha',
+  },
+  {
+    maCK: 4,
+    nguoiChuyen: '123467891654',
+    nguoiNhan: '111222333444',
+    tenNguoiGui: 'Nguyễn Thị Minh Thu',
+    tenNguoiNhan: 'Nguyễn Ngọc Thanh Tâm',
+    soTien: 50000,
+    ngayCK: '20:39 04/01/2023',
+    noiDungCK: 'Cảm ơn đã cho mượn tiền nha',
+  },
+] as ReminderCheckoutHistory[];

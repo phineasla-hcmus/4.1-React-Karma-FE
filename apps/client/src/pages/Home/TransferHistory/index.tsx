@@ -22,13 +22,13 @@ import { formatDateTime, formatMoney } from '../../../utils';
 import TransferCard, { TransferCardProps } from './TransferCard';
 
 const texts = {
-  transfer: 'Chuyển tiền đến',
-  debt: 'Thanh toán nhắc nợ',
-  receive: 'Nhận tiền từ',
+  transfer: 'Transfer money to',
+  debt: 'Pay debt',
+  receive: 'Receive money from',
 };
 
 function TransferHistory() {
-  const userInfo = useSelector((state: RootState) => state.auth.user);
+  const soTK = localStorage.getItem('SOTK');
 
   const [
     getTransactionHistory,
@@ -42,11 +42,9 @@ function TransferHistory() {
     getReminderCheckoutHistory,
     {
       isLoading: reminderCheckoutHistoryLoading,
-      data: reminderCheckoutHistoryData,
+      data: { data: reminderCheckoutHistoryData = [] } = {},
     },
   ] = transferApi.endpoints.getReminderCheckoutHistory.useLazyQuery();
-
-  console.log('history', transactionHistoryData);
 
   const mappedTranferHistory = useMemo(() => {
     return (
@@ -78,22 +76,22 @@ function TransferHistory() {
 
   const mappedReminderCheckoutHistory = useMemo(() => {
     return (
-      (reminderCheckoutHistoryData?.lichSuGiaoDich as ReminderCheckoutHistory[]) ||
-      REMINDER_CHECKOUT_HISTORY.lichSuGiaoDich
+      (reminderCheckoutHistoryData as ReminderCheckoutHistory[]) ||
+      REMINDER_CHECKOUT_HISTORY
     ).map((item: ReminderCheckoutHistory) => ({
       type: 'debt',
       title:
-        item.nguoiChuyen === userInfo.soTK
-          ? texts.debt.concat(` cho ${item.nguoiNhan}`)
-          : texts.debt.concat(` từ ${item.nguoiChuyen}`),
+        item.nguoiChuyen === soTK
+          ? texts.debt.concat(` to ${item.nguoiNhan}`)
+          : texts.debt.concat(` from ${item.nguoiChuyen}`),
       description: item.noiDungCK,
       amount:
-        item.nguoiChuyen === userInfo.soTK
+        item.nguoiChuyen === soTK
           ? `-${formatMoney(item.soTien)} VND`
           : `+${formatMoney(item.soTien)} VND`,
       dateTime: formatDateTime(new Date(item.ngayCK)),
     })) as TransferCardProps[];
-  }, [reminderCheckoutHistoryData?.lichSuGiaoDich, userInfo.soTK]);
+  }, [reminderCheckoutHistoryData, soTK]);
 
   const [value, setValue] = useState(0);
 
@@ -126,8 +124,8 @@ function TransferHistory() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Lịch sử giao dịch</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Transaction history</Typography>
         </StyledBreadCrumbs>
         <AppBar position="static">
           <Tabs
@@ -138,9 +136,9 @@ function TransferHistory() {
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            <Tab label="Chuyển tiền" />
-            <Tab label="Nhận tiền" />
-            <Tab label="Thanh toán nhắc nợ" />
+            <Tab label="Transfer money" />
+            <Tab label="Receive money" />
+            <Tab label="Pay debt" />
           </Tabs>
         </AppBar>
         <Box>

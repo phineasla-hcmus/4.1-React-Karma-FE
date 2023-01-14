@@ -33,9 +33,9 @@ import TransferConfirmation from './TransferConfirmation';
 import TransferReceipt from './TransferReceipt';
 
 const steps = [
-  'Nhập thông tin chuyển tiền',
-  'Bạn sẵn sàng chuyển tiền?',
-  'Hoá đơn',
+  'Input transfer info',
+  'Transfer confirmation',
+  'Transfer receipt',
 ];
 
 const TRANSFER_FEE = 10000;
@@ -51,10 +51,6 @@ function TransferMoney() {
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const dispatch = useDispatch();
@@ -156,8 +152,8 @@ function TransferMoney() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Chuyển tiền</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Transfer money</Typography>
         </StyledBreadCrumbs>
         <Container>
           <Stepper activeStep={activeStep}>
@@ -174,17 +170,9 @@ function TransferMoney() {
             })}
           </Stepper>
           <Box mt={2} mb={1}>
-            {activeStep === 0 && (
-              <TransferInfo
-                handleSubmit={handleSubmit}
-                activeStep={activeStep}
-              />
-            )}
+            {activeStep === 0 && <TransferInfo handleSubmit={handleSubmit} />}
             {activeStep === 1 && (
-              <TransferConfirmation
-                handleSubmit={handleSubmit}
-                activeStep={activeStep}
-              />
+              <TransferConfirmation handleSubmit={handleSubmit} />
             )}
             {activeStep === 2 && <TransferReceipt />}
           </Box>

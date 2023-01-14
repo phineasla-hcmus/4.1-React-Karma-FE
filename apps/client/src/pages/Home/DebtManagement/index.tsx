@@ -141,8 +141,8 @@ export default function DebtManagement() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Nhắc nợ</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Debt management</Typography>
         </StyledBreadCrumbs>
         <Box mt={2}>
           <Box
@@ -153,9 +153,9 @@ export default function DebtManagement() {
               marginBottom: '1.25rem',
             }}
           >
-            <Typography variant="h6">Danh sách nhắc nợ</Typography>
+            <Typography variant="h6">Debt reminder list</Typography>
             <Button variant="contained" onClick={handleOpenAddDebtDialog}>
-              Tạo nhắc nợ mới
+              Add debt reminder
             </Button>
           </Box>
           <AppBar position="static">
@@ -167,8 +167,8 @@ export default function DebtManagement() {
               variant="fullWidth"
               aria-label="full width tabs example"
             >
-              <Tab label="Nhắc nợ từ bạn" />
-              <Tab label="Nhắc nợ đến bạn" />
+              <Tab label="Debt reminder you created" />
+              <Tab label="Debt reminder you received" />
             </Tabs>
           </AppBar>
           <Box>
@@ -187,7 +187,7 @@ export default function DebtManagement() {
         </Box>
       </StyledContentWrapper>
       <Dialog open={openAddDebtDialog} onClose={handleCloseAddDebtDialog}>
-        <DialogTitle>Tạo nhắc nợ mới</DialogTitle>
+        <DialogTitle>Add debt reminder</DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleCreateReminder}>
             <FormControl sx={{ display: 'block' }}>
@@ -198,20 +198,20 @@ export default function DebtManagement() {
                     onChange={handleSelectChooseFromList}
                   />
                 }
-                label="Chọn từ danh sách đã lưu"
+                label="Choose from saved list"
               />
             </FormControl>
             {chooseFromList ? (
               <AsyncDataRenderer loading={getSavedListLoading}>
                 <FormControl sx={{ marginTop: '1rem', width: '100%' }}>
                   <InputLabel id="receiver-select-label">
-                    Số tài khoản
+                    Account number
                   </InputLabel>
                   <Select
                     name="nguoiNhan"
                     labelId="receiver-select-label"
                     id="receiver-select"
-                    label="Số tài khoản"
+                    label="Account number"
                   >
                     {savedList.map((item) => (
                       <MenuItem value={item.nguoiDung}>
@@ -226,7 +226,7 @@ export default function DebtManagement() {
                 name="nguoiNhan"
                 required
                 margin="dense"
-                label="Số tài khoản"
+                label="Account number"
                 type="number"
                 fullWidth
               />
@@ -235,7 +235,7 @@ export default function DebtManagement() {
               name="soTien"
               required
               margin="dense"
-              label="Số tiền cần chuyển"
+              label="Amount"
               type="number"
               fullWidth
             />
@@ -243,17 +243,17 @@ export default function DebtManagement() {
               name="noiDung"
               required
               margin="dense"
-              label="Nội dung"
+              label="Description"
               fullWidth
               multiline
               rows={4}
             />
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button variant="outlined" onClick={handleCloseAddDebtDialog}>
-                Hủy
+                Cancel
               </Button>
               <Button variant="contained" type="submit">
-                Tạo
+                Add
               </Button>
             </DialogActions>
           </Box>

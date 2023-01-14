@@ -18,7 +18,7 @@ export default function DebtTab({ data, value, index, created }: DebtTabProps) {
   const { pendingList, completedList } = useMemo(() => {
     return {
       pendingList: data.filter((item) => item.trangThai === 'pending'),
-      completedList: data.filter((item) => item.trangThai === 'completed'),
+      completedList: data.filter((item) => item.trangThai === 'done'),
     };
   }, [data]);
 
@@ -26,11 +26,11 @@ export default function DebtTab({ data, value, index, created }: DebtTabProps) {
     <>
       <TabPanel value={value} index={index}>
         <StyledCard>
-          <Typography>Cần xử lý</Typography>
+          <Typography>Pending</Typography>
           <DebtTable created={created} data={pendingList} />
         </StyledCard>
         <StyledCard>
-          <Typography>Đã thanh toán</Typography>
+          <Typography>Completed</Typography>
           <DebtTable created={created} completed data={completedList} />
         </StyledCard>
       </TabPanel>

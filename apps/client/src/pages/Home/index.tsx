@@ -51,7 +51,7 @@ function Home() {
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h6">
-                Số dư khả dụng:{' '}
+                Account balance:{' '}
                 <Typography sx={{ marginLeft: '0.2rem' }} component="span">
                   {showBalance
                     ? formatMoney(paymentAccountInfo?.soDu).concat(' VND')
@@ -84,7 +84,7 @@ function Home() {
                   sx={{ marginRight: '1rem' }}
                   src="/img/transaction_history.png"
                 />
-                Lịch sử giao dịch
+                Transaction history
               </StyledClickableCard>
               <StyledClickableCard
                 onClick={() => {
@@ -96,7 +96,7 @@ function Home() {
                   sx={{ marginRight: '1rem' }}
                   src="/img/receiver_list.png"
                 />
-                Quản lý người nhận
+                Receiver management
               </StyledClickableCard>
               <StyledClickableCard
                 onClick={() => {
@@ -108,7 +108,7 @@ function Home() {
                   sx={{ marginRight: '1rem' }}
                   src="/img/transfer_money.png"
                 />
-                Chuyển tiền
+                Transfer money
               </StyledClickableCard>
               <StyledClickableCard
                 onClick={() => {
@@ -120,7 +120,7 @@ function Home() {
                   sx={{ marginRight: '1rem' }}
                   src="/img/debt.png"
                 />
-                Nhắc nợ
+                Debt management
               </StyledClickableCard>
             </Grid>
           </Grid>

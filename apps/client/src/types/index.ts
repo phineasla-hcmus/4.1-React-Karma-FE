@@ -40,7 +40,7 @@ export interface Reminder {
   noiDungNN: string;
   soTien: number;
   ngayTao: string;
-  trangThai: 'pending' | 'completed';
+  trangThai: 'pending' | 'done';
 }
 
 export interface ReminderCheckoutHistory {
