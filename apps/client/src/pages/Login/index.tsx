@@ -6,12 +6,14 @@ import React, {
   useState,
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Alert,
   Avatar,
+  Backdrop,
   Box,
   Button,
+  CircularProgress,
   Container,
   Grid,
   IconButton,
@@ -21,9 +23,8 @@ import {
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-// import axios from '../../api/axios';
 import LocationContext from '../../context/LocationProvider';
-import { setToken, useLoginMutation } from '../../redux/slices/authSlice';
+import { useLoginMutation } from '../../redux/slices/authSlice';
 
 import { StyledCaptchaWrapper } from './styles';
 
@@ -31,6 +32,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { registerLocation } = useContext(LocationContext);
+  const navigate = useNavigate();
 
   const handleClickShowPassword = useCallback(() => {
     setShowPassword((v) => !v);
@@ -42,8 +44,8 @@ function Login() {
 
   const captchaRef = useRef<ReCAPTCHA>(null);
 
+  const [login, { isLoading: loginLoading }] = useLoginMutation();
   const dispatch = useDispatch();
-  const [login] = useLoginMutation();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,39 +54,35 @@ function Login() {
     captchaRef.current?.reset();
 
     if (token?.length === 0) {
-      setError('Vui lòng nhấn vào ô Recaptcha');
+      setError('Please check Recaptcha box');
       return;
     }
 
     const data = new FormData(event.currentTarget);
 
-    await login(
-      JSON.stringify({
-        tenDangNhap: data.get('username'),
-        matKhau: data.get('password'),
-      })
-    );
+    try {
+      const result = await login(
+        JSON.stringify({
+          tenDangNhap: data.get('username'),
+          matKhau: data.get('password'),
+          recaptchaValue: token,
+        })
+      );
 
-    dispatch(setToken('sfsdfsdfsdfsdfsdf'));
+      if ('error' in result) {
+        setError('Invalid username or password');
+        return;
+      }
 
-    // try {
-    //   const response = await axios.post(
-    //     '/login',
-    //     JSON.stringify({
-    //       username: data.get('username'),
-    //       password: data.get('password'),
-    //     }),
-    //     {
-    //       headers: { 'Content-Type': 'application/json' },
-    //       withCredentials: true,
-    //     }
-    //   );
-    //   console.log('response', response);
-    //   const accessToken = response?.data?.accessToken;
-    //   setError('');
-    // } catch (err) {
-    //   setError('Đăng nhập thất bại');
-    // }
+      localStorage.setItem('ACCESS_TOKEN', result.data.data.accessToken);
+      localStorage.setItem('REFRESH_TOKEN', result.data.data.refreshToken);
+
+      // dispatch(setCredentials({ ...result.data.data, user: 'Tam Nguyen' }));
+    } catch (error) {
+      console.log('error', error);
+    }
+
+    navigate('/');
   };
 
   return (
@@ -110,12 +108,12 @@ function Login() {
               required
               margin="normal"
               fullWidth
-              label="Tên đăng nhập"
+              label="Username"
               name="username"
             />
             <TextField
               required
-              label="Mật khẩu"
+              label="Password"
               name="password"
               sx={{ margin: '0.5rem 0', width: '100%' }}
               type={showPassword ? 'text' : 'password'}
@@ -137,13 +135,19 @@ function Login() {
                 ),
               }}
             />
+            <StyledCaptchaWrapper>
+              <ReCAPTCHA
+                sitekey={process.env.REACT_APP_SITE_KEY || ''}
+                ref={captchaRef}
+              />
+            </StyledCaptchaWrapper>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Đăng nhập
+              Login
             </Button>
             <Grid
               sx={{ marginBottom: '1.25rem' }}
@@ -157,19 +161,19 @@ function Login() {
                     registerLocation('/forgot-password');
                   }}
                 >
-                  Quên mật khẩu
+                  Forgot password
                 </Link>
               </Grid>
             </Grid>
-            <StyledCaptchaWrapper>
-              <ReCAPTCHA
-                sitekey={process.env.REACT_APP_SITE_KEY || ''}
-                ref={captchaRef}
-              />
-            </StyledCaptchaWrapper>
           </Box>
         </Box>
       </Container>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loginLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Box>
   );
 }

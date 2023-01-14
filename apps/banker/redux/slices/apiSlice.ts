@@ -8,17 +8,11 @@ import {
   fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
 
-import axios from '../../api/axios';
-import { RootState } from '../store';
-
-import { logOut } from './authSlice';
-
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:3003',
   // credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = localStorage.getItem('ACCESS_TOKEN');
-    console.log('token', token);
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }
@@ -60,11 +54,6 @@ const baseQueryWithReauth = async (
       // retry the original query with new access token
       result = await baseQuery(args, api, extraOptions);
     }
-    // else {
-    //   // api.dispatch(logOut());
-    //   localStorage.removeItem('ACCESS_TOKEN');
-    //   localStorage.removeItem('REFRESH_TOKEN');
-    // }
   }
 
   return result;

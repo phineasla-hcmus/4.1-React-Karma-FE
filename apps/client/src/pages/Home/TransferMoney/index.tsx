@@ -26,16 +26,16 @@ import {
   useRequestOTPForTransferMutation,
 } from '../../../redux/slices/transferSlice';
 import { RootState } from '../../../redux/store';
-import { useAddUserToSavedListMutation } from '../../../redux/slices/savedListSlice';
+import { useAddUserToContactListMutation } from '../../../redux/slices/contactSlice';
 
 import TransferInfo from './TransferInfo';
 import TransferConfirmation from './TransferConfirmation';
 import TransferReceipt from './TransferReceipt';
 
 const steps = [
-  'Nhập thông tin chuyển tiền',
-  'Bạn sẵn sàng chuyển tiền?',
-  'Hoá đơn',
+  'Input transfer info',
+  'Transfer confirmation',
+  'Transfer receipt',
 ];
 
 const TRANSFER_FEE = 10000;
@@ -53,46 +53,49 @@ function TransferMoney() {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
   const dispatch = useDispatch();
 
-  const [makeAnInternalTransfer, { isLoading: internalTransferLoading }] =
-    useMakeInternalTransferMutation();
+  const [
+    makeAnInternalTransfer,
+    { isLoading: internalTransferLoading, error: internalTransferError },
+  ] = useMakeInternalTransferMutation();
 
-  const [makeAnExternalTransfer, { isLoading: externalTransferLoading }] =
-    useMakeExternalTransferMutation();
+  const [
+    makeAnExternalTransfer,
+    { isLoading: externalTransferLoading, error: externalTransferError },
+  ] = useMakeExternalTransferMutation();
 
   const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
     useRequestOTPForTransferMutation();
 
   const [addUserToSavedList, { isLoading: addUserLoading }] =
-    useAddUserToSavedListMutation();
+    useAddUserToContactListMutation();
 
   const transferInfo = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
 
-  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+  const soTK = localStorage.getItem('SOTK');
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     if (activeStep === 0) {
-      console.log('arr', data.get('soTK')?.toString().split(' - '));
       const tenTKFromData = data.get('tenTK')?.toString() || '';
       const transferInfo = {
-        soTK: data.get('soTK')?.toString().split(' - ')[1],
+        soTK,
+        nguoiNhan:
+          tenTKFromData.length > 0
+            ? data.get('soTK')
+            : data.get('soTK')?.toString().split(' - ')[1],
         tenTK:
           tenTKFromData.length > 0
             ? data.get('tenTK')
             : data.get('soTK')?.toString().split(' - ')[0],
         nganHang: data.get('nganHang'),
-        soTien: data.get('soTien'),
-        noiDungCK: data.get('noiDungCK'),
+        soTien: Number(data.get('soTien')),
+        noiDung: data.get('noiDungCK'),
         loaiCK: data.get('loaiCK'),
         phiCK: TRANSFER_FEE,
       };
@@ -104,18 +107,21 @@ function TransferMoney() {
 
     if (activeStep === 1) {
       const payload = {
-        soTK: transferInfo.soTK,
-        tenGoiNho: data.get('tenGoiNho'),
+        nguoiDung: transferInfo.nguoiNhan,
+        tenGoiNho: data.get('tenGoiNho')?.toString(),
       };
 
-      try {
-        await addUserToSavedList(payload);
-      } catch (error) {
-        console.log('error', error);
-        return;
+      if (payload.tenGoiNho !== undefined) {
+        try {
+          await addUserToSavedList(payload);
+        } catch (error) {
+          console.log('error', error);
+          return;
+        }
       }
+
       try {
-        const { soTien, soTK: nguoiNhan } = transferInfo;
+        const { soTien, nguoiNhan } = transferInfo;
         await requestOTPForTransfer({ soTK, nguoiNhan, soTien });
         setOpen(true);
       } catch (error) {
@@ -128,12 +134,14 @@ function TransferMoney() {
     setOpen(false);
 
     try {
-      const payload = { ...transferInfo, otp };
+      const payload = { ...transferInfo, otp: Number(otp) };
 
       if (transferInfo.nganHang?.length > 0) {
         await makeAnExternalTransfer(_omit(payload, ['phiCK', 'tenTK']));
       } else
         await makeAnInternalTransfer(_omit(payload, ['nganHang', 'tenTK']));
+
+      if (internalTransferError || externalTransferError) return;
       handleNext();
     } catch (error) {
       console.log('error', error);
@@ -144,8 +152,8 @@ function TransferMoney() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Chuyển tiền</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Transfer money</Typography>
         </StyledBreadCrumbs>
         <Container>
           <Stepper activeStep={activeStep}>
@@ -162,17 +170,9 @@ function TransferMoney() {
             })}
           </Stepper>
           <Box mt={2} mb={1}>
-            {activeStep === 0 && (
-              <TransferInfo
-                handleSubmit={handleSubmit}
-                activeStep={activeStep}
-              />
-            )}
+            {activeStep === 0 && <TransferInfo handleSubmit={handleSubmit} />}
             {activeStep === 1 && (
-              <TransferConfirmation
-                handleSubmit={handleSubmit}
-                activeStep={activeStep}
-              />
+              <TransferConfirmation handleSubmit={handleSubmit} />
             )}
             {activeStep === 2 && <TransferReceipt />}
           </Box>

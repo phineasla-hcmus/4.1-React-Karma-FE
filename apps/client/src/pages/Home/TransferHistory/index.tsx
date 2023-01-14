@@ -17,84 +17,81 @@ import {
 import { transferApi } from '../../../redux/slices/transferSlice';
 import { RootState } from '../../../redux/store';
 import { ReminderCheckoutHistory, TransactionHistory } from '../../../types';
-import { formatMoney } from '../../../utils';
+import { formatDateTime, formatMoney } from '../../../utils';
 
 import TransferCard, { TransferCardProps } from './TransferCard';
 
 const texts = {
-  transfer: 'Chuyển tiền đến',
-  debt: 'Thanh toán nhắc nợ',
-  receive: 'Nhận tiền từ',
+  transfer: 'Transfer money to',
+  debt: 'Pay debt',
+  receive: 'Receive money from',
 };
 
 function TransferHistory() {
-  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+  const soTK = localStorage.getItem('SOTK');
 
   const [
     getTransactionHistory,
-    { isLoading: transactionHistoryLoading, data: transactionHistoryData },
+    {
+      isLoading: transactionHistoryLoading,
+      data: { data: transactionHistoryData = [] } = {},
+    },
   ] = transferApi.endpoints.getTransactionHistory.useLazyQuery();
 
   const [
     getReminderCheckoutHistory,
     {
       isLoading: reminderCheckoutHistoryLoading,
-      data: reminderCheckoutHistoryData,
+      data: { data: reminderCheckoutHistoryData = [] } = {},
     },
   ] = transferApi.endpoints.getReminderCheckoutHistory.useLazyQuery();
 
   const mappedTranferHistory = useMemo(() => {
     return (
-      (transactionHistoryData?.lichSuGiaoDich as TransactionHistory[]) ||
-      TRANSACTION_HISTORY.lichSuGiaoDich
+      (transactionHistoryData as TransactionHistory[]) || TRANSACTION_HISTORY
     )
-      .filter((item) => item.loai === 'transfer')
+      .filter((item) => item.loai === 0)
       .map((item: TransactionHistory) => ({
-        type: item.loai,
-        title: texts[item.loai].concat(
-          ` ${item.tenNguoiNhan} - ${item.nguoiNhan}`
-        ),
+        type: 'transfer',
+        title: texts.transfer.concat(` ${item.nguoiNhan}`),
         description: item.noiDungCK,
         amount: `-${formatMoney(item.soTien)} VND`,
-        dateTime: item.ngayCK,
+        dateTime: formatDateTime(new Date(item.ngayCK)),
       })) as TransferCardProps[];
   }, [transactionHistoryData]);
 
   const mappedReceiveHistory = useMemo(() => {
     return (
-      (transactionHistoryData?.lichSuGiaoDich as TransactionHistory[]) ||
-      TRANSACTION_HISTORY.lichSuGiaoDich
+      (transactionHistoryData as TransactionHistory[]) || TRANSACTION_HISTORY
     )
-      .filter((item) => item.loai === 'receive')
+      .filter((item) => item.loai === 1)
       .map((item: TransactionHistory) => ({
-        type: item.loai,
-        title: texts[item.loai].concat(
-          ` ${item.tenNguoiGui} - ${item.nguoiGui}`
-        ),
+        type: 'receive',
+        title: texts.receive.concat(` ${item.nguoiChuyen}`),
         description: item.noiDungCK,
         amount: `+${formatMoney(item.soTien)} VND`,
-        dateTime: item.ngayCK,
+        dateTime: formatDateTime(new Date(item.ngayCK)),
       })) as TransferCardProps[];
   }, [transactionHistoryData]);
 
   const mappedReminderCheckoutHistory = useMemo(() => {
     return (
-      (reminderCheckoutHistoryData?.lichSuGiaoDich as ReminderCheckoutHistory[]) ||
-      REMINDER_CHECKOUT_HISTORY.lichSuGiaoDich
+      (reminderCheckoutHistoryData as ReminderCheckoutHistory[]) ||
+      REMINDER_CHECKOUT_HISTORY
     ).map((item: ReminderCheckoutHistory) => ({
       type: 'debt',
       title:
-        item.nguoiGui === userInfo.soTK
-          ? texts.debt.concat(` cho ${item.tenNguoiNhan} - ${item.nguoiNhan}`)
-          : texts.debt.concat(` từ ${item.tenNguoiGui} - ${item.nguoiGui}`),
+        item.nguoiChuyen === soTK
+          ? texts.debt.concat(` to ${item.nguoiNhan}`)
+          : texts.debt.concat(` from ${item.nguoiChuyen}`),
       description: item.noiDungCK,
       amount:
-        item.nguoiGui === userInfo.soTK
+        item.nguoiChuyen === soTK
           ? `-${formatMoney(item.soTien)} VND`
           : `+${formatMoney(item.soTien)} VND`,
-      dateTime: item.ngayCK,
+      dateTime: formatDateTime(new Date(item.ngayCK)),
     })) as TransferCardProps[];
-  }, [transactionHistoryData]);
+  }, [reminderCheckoutHistoryData, soTK]);
 
   const [value, setValue] = useState(0);
 
@@ -121,14 +118,14 @@ function TransferHistory() {
 
   useEffect(() => {
     getTransactionHistory({});
-  }, []);
+  }, [getTransactionHistory]);
 
   return (
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Lịch sử giao dịch</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Transaction history</Typography>
         </StyledBreadCrumbs>
         <AppBar position="static">
           <Tabs
@@ -139,9 +136,9 @@ function TransferHistory() {
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            <Tab label="Chuyển tiền" />
-            <Tab label="Nhận tiền" />
-            <Tab label="Thanh toán nhắc nợ" />
+            <Tab label="Transfer money" />
+            <Tab label="Receive money" />
+            <Tab label="Pay debt" />
           </Tabs>
         </AppBar>
         <Box>

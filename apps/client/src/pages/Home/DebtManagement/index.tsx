@@ -29,7 +29,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import AsyncDataRenderer from '../../../components/AsyncDataRenderer';
@@ -38,14 +37,13 @@ import {
   StyledBreadCrumbs,
   StyledContentWrapper,
 } from '../../../components/styles';
-import { MY_REMINDER_LIST, REMINDER_LIST } from '../../../mocks/reminder';
+import { REMINDER_LIST } from '../../../mocks/reminder';
 import { RECEIVER_LIST } from '../../../mocks/transfer';
 import {
   reminderApi,
   useCreateReminderMutation,
 } from '../../../redux/slices/reminderSlice';
-import { useGetSavedListQuery } from '../../../redux/slices/savedListSlice';
-import { RootState } from '../../../redux/store';
+import { useGetContactListQuery } from '../../../redux/slices/contactSlice';
 import { Receiver, Reminder } from '../../../types';
 
 import DebtTab from './DebtTab';
@@ -55,7 +53,7 @@ export default function DebtManagement() {
   const [openAddDebtDialog, setOpenAddDebtDialog] = useState(false);
   const [chooseFromList, setChooseFromList] = useState(false);
 
-  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+  const soTK = localStorage.getItem('SOTK');
 
   const handleOpenAddDebtDialog = useCallback(() => {
     setOpenAddDebtDialog(true);
@@ -67,7 +65,10 @@ export default function DebtManagement() {
 
   const [
     getReminderList,
-    { isLoading: reminderListLoading, data: reminderListData },
+    {
+      isLoading: reminderListLoading,
+      data: { data: reminderListData = [] } = {},
+    },
   ] = reminderApi.endpoints.getReminderList.useLazyQuery();
 
   const reminderList = useMemo(
@@ -75,25 +76,15 @@ export default function DebtManagement() {
     [reminderListData]
   ) as Reminder[];
 
-  const [
-    getMyReminderList,
-    { isLoading: myReminderListLoading, data: myReminderListData },
-  ] = reminderApi.endpoints.getMyReminderList.useLazyQuery();
-
-  const myReminderList = useMemo(
-    () => myReminderListData || MY_REMINDER_LIST,
-    [reminderListData]
-  ) as Reminder[];
-
   const handleChange = useCallback(
     (event: SyntheticEvent, newValue: number) => {
       switch (newValue) {
         case 0:
-          getReminderList({});
+          getReminderList('others');
           break;
 
         case 1:
-          getMyReminderList({});
+          getReminderList('me');
           break;
 
         default:
@@ -102,7 +93,7 @@ export default function DebtManagement() {
 
       setValue(newValue);
     },
-    []
+    [getReminderList]
   );
 
   const handleSelectChooseFromList = (event: ChangeEvent<HTMLInputElement>) => {
@@ -110,11 +101,13 @@ export default function DebtManagement() {
   };
 
   useEffect(() => {
-    getReminderList({});
-  }, []);
+    getReminderList('others');
+  }, [getReminderList]);
 
-  const { isLoading: getSavedListLoading, data: getSavedListData } =
-    useGetSavedListQuery({});
+  const {
+    isLoading: getSavedListLoading,
+    data: { data: getSavedListData = [] } = {},
+  } = useGetContactListQuery({});
 
   const savedList = useMemo(
     () => getSavedListData || RECEIVER_LIST,
@@ -131,9 +124,9 @@ export default function DebtManagement() {
     setOpenAddDebtDialog(false);
 
     const payload = {
-      nguoiNhan: data.get('nguoiNhan'),
+      soTKNguoiNhan: data.get('nguoiNhan'),
       soTK,
-      soTien: data.get('soTien'),
+      soTien: Number(data.get('soTien')),
       noiDung: data.get('noiDung'),
     };
 
@@ -148,8 +141,8 @@ export default function DebtManagement() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Nhắc nợ</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Debt management</Typography>
         </StyledBreadCrumbs>
         <Box mt={2}>
           <Box
@@ -160,9 +153,9 @@ export default function DebtManagement() {
               marginBottom: '1.25rem',
             }}
           >
-            <Typography variant="h6">Danh sách nhắc nợ</Typography>
+            <Typography variant="h6">Debt reminder list</Typography>
             <Button variant="contained" onClick={handleOpenAddDebtDialog}>
-              Tạo nhắc nợ mới
+              Add debt reminder
             </Button>
           </Box>
           <AppBar position="static">
@@ -174,27 +167,27 @@ export default function DebtManagement() {
               variant="fullWidth"
               aria-label="full width tabs example"
             >
-              <Tab label="Nhắc nợ từ bạn" />
-              <Tab label="Nhắc nợ đến bạn" />
+              <Tab label="Debt reminder you created" />
+              <Tab label="Debt reminder you received" />
             </Tabs>
           </AppBar>
           <Box>
             <AsyncDataRenderer loading={reminderListLoading}>
               <DebtTab value={value} index={0} created data={reminderList} />
             </AsyncDataRenderer>
-            <AsyncDataRenderer loading={myReminderListLoading}>
+            <AsyncDataRenderer loading={reminderListLoading}>
               <DebtTab
                 value={value}
                 index={1}
                 created={false}
-                data={myReminderList}
+                data={reminderList}
               />
             </AsyncDataRenderer>
           </Box>
         </Box>
       </StyledContentWrapper>
       <Dialog open={openAddDebtDialog} onClose={handleCloseAddDebtDialog}>
-        <DialogTitle>Tạo nhắc nợ mới</DialogTitle>
+        <DialogTitle>Add debt reminder</DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleCreateReminder}>
             <FormControl sx={{ display: 'block' }}>
@@ -205,20 +198,20 @@ export default function DebtManagement() {
                     onChange={handleSelectChooseFromList}
                   />
                 }
-                label="Chọn từ danh sách đã lưu"
+                label="Choose from saved list"
               />
             </FormControl>
             {chooseFromList ? (
               <AsyncDataRenderer loading={getSavedListLoading}>
                 <FormControl sx={{ marginTop: '1rem', width: '100%' }}>
                   <InputLabel id="receiver-select-label">
-                    Số tài khoản
+                    Account number
                   </InputLabel>
                   <Select
                     name="nguoiNhan"
                     labelId="receiver-select-label"
                     id="receiver-select"
-                    label="Số tài khoản"
+                    label="Account number"
                   >
                     {savedList.map((item) => (
                       <MenuItem value={item.nguoiDung}>
@@ -233,7 +226,7 @@ export default function DebtManagement() {
                 name="nguoiNhan"
                 required
                 margin="dense"
-                label="Số tài khoản"
+                label="Account number"
                 type="number"
                 fullWidth
               />
@@ -242,7 +235,7 @@ export default function DebtManagement() {
               name="soTien"
               required
               margin="dense"
-              label="Số tiền cần chuyển"
+              label="Amount"
               type="number"
               fullWidth
             />
@@ -250,17 +243,17 @@ export default function DebtManagement() {
               name="noiDung"
               required
               margin="dense"
-              label="Nội dung"
+              label="Description"
               fullWidth
               multiline
               rows={4}
             />
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button variant="outlined" onClick={handleCloseAddDebtDialog}>
-                Hủy
+                Cancel
               </Button>
               <Button variant="contained" type="submit">
-                Tạo
+                Add
               </Button>
             </DialogActions>
           </Box>

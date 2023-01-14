@@ -1,7 +1,6 @@
 import React from 'react';
 import { createBrowserHistory } from 'history';
 import { Admin, Resource } from 'react-admin';
-import jsonServerProvider from 'ra-data-json-server';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 
@@ -24,9 +23,10 @@ function App() {
       dataProvider={dataProvider}
       authProvider={authProvider}
       loginPage={Login}
+      requireAuth
     >
       <Resource
-        name="users"
+        name="clients"
         list={UserList}
         edit={UserEdit}
         create={UserCreate}

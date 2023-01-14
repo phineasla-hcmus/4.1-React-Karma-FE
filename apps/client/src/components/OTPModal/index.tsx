@@ -32,12 +32,12 @@ function OTPModal({
       onClose={onClose}
       aria-labelledby="otp-dialog-title"
     >
-      <DialogTitle id="otp-dialog-title">Xác nhận OTP</DialogTitle>
+      <DialogTitle id="otp-dialog-title">OTP confirmation</DialogTitle>
       <DialogContent>
         <TextField
           sx={{ width: '100%' }}
           name="otp"
-          placeholder="Nhập mã OTP..."
+          placeholder="Enter OTP..."
           onChange={handleChangeOTP}
         />
       </DialogContent>
@@ -50,19 +50,16 @@ function OTPModal({
         }}
       >
         <Typography sx={{ textAlign: 'left' }} variant="caption">
-          Chúng tôi đã gửi mã OTP đến email của bạn
+          We have sent OTP code to your email
         </Typography>
-        <Button color="primary" variant="outlined" onClick={onClickCancel}>
-          Gửi lại
-        </Button>
       </Box>
 
       <DialogActions sx={{ padding: '0.75rem 1.5rem' }}>
         <Button color="error" variant="contained" onClick={onClickCancel}>
-          Hủy
+          Cancel
         </Button>
         <Button color="primary" variant="contained" onClick={onClickConfirm}>
-          Gửi
+          Send
         </Button>
       </DialogActions>
     </StyledDialog>

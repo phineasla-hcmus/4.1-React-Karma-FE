@@ -14,38 +14,80 @@ import { Paginated } from '../types/generics';
 
 const apiUrl = 'http://localhost:3003';
 
-const httpClient = fetchUtils.fetchJson;
+const httpClient = (url: string, options: any) => {
+  if (!options.headers) {
+    options.headers = new Headers({ Accept: 'application/json' });
+  }
+  const token = localStorage.getItem('ACCESS_TOKEN');
+  if (token) {
+    options.headers.set('Authorization', `Bearer ${token}`);
+  }
+  return fetchUtils.fetchJson(url, options);
+};
 
 export type GetQueryParams = {
   page: string;
   size: string;
+  bankID?: string;
+  from?: string;
+  to?: string;
 };
 
 export default {
   getList: async (resource: string, params: GetListParams) => {
     const { page, perPage } = params.pagination;
-    const defaultQueryParams = {
+    let defaultQueryParams: GetQueryParams = {
       page: `${page}`,
       size: perPage.toString(),
     };
+
+    if (params.filter.bankID) {
+      defaultQueryParams = {
+        ...defaultQueryParams,
+        bankID: `${params.filter.bankID}`,
+      };
+    }
+    if (params.filter.from) {
+      defaultQueryParams = {
+        ...defaultQueryParams,
+        from: `${new Date(params.filter.from)}`,
+      };
+    }
+    if (params.filter.to) {
+      const newDate = new Date(params.filter.to);
+      newDate.setDate(newDate.getDate() + 1);
+      defaultQueryParams = {
+        ...defaultQueryParams,
+        to: `${newDate}`,
+      };
+    }
     const query: GetQueryParams = defaultQueryParams;
-    if (resource === 'statistic') {
-      return httpClient(`${apiUrl}/interbank/${resource}`, {
-        method: 'GET',
-      }).then(({ json }: { json: Paginated<unknown> }) => ({
-        data: json.data,
-        total: json.total,
-      }));
+    if (resource === 'interbank') {
+      return httpClient(
+        `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
+        {
+          method: 'GET',
+        }
+      ).then(({ json }: { json: Paginated<unknown> }) => {
+        localStorage.setItem('soTienGui', `${json.soTienGui}`);
+        localStorage.setItem('soTienNhan', `${json.soTienNhan}`);
+        return {
+          data: json.data,
+          total: json.total,
+        };
+      });
     }
     return httpClient(
       `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
       {
         method: 'GET',
       }
-    ).then(({ json }: { json: Paginated<unknown> }) => ({
-      data: json.data,
-      total: json.total,
-    }));
+    ).then(({ json }: { json: Paginated<unknown> }) => {
+      return {
+        data: json.data,
+        total: json.total,
+      };
+    });
   },
 
   getOne: async (resource: string, params: GetOneParams) => {

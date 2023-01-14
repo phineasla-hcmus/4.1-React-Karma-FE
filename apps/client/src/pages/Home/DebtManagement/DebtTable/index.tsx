@@ -19,16 +19,14 @@ import {
   Typography,
 } from '@mui/material';
 import React, { FormEvent, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import {
   useCheckOutReminderMutation,
   useDismissReminderByIdMutation,
 } from '../../../../redux/slices/reminderSlice';
 import { useRequestOTPForTransferMutation } from '../../../../redux/slices/transferSlice';
-import { RootState } from '../../../../redux/store';
 import { Reminder } from '../../../../types';
-import { formatMoney } from '../../../../utils';
+import { formatDateTime, formatMoney } from '../../../../utils';
 
 interface ReceivedColumn {
   id:
@@ -61,21 +59,16 @@ interface CreatedColumn {
 }
 
 const receivedColumns: readonly ReceivedColumn[] = [
-  { id: 'soTaiKhoan', label: 'Số tài khoản' },
-  {
-    id: 'tenNguoiGui',
-    label: 'Người gửi',
-    minWidth: 200,
-  },
-  { id: 'thoiGian', label: 'Thời gian', minWidth: 150 },
+  { id: 'soTaiKhoan', label: 'Account number' },
+  { id: 'thoiGian', label: 'Date', minWidth: 150 },
   {
     id: 'soTien',
-    label: 'Số tiền',
+    label: 'Amount',
     minWidth: 120,
   },
   {
     id: 'noiDung',
-    label: 'Nội dung',
+    label: 'Description',
     minWidth: 400,
   },
   {
@@ -91,25 +84,20 @@ const receivedColumns: readonly ReceivedColumn[] = [
 ];
 
 const createdColumns: readonly CreatedColumn[] = [
-  { id: 'soTaiKhoan', label: 'Số tài khoản' },
-  {
-    id: 'tenNguoiNhan',
-    label: 'Người nhận',
-    minWidth: 200,
-  },
+  { id: 'soTaiKhoan', label: 'Account number' },
   {
     id: 'thoiGian',
-    label: 'Thời gian',
+    label: 'Date',
     minWidth: 150,
   },
   {
     id: 'soTien',
-    label: 'Số tiền',
+    label: 'Amount',
     minWidth: 120,
   },
   {
     id: 'noiDung',
-    label: 'Nội dung',
+    label: 'Description',
     minWidth: 200,
   },
   {
@@ -133,7 +121,7 @@ export default function DebtTable({
   const [openDeleteDebtDialog, setOpenDeleteDebtDialog] = useState(false);
   const [openPayDebtDialog, setOpenPayDebtDialog] = useState(false);
   const [selectedDebt, setSelectedDebt] = useState(0);
-  const { soTK } = useSelector((state: RootState) => state.auth.userInfo);
+  const soTK = localStorage.getItem('SOTK');
 
   const [requestOTPForTransfer, { isLoading: requestOTPLoading }] =
     useRequestOTPForTransferMutation();
@@ -150,7 +138,7 @@ export default function DebtTable({
   const handleOpenPayDebtDialog = async (reminder: Reminder) => {
     await requestOTPForTransfer({
       soTK,
-      nguoiNhan: reminder.soTK,
+      nguoiNhan: reminder.soTKNguoiGui,
       soTien: reminder.soTien,
     });
 
@@ -171,12 +159,13 @@ export default function DebtTable({
 
     setOpenDeleteDebtDialog(false);
 
-    const payload = {
-      noiDung: data.get('noiDung'),
-    };
-
     try {
-      await dismissReminder({ id: selectedDebt, payload });
+      await dismissReminder({
+        id: selectedDebt,
+        payload: {
+          noiDungXoa: data.get('noiDung'),
+        },
+      });
     } catch (error) {
       console.log('error', error);
     }
@@ -192,7 +181,14 @@ export default function DebtTable({
     setOpenPayDebtDialog(false);
 
     try {
-      await checkOutReminder({ id: selectedDebt, payload: data.get('otp') });
+      await checkOutReminder({
+        id: selectedDebt,
+        payload: {
+          otp: Number(data.get('otp')),
+          noiDung: 'Pay debt',
+          loaiCK: 'sender',
+        },
+      });
     } catch (error) {
       console.log('error', error);
     }
@@ -204,7 +200,7 @@ export default function DebtTable({
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell key="index">STT</TableCell>
+              <TableCell key="index">No.</TableCell>
               {created
                 ? createdColumns.map((column) => (
                     <TableCell key={column.id}>{column.label}</TableCell>
@@ -218,9 +214,10 @@ export default function DebtTable({
             {data.map((item, index) => (
               <TableRow key={item.maNN} hover tabIndex={-1}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.soTK}</TableCell>
-                <TableCell>{item.hoTen}</TableCell>
-                <TableCell>{item.ngayTao}</TableCell>
+                <TableCell>
+                  {created ? item.soTKNguoiNhan : item.soTKNguoiGui}
+                </TableCell>
+                <TableCell>{formatDateTime(new Date(item.ngayTao))}</TableCell>
                 <TableCell>{formatMoney(item.soTien)} VND</TableCell>
                 <TableCell>{item.noiDungNN}</TableCell>
                 {!completed && (
@@ -232,7 +229,7 @@ export default function DebtTable({
                           color="success"
                           onClick={() => handleOpenPayDebtDialog(item)}
                         >
-                          Thanh toán
+                          Pay
                         </Button>
                       </TableCell>
                     )}
@@ -242,7 +239,7 @@ export default function DebtTable({
                         color="error"
                         onClick={() => handleOpenDeleteDebtDialog(item)}
                       >
-                        Xoá
+                        Delete
                       </Button>
                     </TableCell>
                   </>
@@ -253,11 +250,11 @@ export default function DebtTable({
         </Table>
       </TableContainer>
       <Dialog open={openDeleteDebtDialog} onClose={handleCloseDeleteDebtDialog}>
-        <DialogTitle>Xoá nhắc nợ</DialogTitle>
+        <DialogTitle>Delete debt reminder</DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleDismissReminder}>
             <DialogContentText>
-              Bạn có chắc muốn xoá nhắc nợ này?
+              Are you sure you want to delete this debt reminder?
             </DialogContentText>
             <TextField
               name="noiDung"
@@ -270,21 +267,21 @@ export default function DebtTable({
             />
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button variant="outlined" onClick={handleCloseDeleteDebtDialog}>
-                Hủy
+                Cancel
               </Button>
               <Button variant="contained" type="submit">
-                Xoá
+                Delete
               </Button>
             </DialogActions>
           </Box>
         </DialogContent>
       </Dialog>
       <Dialog open={openPayDebtDialog} onClose={handleClosePayDebtDialog}>
-        <DialogTitle>Thanh toán nhắc nợ</DialogTitle>
+        <DialogTitle>Pay debt reminder</DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleCheckoutReminder}>
             <DialogContentText>
-              Bạn có chắc muốn thanh toán nhắc nợ này?
+              Are you sure you want to pay this debt reminder?
             </DialogContentText>
             <TextField
               name="otp"
@@ -294,14 +291,14 @@ export default function DebtTable({
               fullWidth
             />
             <Typography variant="caption">
-              Vui lòng nhập mã OTP đã được gửi đến email của bạn
+              Please enter OTP code sent to your email
             </Typography>
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button variant="outlined" onClick={handleClosePayDebtDialog}>
-                Hủy
+                Cancel
               </Button>
               <Button type="submit" variant="contained">
-                Thanh toán
+                Pay
               </Button>
             </DialogActions>
           </Box>

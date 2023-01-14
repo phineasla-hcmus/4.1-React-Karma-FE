@@ -17,14 +17,10 @@ import { formatMoney } from '../../../../utils';
 import { StyledRow, StyledTitle } from './styles';
 
 interface TransferConfirmationProps {
-  activeStep: number;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-function TransferConfirmation({
-  activeStep,
-  handleSubmit,
-}: TransferConfirmationProps) {
+function TransferConfirmation({ handleSubmit }: TransferConfirmationProps) {
   const [saveReceiverInfo, setSaveReceiverInfo] = useState(false);
 
   const handleSelectSaveReceiverInfo = (
@@ -33,7 +29,7 @@ function TransferConfirmation({
     setSaveReceiverInfo(event.target.checked);
   };
 
-  const { soTK, tenTK, soTien, noiDungCK, loaiCK } = useSelector(
+  const { nguoiNhan, tenTK, soTien, noiDung, loaiCK } = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
 
@@ -42,25 +38,25 @@ function TransferConfirmation({
       <Box component="form" onSubmit={handleSubmit}>
         <Card sx={{ padding: '1rem' }}>
           <StyledRow>
-            <StyledTitle>Đến</StyledTitle>
+            <StyledTitle>To</StyledTitle>
             <Typography sx={{ width: '100%' }}>
-              {tenTK} - {soTK}
+              {tenTK} - {nguoiNhan}
             </Typography>
           </StyledRow>
           <StyledRow>
-            <StyledTitle>Số tiền</StyledTitle>
+            <StyledTitle>Amount</StyledTitle>
             <Typography sx={{ width: '100%' }}>
               {formatMoney(soTien)} VND
             </Typography>
           </StyledRow>
           <StyledRow>
-            <StyledTitle>Mô tả</StyledTitle>
-            <Typography sx={{ width: '100%' }}>{noiDungCK}</Typography>
+            <StyledTitle>Description</StyledTitle>
+            <Typography sx={{ width: '100%' }}>{noiDung}</Typography>
           </StyledRow>
           <StyledRow>
-            <StyledTitle>Hình thức thanh toán</StyledTitle>
+            <StyledTitle>Payment method</StyledTitle>
             <Typography sx={{ width: '100%' }}>
-              {loaiCK === 'sender' ? 'Người gửi trả' : 'Người nhận trả'}
+              {loaiCK === 'sender' ? 'Sender pay fee' : 'Receiver pay fee'}
             </Typography>
           </StyledRow>
           <FormControl sx={{ display: 'block' }}>
@@ -71,7 +67,7 @@ function TransferConfirmation({
                   onChange={handleSelectSaveReceiverInfo}
                 />
               }
-              label="Lưu lại thông tin người nhận"
+              label="Save receiver info"
             />
           </FormControl>
           {saveReceiverInfo && (
@@ -79,22 +75,12 @@ function TransferConfirmation({
               fullWidth
               sx={{ display: 'block' }}
               margin="normal"
-              label="Tên gợi nhớ"
+              label="Nickname"
               name="tenGoiNho"
             />
           )}
         </Card>
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-          <Button
-            color="inherit"
-            disabled={activeStep === 0}
-            onClick={() => {
-              console.log('TODO Back');
-            }}
-            sx={{ mr: 1 }}
-          >
-            Quay lại
-          </Button>
           <Box sx={{ flex: '1 1 auto' }} />
           <Button type="submit">Tiếp tục</Button>
         </Box>

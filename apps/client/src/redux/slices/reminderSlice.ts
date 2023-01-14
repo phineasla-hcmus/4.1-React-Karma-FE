@@ -16,15 +16,8 @@ export const reminderSlice = createSlice({
 export const reminderApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getReminderList: build.query({
-      query: () => ({
-        url: 'user/reminders',
-        method: 'GET',
-      }),
-      providesTags: ['reminderList'],
-    }),
-    getMyReminderList: build.query({
-      query: () => ({
-        url: 'user/myReminders',
+      query: (type) => ({
+        url: `user/reminders?type=${type}`,
         method: 'GET',
       }),
       providesTags: ['reminderList'],
@@ -63,7 +56,6 @@ export default reminderSlice.reducer;
 
 export const {
   useGetReminderListQuery,
-  useGetMyReminderListQuery,
   useCreateReminderMutation,
   useDismissReminderByIdMutation,
   useCheckOutReminderMutation,

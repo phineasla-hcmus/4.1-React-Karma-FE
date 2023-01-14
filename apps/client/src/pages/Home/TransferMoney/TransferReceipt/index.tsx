@@ -13,13 +13,13 @@ import {
 } from './styles';
 
 export default function TransferReceipt() {
-  const { soTK, tenTK, soTien, noiDungCK, loaiCK } = useSelector(
+  const { nguoiNhan, tenTK, soTien, noiDung, loaiCK } = useSelector(
     (state: RootState) => state.transfer.transferInfo
   );
 
   return (
     <Box>
-      <Alert severity="success">Giao dịch thành công</Alert>
+      <Alert severity="success">Transaction completed!</Alert>
       <Card sx={{ padding: '1rem', marginTop: '2rem', textAlign: 'center' }}>
         <Typography variant="caption">{formatDateTime(new Date())}</Typography>
         <Typography variant="h5">-{formatMoney(soTien)} VND</Typography>
@@ -31,26 +31,26 @@ export default function TransferReceipt() {
           }}
         >
           <StyledRow>
-            <StyledTitle>Đến</StyledTitle>
+            <StyledTitle>To</StyledTitle>
             <StyledContentBox>
               <Typography>
-                {tenTK} - {soTK}
+                {tenTK} - {nguoiNhan}
               </Typography>
             </StyledContentBox>
           </StyledRow>
           <StyledDivider />
           <StyledRow>
-            <StyledTitle>Mô tả</StyledTitle>
+            <StyledTitle>Description</StyledTitle>
             <StyledContentBox>
-              <Typography>{noiDungCK}</Typography>
+              <Typography>{noiDung}</Typography>
             </StyledContentBox>
           </StyledRow>
           <StyledDivider />
           <StyledRow>
-            <StyledTitle>Hình thức thanh toán</StyledTitle>
+            <StyledTitle>Payment method</StyledTitle>
             <StyledContentBox>
               <Typography>
-                {loaiCK === 'sender' ? 'Người nhận' : 'Ngưởi gửi'} trả phí
+                {loaiCK === 'sender' ? 'Sender' : 'Receiver'} pay fee
               </Typography>
             </StyledContentBox>
           </StyledRow>

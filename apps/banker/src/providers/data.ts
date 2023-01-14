@@ -9,12 +9,22 @@ import type {
   CreateParams,
   DeleteParams,
 } from 'react-admin';
+import jwt from 'jwt-decode'; // import dependency
 
 import { Paginated } from '../types/generics';
 
 const apiUrl = 'http://localhost:3003';
 
-const httpClient = fetchUtils.fetchJson;
+const httpClient = (url: string, options: any) => {
+  if (!options.headers) {
+    options.headers = new Headers({ Accept: 'application/json' });
+  }
+  const token = localStorage.getItem('ACCESS_TOKEN');
+  if (token) {
+    options.headers.set('Authorization', `Bearer ${token}`);
+  }
+  return fetchUtils.fetchJson(url, options);
+};
 
 export type GetQueryParams = {
   page: string;
@@ -27,8 +37,10 @@ export default {
     const defaultQueryParams = {
       page: `${page}`,
       size: perPage.toString(),
+      sender: '',
     };
-    const query: GetQueryParams = defaultQueryParams;
+    const query = defaultQueryParams;
+
     return httpClient(
       `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
       {
@@ -64,7 +76,7 @@ export default {
       }));
     }
 
-    return httpClient(`${apiUrl}/${resource}`, {
+    return httpClient(`${apiUrl}/${resource}/all`, {
       method: 'GET',
     }).then(({ json }) => ({
       data: json.data,
@@ -80,6 +92,17 @@ export default {
   },
 
   update: async (resource: string, params: UpdateParams) => {
+    if (resource === 'clients') {
+      const token = localStorage.getItem('ACCESS_TOKEN');
+      const decoded: { maTK: number } = jwt(token || '');
+
+      return httpClient(`${apiUrl}/bankers/recharge`, {
+        method: 'PATCH',
+        body: JSON.stringify(params.data),
+      }).then(() => ({
+        data: { id: params.id, maNV: decoded.maTK, ...params.data },
+      }));
+    }
     return httpClient(`${apiUrl}/${resource}/${params.id}`, {
       method: 'PATCH',
       body: JSON.stringify(params.data),

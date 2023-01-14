@@ -6,58 +6,58 @@ import { Receiver } from '../../types';
 import { apiSlice } from './apiSlice';
 
 const initialState = {
-  savedList: [] as Receiver[],
+  contactList: [] as Receiver[],
 };
 
-export const savedListSlice = createSlice({
-  name: 'savedList',
+export const contacSlice = createSlice({
+  name: 'contactList',
   initialState,
   reducers: {},
 });
 
 export const savedListApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
-    getSavedList: build.query({
+    getContactList: build.query({
       query: () => ({
-        url: 'user/saved-list',
+        url: 'user/contacts/all',
         method: 'GET',
       }),
-      providesTags: ['savedList'],
+      providesTags: ['contactList'],
     }),
-    addUserToSavedList: build.mutation({
+    addUserToContactList: build.mutation({
       query: (payload) => ({
         headers: {
           'Content-type': 'application/json',
         },
-        url: 'user/saved-list',
+        url: 'user/contacts',
         method: 'POST',
         body: payload,
       }),
-      invalidatesTags: ['savedList'],
+      invalidatesTags: ['contactList'],
     }),
-    updateUserSavedListById: build.mutation({
+    updateUserContactListById: build.mutation({
       query: ({ soTK, payload }) => ({
-        url: `user/saved-list/${soTK}`,
+        url: `user/contacts/${soTK}`,
         method: 'PATCH',
         body: payload,
       }),
-      invalidatesTags: ['savedList'],
+      invalidatesTags: ['contactList'],
     }),
-    deleteUserSavedListById: build.mutation({
+    deleteUserContactListById: build.mutation({
       query: (id) => ({
-        url: `user/saved-list/${id}`,
+        url: `user/contacts/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['savedList'],
+      invalidatesTags: ['contactList'],
     }),
   }),
 });
 
-export default savedListSlice.reducer;
+export default contacSlice.reducer;
 
 export const {
-  useGetSavedListQuery,
-  useAddUserToSavedListMutation,
-  useUpdateUserSavedListByIdMutation,
-  useDeleteUserSavedListByIdMutation,
+  useGetContactListQuery,
+  useAddUserToContactListMutation,
+  useUpdateUserContactListByIdMutation,
+  useDeleteUserContactListByIdMutation,
 } = savedListApi;
