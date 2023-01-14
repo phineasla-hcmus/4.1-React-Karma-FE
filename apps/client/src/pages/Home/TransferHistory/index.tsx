@@ -17,7 +17,7 @@ import {
 import { transferApi } from '../../../redux/slices/transferSlice';
 import { RootState } from '../../../redux/store';
 import { ReminderCheckoutHistory, TransactionHistory } from '../../../types';
-import { formatMoney } from '../../../utils';
+import { formatDateTime, formatMoney } from '../../../utils';
 
 import TransferCard, { TransferCardProps } from './TransferCard';
 
@@ -32,7 +32,10 @@ function TransferHistory() {
 
   const [
     getTransactionHistory,
-    { isLoading: transactionHistoryLoading, data: transactionHistoryData },
+    {
+      isLoading: transactionHistoryLoading,
+      data: { data: transactionHistoryData = [] } = {},
+    },
   ] = transferApi.endpoints.getTransactionHistory.useLazyQuery();
 
   const [
@@ -43,37 +46,33 @@ function TransferHistory() {
     },
   ] = transferApi.endpoints.getReminderCheckoutHistory.useLazyQuery();
 
+  console.log('history', transactionHistoryData);
+
   const mappedTranferHistory = useMemo(() => {
     return (
-      (transactionHistoryData?.lichSuGiaoDich as TransactionHistory[]) ||
-      TRANSACTION_HISTORY.lichSuGiaoDich
+      (transactionHistoryData as TransactionHistory[]) || TRANSACTION_HISTORY
     )
-      .filter((item) => item.loai === 'transfer')
+      .filter((item) => item.loai === 0)
       .map((item: TransactionHistory) => ({
-        type: item.loai,
-        title: texts[item.loai].concat(
-          ` ${item.tenNguoiNhan} - ${item.nguoiNhan}`
-        ),
+        type: 'transfer',
+        title: texts.transfer.concat(` ${item.nguoiNhan}`),
         description: item.noiDungCK,
         amount: `-${formatMoney(item.soTien)} VND`,
-        dateTime: item.ngayCK,
+        dateTime: formatDateTime(new Date(item.ngayCK)),
       })) as TransferCardProps[];
   }, [transactionHistoryData]);
 
   const mappedReceiveHistory = useMemo(() => {
     return (
-      (transactionHistoryData?.lichSuGiaoDich as TransactionHistory[]) ||
-      TRANSACTION_HISTORY.lichSuGiaoDich
+      (transactionHistoryData as TransactionHistory[]) || TRANSACTION_HISTORY
     )
-      .filter((item) => item.loai === 'receive')
+      .filter((item) => item.loai === 1)
       .map((item: TransactionHistory) => ({
-        type: item.loai,
-        title: texts[item.loai].concat(
-          ` ${item.tenNguoiGui} - ${item.nguoiGui}`
-        ),
+        type: 'receive',
+        title: texts.receive.concat(` ${item.nguoiChuyen}`),
         description: item.noiDungCK,
         amount: `+${formatMoney(item.soTien)} VND`,
-        dateTime: item.ngayCK,
+        dateTime: formatDateTime(new Date(item.ngayCK)),
       })) as TransferCardProps[];
   }, [transactionHistoryData]);
 
@@ -84,17 +83,17 @@ function TransferHistory() {
     ).map((item: ReminderCheckoutHistory) => ({
       type: 'debt',
       title:
-        item.nguoiGui === userInfo.soTK
-          ? texts.debt.concat(` cho ${item.tenNguoiNhan} - ${item.nguoiNhan}`)
-          : texts.debt.concat(` từ ${item.tenNguoiGui} - ${item.nguoiGui}`),
+        item.nguoiChuyen === userInfo.soTK
+          ? texts.debt.concat(` cho ${item.nguoiNhan}`)
+          : texts.debt.concat(` từ ${item.nguoiChuyen}`),
       description: item.noiDungCK,
       amount:
-        item.nguoiGui === userInfo.soTK
+        item.nguoiChuyen === userInfo.soTK
           ? `-${formatMoney(item.soTien)} VND`
           : `+${formatMoney(item.soTien)} VND`,
-      dateTime: item.ngayCK,
+      dateTime: formatDateTime(new Date(item.ngayCK)),
     })) as TransferCardProps[];
-  }, [transactionHistoryData]);
+  }, [reminderCheckoutHistoryData?.lichSuGiaoDich, userInfo.soTK]);
 
   const [value, setValue] = useState(0);
 
@@ -121,7 +120,7 @@ function TransferHistory() {
 
   useEffect(() => {
     getTransactionHistory({});
-  }, []);
+  }, [getTransactionHistory]);
 
   return (
     <Layout>

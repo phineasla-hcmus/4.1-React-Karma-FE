@@ -70,11 +70,24 @@ export const authApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    deactivateAccount: build.mutation({
+      query: () => ({
+        headers: {
+          'Content-type': 'application/json',
+        },
+        url: 'user/account/deactivate',
+        method: 'PATCH',
+      }),
+    }),
   }),
 });
 
 export const { setUserInfo, logOut } = authSlice.actions;
 export default authSlice.reducer;
-export const { useLoginMutation, useLogoutMutation, useUserInfoQuery } =
-  authApi;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useUserInfoQuery,
+  useDeactivateAccountMutation,
+} = authApi;
 export const selectCurrentToken = (state: RootState) => state.auth.token;

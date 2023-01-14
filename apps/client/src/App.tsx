@@ -15,6 +15,7 @@ import ResetPassword from './pages/ResetPassword';
 import Unauthorized from './pages/Unauthorized';
 import VerifyRequest from './pages/VerifyRequest';
 import RequireAuth from './components/RequireAuth';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/receiver-management" element={<ReceiverManagement />} />
           <Route path="/debt-management" element={<DebtManagement />} />
           <Route path="/transfer" element={<TransferMoney />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         <Route element={<PersistLogin />}>

@@ -16,14 +16,14 @@ export interface PaymentAccountInfo {
 
 export interface TransactionHistory {
   maCK: number;
-  nguoiGui: string;
+  nguoiChuyen: string;
   nguoiNhan: string;
   tenNguoiGui: string;
   tenNguoiNhan: string;
   soTien: number;
   ngayCK: string;
   noiDungCK: string;
-  loai: 'transfer' | 'receive';
+  loai: number;
   loaiCK: 'sender' | 'receiver';
   phiCK: number;
 }
@@ -45,7 +45,7 @@ export interface Reminder {
 
 export interface ReminderCheckoutHistory {
   maCK: number;
-  nguoiGui: string;
+  nguoiChuyen: string;
   nguoiNhan: string;
   tenNguoiGui: string;
   tenNguoiNhan: string;
