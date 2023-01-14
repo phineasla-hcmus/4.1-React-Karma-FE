@@ -9,16 +9,12 @@ import {
 } from '@reduxjs/toolkit/query/react';
 
 import axios from '../../api/axios';
-import { RootState } from '../store';
-
-import { logOut } from './authSlice';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:3003',
-  // credentials: 'include',
-  prepareHeaders: (headers, { getState }) => {
+  baseUrl: 'https://karma-mb60.onrender.com',
+  prepareHeaders: (headers) => {
     const token = localStorage.getItem('ACCESS_TOKEN');
-    console.log('token', token);
+
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }
@@ -41,30 +37,21 @@ const baseQueryWithReauth = async (
           authorization: `Bearer ${localStorage.getItem('REFRESH_TOKEN')}`,
         },
       })
-      .catch(function (error) {
+      .catch((error) => {
         if (error.response.status === 401) {
           localStorage.removeItem('ACCESS_TOKEN');
           localStorage.removeItem('REFRESH_TOKEN');
           location.reload();
         }
       });
-    console.log(refreshResult);
     if (refreshResult?.data) {
       const data = refreshResult?.data;
-      console.log('data', data);
-      // store the new token
-      // api.dispatch(setCredentials({ ...refreshResult.data, user }));
 
       localStorage.setItem('ACCESS_TOKEN', data.accessToken);
       localStorage.setItem('REFRESH_TOKEN', data.refreshToken);
       // retry the original query with new access token
       result = await baseQuery(args, api, extraOptions);
     }
-    // else {
-    //   // api.dispatch(logOut());
-    //   localStorage.removeItem('ACCESS_TOKEN');
-    //   localStorage.removeItem('REFRESH_TOKEN');
-    // }
   }
 
   return result;
