@@ -1,8 +1,15 @@
 /* eslint-disable consistent-return */
 import React, { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import { Box } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 
 import PersistLogin from './components/PersistLogin';
 import { LocationContextProvider } from './context/LocationProvider';
@@ -21,7 +28,9 @@ import RequireAuth from './components/RequireAuth';
 import Profile from './pages/Profile';
 
 function App() {
-  const [noti, setNoti] = useState('');
+  const [open, setOpen] = useState(false);
+  const [content, setContent] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem('ACCESS_TOKEN')) {
@@ -36,8 +45,18 @@ function App() {
       });
 
       socket.on('reminder.created', (data: any) => {
-        console.log('data', data);
-        setNoti('Received');
+        setOpen(true);
+        setContent(`You received a debt reminder from ${data.tenNguoiGui}`);
+      });
+
+      socket.on('reminder.confirmed', (data: any) => {
+        setOpen(true);
+        setContent(`${data.tenNguoiChuyen} has just paid a debt`);
+      });
+
+      socket.on('reminder.cancelled', (data: any) => {
+        setOpen(true);
+        setContent(`${data.tenNguoiGui} has just cancelled a debt`);
       });
 
       socket.on('disconnect', () => {
@@ -52,45 +71,39 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   if (localStorage.getItem('ACCESS_TOKEN')) {
-  //     const socket = io('localhost:3005', {
-  //       auth: {
-  //         token: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
-  //       },
-  //     });
-
-  //     socket.on('connect', () => {
-  //       console.log('connected');
-  //     });
-
-  //     socket.on('reminder.created', () => {
-  //       console.log('hello');
-  //       setNoti('Created');
-  //     });
-
-  //     socket.on('reminder.confirmed', () => {
-  //       setNoti('Confirmed');
-  //     });
-
-  //     socket.on('reminder.cancelled', () => {
-  //       setNoti('Cancelled');
-  //     });
-
-  //     // return () => {
-  //     //   socket.off('reminder.created');
-  //     //   socket.off('reminder.confirmed');
-  //     //   socket.off('reminder.cancelled');
-  //     // };
-  //   }
-  // }, []);
-
   return (
     <>
       <LocationContextProvider>
-        {noti && (
-          <Box sx={{ marginTop: '5rem', padding: '1.25rem' }}>{noti}</Box>
-        )}
+        <Dialog
+          open={open}
+          onClose={() => {
+            setOpen(false);
+          }}
+        >
+          <DialogTitle>Debt reminder notification</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{content}</DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ marginRight: '1rem' }}>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              Close
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setOpen(false);
+                navigate('/debt-management');
+              }}
+            >
+              View
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
