@@ -17,7 +17,7 @@ export const reminderApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getReminderList: build.query({
       query: (type) => ({
-        url: `user/reminders?type=${type}`,
+        url: `user/reminders?type=${type}&page=${1}&size=${1000}`,
         method: 'GET',
       }),
       providesTags: ['reminderList'],
