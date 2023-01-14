@@ -19,7 +19,7 @@ export default function TransferReceipt() {
 
   return (
     <Box>
-      <Alert severity="success">Giao dịch thành công</Alert>
+      <Alert severity="success">Transaction completed!</Alert>
       <Card sx={{ padding: '1rem', marginTop: '2rem', textAlign: 'center' }}>
         <Typography variant="caption">{formatDateTime(new Date())}</Typography>
         <Typography variant="h5">-{formatMoney(soTien)} VND</Typography>
@@ -31,7 +31,7 @@ export default function TransferReceipt() {
           }}
         >
           <StyledRow>
-            <StyledTitle>Đến</StyledTitle>
+            <StyledTitle>To</StyledTitle>
             <StyledContentBox>
               <Typography>
                 {tenTK} - {nguoiNhan}
@@ -40,17 +40,17 @@ export default function TransferReceipt() {
           </StyledRow>
           <StyledDivider />
           <StyledRow>
-            <StyledTitle>Mô tả</StyledTitle>
+            <StyledTitle>Description</StyledTitle>
             <StyledContentBox>
               <Typography>{noiDung}</Typography>
             </StyledContentBox>
           </StyledRow>
           <StyledDivider />
           <StyledRow>
-            <StyledTitle>Hình thức thanh toán</StyledTitle>
+            <StyledTitle>Payment method</StyledTitle>
             <StyledContentBox>
               <Typography>
-                {loaiCK === 'sender' ? 'Người nhận' : 'Người gửi'} trả phí
+                {loaiCK === 'sender' ? 'Sender' : 'Receiver'} pay fee
               </Typography>
             </StyledContentBox>
           </StyledRow>

@@ -154,8 +154,8 @@ export default function ReceiverManagement() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Quản lý người nhận</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Receiver management</Typography>
         </StyledBreadCrumbs>
         <AsyncDataRenderer loading={getSavedListLoading}>
           <Box mt={2}>
@@ -167,12 +167,12 @@ export default function ReceiverManagement() {
                 marginBottom: '1.25rem',
               }}
             >
-              <Typography variant="h6">Danh sách người nhận</Typography>
+              <Typography variant="h6">Receiver list</Typography>
               <Button
                 variant="contained"
                 onClick={handleClickOpenAddReceiverDialog}
               >
-                Thêm người nhận
+                Add receiver
               </Button>
             </Box>
             {savedList.map((item) => (
@@ -188,43 +188,43 @@ export default function ReceiverManagement() {
         </AsyncDataRenderer>
       </StyledContentWrapper>
       <Dialog open={openAddReceiver} onClose={handleCloseAddReceiverDialog}>
-        <DialogTitle>Thêm người nhận</DialogTitle>
+        <DialogTitle>Add receiver</DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleAddUserToSavedList}>
             <TextField
               name="soTK"
               required
               margin="dense"
-              label="Số tài khoản"
+              label="Account number"
               type="number"
               fullWidth
             />
             <TextField
               name="tenGoiNho"
               margin="dense"
-              label="Tên gợi nhớ"
+              label="Nickname"
               fullWidth
             />
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button variant="outlined" onClick={handleCloseAddReceiverDialog}>
-                Hủy
+                Cancel
               </Button>
               <Button variant="contained" type="submit">
-                Lưu
+                Save
               </Button>
             </DialogActions>
           </Box>
         </DialogContent>
       </Dialog>
       <Dialog open={openEditReceiver} onClose={handleCloseEditReceiverDialog}>
-        <DialogTitle>Chỉnh sửa người nhận</DialogTitle>
+        <DialogTitle>Edit receiver</DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleEditUserInSavedList}>
             <TextField
               value={values.accountNumber}
               name="soTK"
               margin="dense"
-              label="Số tài khoản"
+              label="Account number"
               type="number"
               fullWidth
               InputProps={{ readOnly: true }}
@@ -233,7 +233,7 @@ export default function ReceiverManagement() {
               value={values.name}
               name="tenGoiNho"
               margin="dense"
-              label="Tên gợi nhớ"
+              label="Nickname"
               fullWidth
               onChange={handleChangeName}
             />
@@ -242,10 +242,10 @@ export default function ReceiverManagement() {
                 variant="outlined"
                 onClick={handleCloseEditReceiverDialog}
               >
-                Hủy
+                Cancel
               </Button>
               <Button type="submit" variant="contained">
-                Lưu
+                Save
               </Button>
             </DialogActions>
           </Box>
@@ -255,18 +255,18 @@ export default function ReceiverManagement() {
         open={openDeleteReceiver}
         onClose={handleCloseDeleteReceiverDialog}
       >
-        <DialogTitle>Xoá người nhận</DialogTitle>
+        <DialogTitle>Delete receiver</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Bạn có chắc muốn xoá người nhận này?
+            Are you sure you want to delete this receiver?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ marginRight: '1rem' }}>
           <Button variant="outlined" onClick={handleCloseDeleteReceiverDialog}>
-            Hủy
+            Cancel
           </Button>
           <Button variant="contained" onClick={handleDeleteUserInSavedList}>
-            Xoá
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

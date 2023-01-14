@@ -54,7 +54,7 @@ function Login() {
     captchaRef.current?.reset();
 
     if (token?.length === 0) {
-      setError('Vui lòng nhấn vào ô Recaptcha');
+      setError('Please check Recaptcha box');
       return;
     }
 
@@ -70,7 +70,7 @@ function Login() {
       );
 
       if ('error' in result) {
-        setError('Tên đăng nhập hoặc mật khẩu không hợp lệ');
+        setError('Invalid username or password');
         return;
       }
 
@@ -108,12 +108,12 @@ function Login() {
               required
               margin="normal"
               fullWidth
-              label="Tên đăng nhập"
+              label="Username"
               name="username"
             />
             <TextField
               required
-              label="Mật khẩu"
+              label="Password"
               name="password"
               sx={{ margin: '0.5rem 0', width: '100%' }}
               type={showPassword ? 'text' : 'password'}
@@ -135,13 +135,19 @@ function Login() {
                 ),
               }}
             />
+            <StyledCaptchaWrapper>
+              <ReCAPTCHA
+                sitekey={process.env.REACT_APP_SITE_KEY || ''}
+                ref={captchaRef}
+              />
+            </StyledCaptchaWrapper>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Đăng nhập
+              Login
             </Button>
             <Grid
               sx={{ marginBottom: '1.25rem' }}
@@ -155,16 +161,10 @@ function Login() {
                     registerLocation('/forgot-password');
                   }}
                 >
-                  Quên mật khẩu
+                  Forgot password
                 </Link>
               </Grid>
             </Grid>
-            <StyledCaptchaWrapper>
-              <ReCAPTCHA
-                sitekey={process.env.REACT_APP_SITE_KEY || ''}
-                ref={captchaRef}
-              />
-            </StyledCaptchaWrapper>
           </Box>
         </Box>
       </Container>

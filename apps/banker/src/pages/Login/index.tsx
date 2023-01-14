@@ -113,12 +113,12 @@ function Login() {
               required
               margin="normal"
               fullWidth
-              label="Tên đăng nhập"
+              label="Username"
               name="username"
             />
             <TextField
               required
-              label="Mật khẩu"
+              label="Password"
               name="password"
               sx={{ margin: '0.5rem 0', width: '100%' }}
               type={showPassword ? 'text' : 'password'}
@@ -152,7 +152,7 @@ function Login() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Đăng nhập
+              Login
             </Button>
             <Grid
               sx={{ marginBottom: '1.25rem' }}

@@ -22,9 +22,9 @@ import { formatDateTime, formatMoney } from '../../../utils';
 import TransferCard, { TransferCardProps } from './TransferCard';
 
 const texts = {
-  transfer: 'Chuyển tiền đến',
-  debt: 'Thanh toán nhắc nợ',
-  receive: 'Nhận tiền từ',
+  transfer: 'Transfer money to',
+  debt: 'Pay debt',
+  receive: 'Receive money from',
 };
 
 function TransferHistory() {
@@ -45,8 +45,6 @@ function TransferHistory() {
       data: reminderCheckoutHistoryData,
     },
   ] = transferApi.endpoints.getReminderCheckoutHistory.useLazyQuery();
-
-  console.log('history', transactionHistoryData);
 
   const mappedTranferHistory = useMemo(() => {
     return (
@@ -84,8 +82,8 @@ function TransferHistory() {
       type: 'debt',
       title:
         item.nguoiChuyen === userInfo.soTK
-          ? texts.debt.concat(` cho ${item.nguoiNhan}`)
-          : texts.debt.concat(` từ ${item.nguoiChuyen}`),
+          ? texts.debt.concat(` to ${item.nguoiNhan}`)
+          : texts.debt.concat(` from ${item.nguoiChuyen}`),
       description: item.noiDungCK,
       amount:
         item.nguoiChuyen === userInfo.soTK
@@ -126,8 +124,8 @@ function TransferHistory() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Lịch sử giao dịch</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Transaction history</Typography>
         </StyledBreadCrumbs>
         <AppBar position="static">
           <Tabs
@@ -138,9 +136,9 @@ function TransferHistory() {
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            <Tab label="Chuyển tiền" />
-            <Tab label="Nhận tiền" />
-            <Tab label="Thanh toán nhắc nợ" />
+            <Tab label="Transfer money" />
+            <Tab label="Receive money" />
+            <Tab label="Pay debt" />
           </Tabs>
         </AppBar>
         <Box>

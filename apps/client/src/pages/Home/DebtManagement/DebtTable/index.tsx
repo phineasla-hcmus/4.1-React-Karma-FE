@@ -59,21 +59,16 @@ interface CreatedColumn {
 }
 
 const receivedColumns: readonly ReceivedColumn[] = [
-  { id: 'soTaiKhoan', label: 'Số tài khoản' },
-  {
-    id: 'tenNguoiGui',
-    label: 'Người gửi',
-    minWidth: 200,
-  },
-  { id: 'thoiGian', label: 'Thời gian', minWidth: 150 },
+  { id: 'soTaiKhoan', label: 'Account number' },
+  { id: 'thoiGian', label: 'Date', minWidth: 150 },
   {
     id: 'soTien',
-    label: 'Số tiền',
+    label: 'Amount',
     minWidth: 120,
   },
   {
     id: 'noiDung',
-    label: 'Nội dung',
+    label: 'Description',
     minWidth: 400,
   },
   {
@@ -89,20 +84,20 @@ const receivedColumns: readonly ReceivedColumn[] = [
 ];
 
 const createdColumns: readonly CreatedColumn[] = [
-  { id: 'soTaiKhoan', label: 'Số tài khoản' },
+  { id: 'soTaiKhoan', label: 'Account number' },
   {
     id: 'thoiGian',
-    label: 'Thời gian',
+    label: 'Date',
     minWidth: 150,
   },
   {
     id: 'soTien',
-    label: 'Số tiền',
+    label: 'Amount',
     minWidth: 120,
   },
   {
     id: 'noiDung',
-    label: 'Nội dung',
+    label: 'Description',
     minWidth: 200,
   },
   {
@@ -190,7 +185,7 @@ export default function DebtTable({
         id: selectedDebt,
         payload: {
           otp: Number(data.get('otp')),
-          noiDung: 'Giải quyết nhắc nợ',
+          noiDung: 'Pay debt',
           loaiCK: 'sender',
         },
       });
@@ -205,7 +200,7 @@ export default function DebtTable({
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell key="index">STT</TableCell>
+              <TableCell key="index">No.</TableCell>
               {created
                 ? createdColumns.map((column) => (
                     <TableCell key={column.id}>{column.label}</TableCell>
@@ -234,7 +229,7 @@ export default function DebtTable({
                           color="success"
                           onClick={() => handleOpenPayDebtDialog(item)}
                         >
-                          Thanh toán
+                          Pay
                         </Button>
                       </TableCell>
                     )}
@@ -244,7 +239,7 @@ export default function DebtTable({
                         color="error"
                         onClick={() => handleOpenDeleteDebtDialog(item)}
                       >
-                        Xoá
+                        Delete
                       </Button>
                     </TableCell>
                   </>
@@ -255,11 +250,11 @@ export default function DebtTable({
         </Table>
       </TableContainer>
       <Dialog open={openDeleteDebtDialog} onClose={handleCloseDeleteDebtDialog}>
-        <DialogTitle>Xoá nhắc nợ</DialogTitle>
+        <DialogTitle>Delete debt reminder</DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleDismissReminder}>
             <DialogContentText>
-              Bạn có chắc muốn xoá nhắc nợ này?
+              Are you sure you want to delete this debt reminder?
             </DialogContentText>
             <TextField
               name="noiDung"
@@ -272,21 +267,21 @@ export default function DebtTable({
             />
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button variant="outlined" onClick={handleCloseDeleteDebtDialog}>
-                Hủy
+                Cancel
               </Button>
               <Button variant="contained" type="submit">
-                Xoá
+                Delete
               </Button>
             </DialogActions>
           </Box>
         </DialogContent>
       </Dialog>
       <Dialog open={openPayDebtDialog} onClose={handleClosePayDebtDialog}>
-        <DialogTitle>Thanh toán nhắc nợ</DialogTitle>
+        <DialogTitle>Pay debt reminder</DialogTitle>
         <DialogContent>
           <Box component="form" onSubmit={handleCheckoutReminder}>
             <DialogContentText>
-              Bạn có chắc muốn thanh toán nhắc nợ này?
+              Are you sure you want to pay this debt reminder?
             </DialogContentText>
             <TextField
               name="otp"
@@ -296,14 +291,14 @@ export default function DebtTable({
               fullWidth
             />
             <Typography variant="caption">
-              Vui lòng nhập mã OTP đã được gửi đến email của bạn
+              Please enter OTP code sent to your email
             </Typography>
             <DialogActions sx={{ paddingRight: 0 }}>
               <Button variant="outlined" onClick={handleClosePayDebtDialog}>
-                Hủy
+                Cancel
               </Button>
               <Button type="submit" variant="contained">
-                Thanh toán
+                Pay
               </Button>
             </DialogActions>
           </Box>
