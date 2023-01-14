@@ -104,6 +104,17 @@ function ActionsBar() {
         <MenuItem>
           <ListItemButton
             sx={{ padding: 0 }}
+            onClick={() => navigate('/profile')}
+          >
+            <ListItemIcon>
+              <AccountCircleIcon fontSize="small" />
+            </ListItemIcon>
+            Thông tin cá nhân
+          </ListItemButton>
+        </MenuItem>
+        <MenuItem>
+          <ListItemButton
+            sx={{ padding: 0 }}
             href="/change-password"
             LinkComponent={Link}
           >
