@@ -54,21 +54,40 @@ export default {
       };
     }
     if (params.filter.to) {
+      const newDate = new Date(params.filter.to);
+      newDate.setDate(newDate.getDate() + 1);
       defaultQueryParams = {
         ...defaultQueryParams,
-        to: `${new Date(params.filter.to)}`,
+        to: `${newDate}`,
       };
     }
     const query: GetQueryParams = defaultQueryParams;
+    if (resource === 'interbank') {
+      return httpClient(
+        `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
+        {
+          method: 'GET',
+        }
+      ).then(({ json }: { json: Paginated<unknown> }) => {
+        localStorage.setItem('soTienGui', `${json.soTienGui}`);
+        localStorage.setItem('soTienNhan', `${json.soTienNhan}`);
+        return {
+          data: json.data,
+          total: json.total,
+        };
+      });
+    }
     return httpClient(
       `${apiUrl}/${resource}?${new URLSearchParams(query).toString()}`,
       {
         method: 'GET',
       }
-    ).then(({ json }: { json: Paginated<unknown> }) => ({
-      data: json.data,
-      total: json.total,
-    }));
+    ).then(({ json }: { json: Paginated<unknown> }) => {
+      return {
+        data: json.data,
+        total: json.total,
+      };
+    });
   },
 
   getOne: async (resource: string, params: GetOneParams) => {
