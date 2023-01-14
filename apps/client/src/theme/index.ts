@@ -49,8 +49,8 @@ type CustomTheme = {
   [Key in keyof typeof themeColors]: typeof themeColors[Key];
 };
 declare module '@mui/material/styles/createTheme' {
-  interface Theme extends CustomTheme {}
-  interface ThemeOptions extends CustomTheme {}
+  type Theme = CustomTheme;
+  type ThemeOptions = CustomTheme;
 }
 
 // Create theme

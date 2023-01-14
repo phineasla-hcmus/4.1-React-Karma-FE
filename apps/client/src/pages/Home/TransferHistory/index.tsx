@@ -28,7 +28,7 @@ const texts = {
 };
 
 function TransferHistory() {
-  const userInfo = useSelector((state: RootState) => state.auth.user);
+  const soTK = localStorage.getItem('SOTK');
 
   const [
     getTransactionHistory,
@@ -42,7 +42,7 @@ function TransferHistory() {
     getReminderCheckoutHistory,
     {
       isLoading: reminderCheckoutHistoryLoading,
-      data: reminderCheckoutHistoryData,
+      data: { data: reminderCheckoutHistoryData = [] } = {},
     },
   ] = transferApi.endpoints.getReminderCheckoutHistory.useLazyQuery();
 
@@ -76,22 +76,22 @@ function TransferHistory() {
 
   const mappedReminderCheckoutHistory = useMemo(() => {
     return (
-      (reminderCheckoutHistoryData?.lichSuGiaoDich as ReminderCheckoutHistory[]) ||
-      REMINDER_CHECKOUT_HISTORY.lichSuGiaoDich
+      (reminderCheckoutHistoryData as ReminderCheckoutHistory[]) ||
+      REMINDER_CHECKOUT_HISTORY
     ).map((item: ReminderCheckoutHistory) => ({
       type: 'debt',
       title:
-        item.nguoiChuyen === userInfo.soTK
+        item.nguoiChuyen === soTK
           ? texts.debt.concat(` to ${item.nguoiNhan}`)
           : texts.debt.concat(` from ${item.nguoiChuyen}`),
       description: item.noiDungCK,
       amount:
-        item.nguoiChuyen === userInfo.soTK
+        item.nguoiChuyen === soTK
           ? `-${formatMoney(item.soTien)} VND`
           : `+${formatMoney(item.soTien)} VND`,
       dateTime: formatDateTime(new Date(item.ngayCK)),
     })) as TransferCardProps[];
-  }, [reminderCheckoutHistoryData?.lichSuGiaoDich, userInfo.soTK]);
+  }, [reminderCheckoutHistoryData, soTK]);
 
   const [value, setValue] = useState(0);
 

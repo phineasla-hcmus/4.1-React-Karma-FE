@@ -18,7 +18,7 @@ export default function DebtTab({ data, value, index, created }: DebtTabProps) {
   const { pendingList, completedList } = useMemo(() => {
     return {
       pendingList: data.filter((item) => item.trangThai === 'pending'),
-      completedList: data.filter((item) => item.trangThai === 'completed'),
+      completedList: data.filter((item) => item.trangThai === 'done'),
     };
   }, [data]);
 
