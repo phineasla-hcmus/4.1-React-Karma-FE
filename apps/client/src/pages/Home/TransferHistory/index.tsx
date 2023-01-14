@@ -52,6 +52,7 @@ function TransferHistory() {
     )
       .filter((item) => item.loai === 0)
       .map((item: TransactionHistory) => ({
+        maNganHang: item.maNganHang,
         type: 'transfer',
         title: texts.transfer.concat(` ${item.nguoiNhan}`),
         description: item.noiDungCK,
@@ -66,6 +67,7 @@ function TransferHistory() {
     )
       .filter((item) => item.loai === 1)
       .map((item: TransactionHistory) => ({
+        maNganHang: item.maNganHang,
         type: 'receive',
         title: texts.receive.concat(` ${item.nguoiChuyen}`),
         description: item.noiDungCK,
@@ -151,6 +153,7 @@ function TransferHistory() {
                   description={transaction.description}
                   amount={transaction.amount}
                   dateTime={transaction.dateTime}
+                  maNganHang={transaction.maNganHang}
                 />
               ))}
             </TabPanel>
@@ -162,6 +165,7 @@ function TransferHistory() {
                   description={transaction.description}
                   amount={transaction.amount}
                   dateTime={transaction.dateTime}
+                  maNganHang={transaction.maNganHang}
                 />
               ))}
             </TabPanel>

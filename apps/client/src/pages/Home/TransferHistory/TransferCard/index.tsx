@@ -1,7 +1,9 @@
-import { Avatar, Box, Card, Typography } from '@mui/material';
+/* eslint-disable react/require-default-props */
+import { Avatar, Box, Card, Chip, Typography } from '@mui/material';
 import React, { useCallback } from 'react';
 
 export interface TransferCardProps {
+  maNganHang?: number;
   type: 'transfer' | 'receive' | 'debt';
   title: string;
   description: string;
@@ -10,6 +12,7 @@ export interface TransferCardProps {
 }
 
 function TransferCard({
+  maNganHang,
   type,
   title,
   description,
@@ -39,6 +42,13 @@ function TransferCard({
     >
       <Avatar variant="square" src={mapTransferTypeToIcon()} />
       <Box ml={3}>
+        {maNganHang && (
+          <Chip
+            sx={{ marginBottom: '0.5rem' }}
+            label="External"
+            color="primary"
+          />
+        )}
         <Typography sx={{ fontSize: '0.8rem', color: '#9b9a9a' }}>
           {dateTime}
         </Typography>

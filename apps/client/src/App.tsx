@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable consistent-return */
 import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -50,13 +51,18 @@ function App() {
       });
 
       socket.on('reminder.confirmed', (data: any) => {
-        setOpen(true);
-        setContent(`${data.tenNguoiChuyen} has just paid a debt`);
+        if (
+          data.chuyenKhoanNoiBo.nguoiChuyen !==
+          localStorage.getItem('SOTK')?.toString()
+        ) {
+          setOpen(true);
+          setContent(`${data.tenNguoiChuyen} has just paid a debt`);
+        }
       });
 
       socket.on('reminder.cancelled', (data: any) => {
         setOpen(true);
-        setContent(`${data.tenNguoiGui} has just cancelled a debt`);
+        setContent('A debt has just been cancelled');
       });
 
       socket.on('disconnect', () => {
@@ -68,7 +74,6 @@ function App() {
         socket.off('disconnect');
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

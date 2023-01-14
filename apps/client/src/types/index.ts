@@ -16,6 +16,7 @@ export interface PaymentAccountInfo {
 
 export interface TransactionHistory {
   maCK: number;
+  maNganHang: number;
   nguoiChuyen: string;
   nguoiNhan: string;
   tenNguoiGui: string;
