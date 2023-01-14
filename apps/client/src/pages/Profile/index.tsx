@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import AsyncDataRenderer from '../../components/AsyncDataRenderer';
 import Layout from '../../components/Layout';
@@ -40,13 +40,20 @@ export default function Profile() {
     setOpenDeactivateDialog(true);
   };
 
-  const handleCloseDeactvateDialog = () => {
+  const handleCloseDeactivateDialog = () => {
     setOpenDeactivateDialog(false);
   };
+
+  const navigate = useNavigate();
 
   const handleDeactivateAccount = async () => {
     try {
       await deActivateAccount({});
+      handleCloseDeactivateDialog();
+      localStorage.removeItem('ACCESS_TOKEN');
+      localStorage.removeItem('REFRESH_TOKEN');
+      localStorage.removeItem('SOTK');
+      navigate('/login');
     } catch (error) {
       console.log('error', error);
     }
@@ -92,7 +99,7 @@ export default function Profile() {
           </Card>
         </AsyncDataRenderer>
       </StyledContentWrapper>
-      <Dialog open={openDeactivateDialog} onClose={handleCloseDeactvateDialog}>
+      <Dialog open={openDeactivateDialog} onClose={handleCloseDeactivateDialog}>
         <DialogTitle>Đóng tài khoản</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -100,7 +107,7 @@ export default function Profile() {
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ marginRight: '1rem' }}>
-          <Button variant="outlined" onClick={handleCloseDeactvateDialog}>
+          <Button variant="outlined" onClick={handleCloseDeactivateDialog}>
             Hủy
           </Button>
           <Button variant="contained" onClick={handleDeactivateAccount}>
