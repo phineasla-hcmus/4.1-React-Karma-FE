@@ -13,7 +13,7 @@ export const authProvider = {
     matKhau: string;
     recaptchaValue: string;
   }) => {
-    const request = new Request('http://localhost:3003/auth/admin/login', {
+    const request = new Request('https://karma-mb60.onrender.com/auth/admin/login', {
       method: 'POST',
       body: JSON.stringify({ tenDangNhap, matKhau, recaptchaValue }),
       headers: new Headers({ 'Content-Type': 'application/json' }),
