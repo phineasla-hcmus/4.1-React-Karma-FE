@@ -1,0 +1,9 @@
+[build.environment]
+  NPM_FLAGS = "--version"
+  NETLIFY_USE_PNPM = true
+[build]
+  command = "npx pnpm install --store=node_modules/.pnpm-store && npx pnpm build"
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
