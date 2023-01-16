@@ -13,7 +13,6 @@ import {
 import { Logout } from '@mui/icons-material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SettingsIcon from '@mui/icons-material/Settings';
 
 import { useLogoutMutation } from '../../redux/slices/authSlice';
 
@@ -109,19 +108,7 @@ function ActionsBar() {
             <ListItemIcon>
               <AccountCircleIcon fontSize="small" />
             </ListItemIcon>
-            Thông tin cá nhân
-          </ListItemButton>
-        </MenuItem>
-        <MenuItem>
-          <ListItemButton
-            sx={{ padding: 0 }}
-            href="/change-password"
-            LinkComponent={Link}
-          >
-            <ListItemIcon>
-              <SettingsIcon fontSize="small" />
-            </ListItemIcon>
-            Thay đổi mật khẩu
+            Profile
           </ListItemButton>
         </MenuItem>
         <MenuItem>
@@ -129,7 +116,7 @@ function ActionsBar() {
             <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>
-            Đăng xuất
+            Logout
           </ListItemButton>
         </MenuItem>
       </Menu>

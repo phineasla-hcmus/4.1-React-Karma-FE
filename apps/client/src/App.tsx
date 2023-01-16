@@ -14,7 +14,6 @@ import {
 
 import PersistLogin from './components/PersistLogin';
 import { LocationContextProvider } from './context/LocationProvider';
-import ChangePassword from './pages/ChangePassword';
 import ForgotPassword from './pages/ForgotPassword';
 import Home from './pages/Home';
 import ReceiverManagement from './pages/Home/ReceiverManagement';
@@ -125,10 +124,6 @@ function App() {
             <Route path="/debt-management" element={<DebtManagement />} />
             <Route path="/transfer" element={<TransferMoney />} />
             <Route path="/profile" element={<Profile />} />
-          </Route>
-
-          <Route element={<PersistLogin />}>
-            <Route path="/change-password" element={<ChangePassword />} />
           </Route>
         </Routes>
       </LocationContextProvider>
