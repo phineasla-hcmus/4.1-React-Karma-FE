@@ -12,7 +12,7 @@ import type {
 
 import { Paginated } from '../types/generics';
 
-const apiUrl = 'http://localhost:3003';
+const apiUrl = 'https://karma-mb60.onrender.com';
 
 const httpClient = (url: string, options: any) => {
   if (!options.headers) {
