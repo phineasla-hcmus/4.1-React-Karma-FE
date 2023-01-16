@@ -63,15 +63,15 @@ export default function Profile() {
     <Layout>
       <StyledContentWrapper>
         <StyledBreadCrumbs aria-label="breadcrumb">
-          <Link to="/">Trang chủ</Link>
-          <Typography color="text.primary">Thông tin cá nhân</Typography>
+          <Link to="/">Home</Link>
+          <Typography color="text.primary">Profile</Typography>
         </StyledBreadCrumbs>
         <AsyncDataRenderer loading={isLoading}>
           <Card sx={{ padding: '1rem' }}>
             <Box>
               <Typography>
                 <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                  Họ tên
+                  Fullname
                 </Typography>
                 : {userInfo.hoTen}
               </Typography>
@@ -83,7 +83,7 @@ export default function Profile() {
               </Typography>
               <Typography>
                 <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                  Điện thoại
+                  Phone number
                 </Typography>
                 : {userInfo.sdt}
               </Typography>
@@ -93,25 +93,25 @@ export default function Profile() {
                 sx={{ marginTop: '1rem' }}
                 onClick={handleClickOpenDeactivateDialog}
               >
-                Đóng tài khoản
+                Deactivate account
               </Button>
             </Box>
           </Card>
         </AsyncDataRenderer>
       </StyledContentWrapper>
       <Dialog open={openDeactivateDialog} onClose={handleCloseDeactivateDialog}>
-        <DialogTitle>Đóng tài khoản</DialogTitle>
+        <DialogTitle>Deactivate account</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Bạn có chắc muốn đóng tài khoản?
+            Are you sure want to deactivate account?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ marginRight: '1rem' }}>
           <Button variant="outlined" onClick={handleCloseDeactivateDialog}>
-            Hủy
+            Cancel
           </Button>
           <Button variant="contained" onClick={handleDeactivateAccount}>
-            Xác nhận
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>
